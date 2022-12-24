@@ -1,0 +1,23 @@
+@use "../../styles/partials/variables" as *;
+
+.main-menu {
+  text-align: center;
+  animation: main-menu-fade-in 1s linear;
+
+  &__title {
+    font-size: 5rem;
+    margin: 2rem 0;
+    text-shadow: $text-shadow-global;
+  }
+
+  &__actions {
+    display: flex;
+    flex-direction: column;
+  }
+}
+
+@keyframes main-menu-fade-in {
+  0% {
+    opacity: 0;
+  }
+}

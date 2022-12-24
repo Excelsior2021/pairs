@@ -1,0 +1,11 @@
+@mixin scrollbars {
+  /* width */
+  ::-webkit-scrollbar {
+    width: 5px;
+  }
+
+  /* Handle */
+  ::-webkit-scrollbar-thumb {
+    background: white;
+  }
+}

@@ -1,25 +1,30 @@
-import * as deck from "./deckFunctions";
-import * as goFish from "./goFishFunctions";
-import * as comp from "./compFunctions";
+import deck from "./deckFunctions";
+import goFish from "./goFishFunctions";
+import comp from "./opponentFunctions";
+import gameReport from "./gameReport";
 
 export const playerMatch = (
   cardImg,
   shuffledDeck,
   playerHand,
-  compHand,
+  opponentHand,
   playerPairs,
-  compPairs,
+  opponentPairs,
   playerTurnHandler,
   updateUI
 ) => {
-  if (shuffledDeck.length > 0 && playerHand.length > 0 && compHand.length > 0) {
-    const chosenCardValue = cardImg.target.attributes[1].value;
+  if (
+    shuffledDeck.length > 0 &&
+    playerHand.length > 0 &&
+    opponentHand.length > 0
+  ) {
+    const chosenCardValue = cardImg.target.value;
 
-    //Match with card in compHand
-    for (const card of compHand) {
-      if (card.value.toString() === chosenCardValue) {
+    //Match with card in opponentHand
+    for (const card of opponentHand) {
+      if (card.value === chosenCardValue) {
         playerPairs.push(card);
-        compHand.splice(compHand.indexOf(card), 1);
+        opponentHand.splice(opponentHand.indexOf(card), 1);
 
         for (const card of playerHand) {
           if (cardImg.target.id === card.id) {
@@ -27,9 +32,9 @@ export const playerMatch = (
             playerHand.splice(playerHand.indexOf(card), 1);
             updateUI(
               playerHand,
-              compHand,
+              opponentHand,
               playerPairs,
-              compPairs,
+              opponentPairs,
               playerTurnHandler
             );
             return 0;
@@ -45,16 +50,16 @@ export const playerDealt = (
   cardImg,
   shuffledDeck,
   playerHand,
-  compHand,
+  opponentHand,
   playerPairs,
-  compPairs,
+  opponentPairs,
   playerTurnHandler,
   updateUI
 ) => {
   const dealtCard = deck.dealTopCard(shuffledDeck);
-  const chosenCardValue = cardImg.target.attributes[1].value;
+  const chosenCardValue = cardImg.target.value;
 
-  if (chosenCardValue === dealtCard.value.toString()) {
+  if (chosenCardValue === dealtCard.value) {
     playerPairs.push(dealtCard);
     for (let card of playerHand) {
       if (cardImg.target.id === card.id) {
@@ -62,9 +67,9 @@ export const playerDealt = (
         playerHand.splice(playerHand.indexOf(card), 1);
         updateUI(
           playerHand,
-          compHand,
+          opponentHand,
           playerPairs,
-          compPairs,
+          opponentPairs,
           playerTurnHandler
         );
         return 1;
@@ -72,52 +77,62 @@ export const playerDealt = (
     }
   }
 
-  for (let x in playerHand) {
-    if (dealtCard.value === playerHand[x].value) {
+  for (let card of playerHand) {
+    if (dealtCard.value === card.value) {
       playerPairs.push(dealtCard);
-      playerPairs.push(playerHand[x]);
-      playerHand.splice(playerHand.indexOf(playerHand[x]), 1);
-      updateUI(playerHand, compHand, playerPairs, compPairs, playerTurnHandler);
+      playerPairs.push(card);
+      playerHand.splice(playerHand.indexOf(card), 1);
+      updateUI(
+        playerHand,
+        opponentHand,
+        playerPairs,
+        opponentPairs,
+        playerTurnHandler
+      );
       return 2;
     }
   }
 
   playerHand.push(dealtCard);
-  updateUI(playerHand, compHand, playerPairs, compPairs, playerTurnHandler);
+  updateUI(
+    playerHand,
+    opponentHand,
+    playerPairs,
+    opponentPairs,
+    playerTurnHandler
+  );
   return 3;
 };
 
 export const playerTurnHandler = (
   cardImg,
-  styles,
   goFish,
   shuffledDeck,
   playerHand,
-  compHand,
+  opponentHand,
   playerPairs,
-  compPairs,
+  opponentPairs,
   playerTurnHandler,
   updateUI,
   dispatchGameAction,
   setGameDeck,
-  compTurn,
+  opponentTurn,
   gameOver
 ) => {
   const gameDeckHandler = () =>
     deck.gameDeckHandler(
       playerDealt,
-      styles,
       cardImg,
       shuffledDeck,
       playerHand,
-      compHand,
+      opponentHand,
       playerPairs,
-      compPairs,
+      opponentPairs,
       playerTurnHandler,
       updateUI,
       dispatchGameAction,
       setGameDeck,
-      compTurn,
+      opponentTurn,
       gameOver
     );
 
@@ -125,225 +140,245 @@ export const playerTurnHandler = (
     cardImg,
     shuffledDeck,
     playerHand,
-    compHand,
+    opponentHand,
     playerPairs,
-    compPairs,
+    opponentPairs,
     playerTurnHandler,
     updateUI
   );
-  dispatchGameAction({ type: "PLAYER_ACTION", playerOutput });
-  dispatchGameAction({ type: "CONSOLE_LOG", response: false });
+
+  dispatchGameAction({
+    type: "PLAYER_ACTION",
+    playerOutput,
+    playerHand,
+    playerPairs,
+  });
+  dispatchGameAction({ type: "GAME_LOG" });
+
+  // gameReport(
+  //   shuffledDeck,
+  //   playerHand,
+  //   opponentHand,
+  //   playerPairs,
+  //   opponentPairs
+  // );
+
   const gameOverCheck = gameOver(
     shuffledDeck,
     playerHand,
-    compHand,
+    opponentHand,
     playerPairs,
-    compPairs,
+    opponentPairs,
     playerTurnHandler,
     updateUI
   );
+
   if (!gameOverCheck) {
     if (playerOutput === false) {
-      const response = (
-        <h3 className={styles.heading}>
+      const log = (
+        <p class="">
           You didn't match with any card in your opponent's hand. Please deal a
           card from the deck.
-        </h3>
+        </p>
       );
       goFish.playerHandUnclickable(
         playerHand,
-        compHand,
+        opponentHand,
         playerPairs,
-        compPairs,
+        opponentPairs,
         playerTurnHandler,
         updateUI
       );
-      setGameDeck(deck.gameDeckUI(styles, gameDeckHandler));
-      dispatchGameAction({ type: "CONSOLE_LOG", response: response });
+      setGameDeck(deck.gameDeckUI(gameDeckHandler));
+      dispatchGameAction({ type: "GAME_LOG", log });
+
+      // gameReport(
+      //   shuffledDeck,
+      //   playerHand,
+      //   opponentHand,
+      //   playerPairs,
+      //   opponentPairs
+      // );
     }
   }
 };
 
 export const playerResponseHandler = (
   response,
-  styles,
   shuffledDeck,
   playerHand,
-  compHand,
+  opponentHand,
   playerPairs,
-  compPairs,
-  compAsked,
+  opponentPairs,
+  opponentAsked,
   playerAnswerHandler,
   playerTurnHandler,
-  compDealt,
+  opponentDealt,
   yesButton,
   noButton,
   updateUI,
   dispatchGameAction,
   gameOver
 ) => {
-  const compTurn = () =>
-    comp.compTurn(
-      styles,
+  const opponentTurn = () =>
+    comp.opponentTurn(
       shuffledDeck,
       playerHand,
-      compHand,
+      opponentHand,
       playerPairs,
-      compPairs,
+      opponentPairs,
       playerTurnHandler,
       updateUI,
       dispatchGameAction,
       gameOver
     );
 
+  let log;
+
   if (response.target.innerHTML === "Yes") {
-    for (let x in playerHand) {
-      if (playerHand[x].value === compAsked.value) {
-        response = (
-          <h3 className={styles.heading}>
+    for (let card of playerHand) {
+      if (card.value === opponentAsked.value) {
+        log = (
+          <p class="heading">
             Please select the card with the same value as the one your opponent
             requested. Then it will be your opponent's turn again.
-          </h3>
+          </p>
         );
-        dispatchGameAction({ type: "CONSOLE_LOG", response: response });
+        dispatchGameAction({ type: "GAME_LOG", log });
         dispatchGameAction({
           type: "PLAYER_ANSWER",
           playerHand,
-          compAsked,
+          opponentAsked,
           playerAnswerHandler,
         });
         return;
       }
     }
-    response = (
-      <h3 className={styles.heading}>
-        Are you sure? Do you have a {compAsked.value}?
-      </h3>
+    log = (
+      <p class="heading">Are you sure? Do you have a {opponentAsked.value}?</p>
     );
     dispatchGameAction({
-      type: "CONSOLE_LOG",
+      type: "GAME_LOG",
       yesButton: yesButton,
       noButton: noButton,
-      response: response,
+      log: log,
     });
     return;
   }
   if (response.target.innerHTML === "No") {
-    for (let x in playerHand) {
-      if (playerHand[x].value === compAsked.value) {
-        response = (
-          <h3 className={styles.heading}>
-            Are you sure? Do you have a {compAsked.value}?
-          </h3>
+    for (let card of playerHand) {
+      if (card.value === opponentAsked.value) {
+        log = (
+          <p class="heading">
+            Are you sure? Do you have a {opponentAsked.value}?
+          </p>
         );
         dispatchGameAction({
-          type: "CONSOLE_LOG",
+          type: "GAME_LOG",
           yesButton: yesButton,
           noButton: noButton,
-          response: response,
+          log,
         });
         return;
       }
     }
 
-    const compOutput = compDealt(
+    const opponentOutput = opponentDealt(
       shuffledDeck,
       playerHand,
-      compHand,
+      opponentHand,
       playerPairs,
-      compPairs,
+      opponentPairs,
       playerTurnHandler,
       updateUI,
-      compAsked
+      opponentAsked
     );
-    if (compOutput === 0) {
+    if (opponentOutput === 0) {
       goFish.playerHandUnclickable(
         playerHand,
-        compHand,
+        opponentHand,
         playerPairs,
-        compPairs,
+        opponentPairs,
         playerTurnHandler,
         updateUI
       );
-      response = (
-        <h3 className={styles.heading}>
+      log = (
+        <p class="heading">
           Your opponent has dealt a card from the deck and the value they chose
           matched with the dealt card's value. It's your opponent's turn again.
-        </h3>
+        </p>
       );
-      dispatchGameAction({ type: "CONSOLE_LOG", response: response });
-      setTimeout(compTurn, 4000);
+      dispatchGameAction({ type: "GAME_LOG", log });
+      setTimeout(opponentTurn, 4000);
     }
-    if (compOutput === 1) {
-      response = (
-        <h3 className={styles.heading}>
+    if (opponentOutput === 1) {
+      log = (
+        <p class="heading">
           Your opponent has dealt a card from the deck. The value they chose did
           not match with the dealt card's value but they matched with another
           card in their deck. It's your turn.
-        </h3>
+        </p>
       );
     }
-    if (compOutput === 2) {
-      response = (
-        <h3 className={styles.heading}>
+    if (opponentOutput === 2) {
+      log = (
+        <p class="heading">
           Your opponent has dealt a card from the deck and added it to their
           hand. There were no matches. It's your turn.
-        </h3>
+        </p>
       );
     }
   }
-  dispatchGameAction({ type: "CONSOLE_LOG", response: response });
+  dispatchGameAction({ type: "GAME_LOG", log });
 };
 
 export const playerAnswerHandler = (
   cardImg,
-  styles,
   shuffledDeck,
   playerHand,
-  compHand,
+  opponentHand,
   playerPairs,
-  compPairs,
-  compAsked,
+  opponentPairs,
+  opponentAsked,
   playerTurnHandler,
-  compMatch,
-  compTurn,
+  opponentMatch,
+  opponentTurn,
   updateUI,
   dispatchGameAction,
   gameOver
 ) => {
-  const playerPickValue = cardImg.target.attributes[1].value;
-  if (playerPickValue === String(compAsked.value)) {
-    compMatch(
+  const chosenCard = cardImg.target.value;
+  if (chosenCard === opponentAsked.value) {
+    opponentMatch(
       playerHand,
-      compHand,
+      opponentHand,
       playerPairs,
-      compPairs,
+      opponentPairs,
       playerTurnHandler,
       updateUI,
-      compAsked,
+      opponentAsked,
       cardImg
     );
-    compTurn(
-      styles,
+    opponentTurn(
       shuffledDeck,
       playerHand,
-      compHand,
+      opponentHand,
       playerPairs,
-      compPairs,
+      opponentPairs,
       playerTurnHandler,
       updateUI,
       dispatchGameAction,
       gameOver
     );
-  } else if (playerPickValue !== compAsked.value) {
-    const response = (
-      <h3 className={styles.heading}>
+  } else if (chosenCard !== opponentAsked.value) {
+    const log = (
+      <p class="heading">
         That card does not have the value that your opponent requested. Please
         select the card with the value your opponent requested. (Card Value:{" "}
-        {compAsked.value})
-      </h3>
+        {opponentAsked.value})
+      </p>
     );
-    dispatchGameAction({ type: "CONSOLE_LOG", response: response });
+    dispatchGameAction({ type: "GAME_LOG", log });
   }
 };
 

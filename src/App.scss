@@ -1,5 +1,15 @@
+@use "./styles/partials/variables" as *;
+
 .app {
   display: flex;
   flex-direction: column;
   align-items: center;
+  min-width: fit-content;
+  padding: 20px;
+}
+
+.title {
+  font-size: 5rem;
+  margin-bottom: 2rem;
+  text-shadow: $text-shadow-global;
 }

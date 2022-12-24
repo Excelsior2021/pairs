@@ -1,14 +1,20 @@
-import { Component, createSignal } from "solid-js";
+import { Component, createSignal, Show } from "solid-js";
 import MainMenu from "../MainMenu/MainMenu";
 import Session from "../Session/Session";
 import Instructions from "../Instructions/Instructions";
 import "./GameScreen.scss";
 
+export const [gameStarted, setGameStarted] = createSignal(false);
+
 const GameScreen: Component = () => {
   return (
     <main class="game-screen">
-      {/* <MainMenu /> */}
-      <Session />
+      <Show
+        when={gameStarted()}
+        fallback={<MainMenu setGameStarted={setGameStarted} />}
+      >
+        <Session />
+      </Show>
       <Instructions />
     </main>
   );

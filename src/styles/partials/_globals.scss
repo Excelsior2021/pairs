@@ -1,3 +1,6 @@
+@use "../../styles/partials/variables" as *;
+@use "../../styles/partials/mixins" as *;
+
 *,
 *::before,
 *::after {
@@ -11,6 +14,56 @@ html {
 }
 
 body {
+  @include scrollbars;
   font-size: 1.6rem;
   font-family: Arial, Helvetica, sans-serif;
+  color: white;
+  background-color: rgb(0, 0, 80);
+  min-width: fit-content;
+}
+
+.button {
+  font-size: 1.6rem;
+  text-transform: capitalize;
+  color: white;
+  background-color: rgb(116, 34, 34);
+  box-shadow: $box-shadow-global;
+  border: none;
+  border-radius: 4px;
+  margin: 1rem 0;
+  padding: 1rem 5rem;
+  cursor: pointer;
+
+  &:hover {
+    background-color: rgb(132, 34, 34);
+  }
+}
+
+.card {
+  height: 120px;
+  margin: 2px 4px;
+  box-shadow: 0.2em 0.2em 0.3em black;
+  cursor: pointer;
+
+  &--player {
+    &:hover {
+      transform: scale(1.05) translateY(-8px);
+      box-shadow: 0.2em 0.2em 0.6em black;
+    }
+  }
+
+  &--deck {
+    margin-bottom: 20px;
+    border-radius: 5px;
+    box-shadow: 0.4em 0.4em rgb(154, 154, 154), 0.3em 0.3em rgb(154, 154, 154),
+      0.2em 0.2em rgb(154, 154, 154), 0.1em 0.1em rgb(154, 154, 154),
+      0.6em 0.6em 0.3em black;
+
+    &:hover {
+      transform: scale(1.02);
+      box-shadow: 0.4em 0.4em rgb(154, 154, 154), 0.3em 0.3em rgb(154, 154, 154),
+        0.2em 0.2em rgb(154, 154, 154), 0.1em 0.1em rgb(154, 154, 154),
+        0.6em 0.6em 0.5em black;
+    }
+  }
 }

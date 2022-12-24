@@ -2,36 +2,33 @@ import * as deck from "./deckFunctions";
 import * as goFish from "./goFishFunctions";
 import * as player from "./playerFunctions";
 
-export const compAsk = compHand => {
-  const index = Math.floor(Math.random() * compHand.length);
-  const card = compHand[index];
-  return card;
-};
+export const opponentAsk = opponentHand =>
+  opponentHand[Math.floor(Math.random() * opponentHand.length)];
 
-export const compMatch = (
+export const opponentMatch = (
   playerHand,
-  compHand,
+  opponentHand,
   playerPairs,
-  compPairs,
+  opponentPairs,
   playerTurn,
   updateUI,
-  compAsk,
+  opponentAsk,
   cardImg
 ) => {
-  compPairs.push(compAsk);
-  compHand.splice(compHand.indexOf(compAsk), 1);
+  opponentPairs.push(opponentAsk);
+  opponentHand.splice(opponentHand.indexOf(opponentAsk), 1);
   for (let x in playerHand) {
     if (cardImg.target.id === playerHand[x].id) {
-      compPairs.push(playerHand[x]);
+      opponentPairs.push(playerHand[x]);
       playerHand.splice(playerHand.indexOf(playerHand[x]), 1);
     }
   }
 
   goFish.playerHandUnclickable(
     playerHand,
-    compHand,
+    opponentHand,
     playerPairs,
-    compPairs,
+    opponentPairs,
     playerTurn,
     updateUI
   );
@@ -39,51 +36,56 @@ export const compMatch = (
 };
 
 //If value of chosen card not in playerHand
-export const compDealt = (
+export const opponentDealt = (
   shuffledDeck,
   playerHand,
-  compHand,
+  opponentHand,
   playerPairs,
-  compPairs,
+  opponentPairs,
   playerTurn,
   updateUI,
-  compAsk
+  opponentAsk
 ) => {
   const dealtCard = deck.dealTopCard(shuffledDeck);
 
-  //comp matches with dealt card
-  if (dealtCard.value === compAsk.value) {
-    compPairs.push(dealtCard);
-    compPairs.push(compAsk);
-    compHand.splice(compHand.indexOf(compAsk), 1);
-    updateUI(playerHand, compHand, playerPairs, compPairs, playerTurn);
+  //opponent matches with dealt card
+  if (dealtCard.value === opponentAsk.value) {
+    opponentPairs.push(dealtCard);
+    opponentPairs.push(opponentAsk);
+    opponentHand.splice(opponentHand.indexOf(opponentAsk), 1);
+    updateUI(playerHand, opponentHand, playerPairs, opponentPairs, playerTurn);
     return 0;
   }
 
-  //comp matches dealt card with another card in comp hand
-  for (let x in compHand) {
-    if (dealtCard.value === compHand[x].value) {
-      compPairs.push(dealtCard);
-      compPairs.push(compHand[x]);
-      compHand.splice(compHand.indexOf(compHand[x]), 1);
-      updateUI(playerHand, compHand, playerPairs, compPairs, playerTurn);
+  //opponent matches dealt card with another card in opponent hand
+  for (let x in opponentHand) {
+    if (dealtCard.value === opponentHand[x].value) {
+      opponentPairs.push(dealtCard);
+      opponentPairs.push(opponentHand[x]);
+      opponentHand.splice(opponentHand.indexOf(opponentHand[x]), 1);
+      updateUI(
+        playerHand,
+        opponentHand,
+        playerPairs,
+        opponentPairs,
+        playerTurn
+      );
       return 1;
     }
   }
 
-  //comp adds dealt card to comp hand
-  compHand.push(dealtCard);
-  updateUI(playerHand, compHand, playerPairs, compPairs, playerTurn);
+  //opponent adds dealt card to opponent hand
+  opponentHand.push(dealtCard);
+  updateUI(playerHand, opponentHand, playerPairs, opponentPairs, playerTurn);
   return 2;
 };
 
-export const compTurn = (
-  styles,
+export const opponentTurn = (
   shuffledDeck,
   playerHand,
-  compHand,
+  opponentHand,
   playerPairs,
-  compPairs,
+  opponentPairs,
   playerTurnHandler,
   updateUI,
   dispatchGameAction,
@@ -92,30 +94,28 @@ export const compTurn = (
   const gameOverCheck = gameOver(
     shuffledDeck,
     playerHand,
-    compHand,
+    opponentHand,
     playerPairs,
-    compPairs,
+    opponentPairs,
     playerTurnHandler,
     updateUI
   );
 
   goFish.playerHandUnclickable(
     playerHand,
-    compHand,
+    opponentHand,
     playerPairs,
-    compPairs,
+    opponentPairs,
     playerTurnHandler,
     updateUI
   );
 
   if (!gameOverCheck) {
-    const compAsked = compAsk(compHand);
-    const question = (
-      <h3 className={styles.heading}>Do you have a {compAsked.value}?</h3>
-    );
+    const chosenCard = opponentAsk(opponentHand);
+    const question = <p class="heading">Do you have a {chosenCard.value}?</p>;
     const yesButton = (
       <button
-        className={`${styles["button"]} ${styles["button--response"]}`}
+        class="button button--response"
         onClick={response => playerResponseHandler(response)}
       >
         Yes
@@ -123,28 +123,25 @@ export const compTurn = (
     );
     const noButton = (
       <button
-        className={`${styles["button"]} ${styles["button--response"]}`}
+        class="button button--response"
         onClick={response => playerResponseHandler(response)}
       >
         No
       </button>
     );
 
-    let response = true;
-
     const playerResponseHandler = response =>
       player.playerResponseHandler(
         response,
-        styles,
         shuffledDeck,
         playerHand,
-        compHand,
+        opponentHand,
         playerPairs,
-        compPairs,
-        compAsked,
+        opponentPairs,
+        chosenCard,
         playerAnswerHandler,
         playerTurnHandler,
-        compDealt,
+        opponentDealt,
         yesButton,
         noButton,
         updateUI,
@@ -153,27 +150,25 @@ export const compTurn = (
       );
 
     dispatchGameAction({
-      type: "CONSOLE_LOG",
-      compAsked,
+      type: "GAME_LOG",
+      chosenCard,
       question,
       yesButton,
       noButton,
-      response,
     });
 
     const playerAnswerHandler = cardImg =>
       player.playerAnswerHandler(
         cardImg,
-        styles,
         shuffledDeck,
         playerHand,
-        compHand,
+        opponentHand,
         playerPairs,
-        compPairs,
-        compAsked,
+        opponentPairs,
+        chosenCard,
         playerTurnHandler,
-        compMatch,
-        compTurn,
+        opponentMatch,
+        opponentTurn,
         updateUI,
         dispatchGameAction,
         gameOver
@@ -182,8 +177,8 @@ export const compTurn = (
 };
 
 export default {
-  compAsk,
-  compMatch,
-  compDealt,
-  compTurn,
+  opponentAsk,
+  opponentMatch,
+  opponentDealt,
+  opponentTurn,
 };

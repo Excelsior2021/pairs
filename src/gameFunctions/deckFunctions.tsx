@@ -1,5 +1,4 @@
 import cardBack from "../assets/cards/back.png";
-import "../styles/card.scss";
 
 export const createDeck = () => {
   const deck = [];
@@ -47,12 +46,12 @@ export const createDeck = () => {
   return deck;
 };
 
-export const gameDeckUI = (styles, gameDeckHandler) => (
+export const gameDeckUI = (gameDeckHandler = null) => (
   <img
-    className={null}
+    class="card card--deck"
     src={cardBack}
     alt="game deck"
-    onClick={gameDeckHandler}
+    onclick={gameDeckHandler}
   />
 );
 
@@ -78,7 +77,7 @@ export const dealHand = (deck, handSize) => {
   return hand;
 };
 
-export const createPlayerHandUI = (hand, onClickHandler) => (
+export const createPlayerHandUI = (hand, cardHandler) => (
   <For each={hand}>
     {card => (
       <img
@@ -87,13 +86,13 @@ export const createPlayerHandUI = (hand, onClickHandler) => (
         class="card card--player"
         src={card.img}
         alt={card.id}
-        onClick={onClickHandler}
+        onclick={cardHandler}
       />
     )}
   </For>
 );
 
-export const createHandUI = (hand, onClickHandler = null) => (
+export const createHandUI = hand => (
   <For each={hand}>
     {card => (
       <img
@@ -102,7 +101,6 @@ export const createHandUI = (hand, onClickHandler = null) => (
         value={card.value}
         src={card.img}
         alt={card.id}
-        onClick={onClickHandler}
       />
     )}
   </For>
@@ -124,42 +122,45 @@ export const createHandUIback = hand => (
 
 export const gameDeckHandler = (
   playerDealt,
-  styles,
   cardImg,
   shuffledDeck,
   playerHand,
-  compHand,
+  opponentHand,
   playerPairs,
-  compPairs,
+  opponentPairs,
   playerTurnHandler,
   updateUI,
   dispatchGameAction,
   setGameDeck,
-  compTurn,
+  opponentTurn,
   gameOver
 ) => {
   let playerOutput = playerDealt(
     cardImg,
     shuffledDeck,
     playerHand,
-    compHand,
+    opponentHand,
     playerPairs,
-    compPairs,
+    opponentPairs,
     playerTurnHandler,
     updateUI
   );
-  dispatchGameAction({ type: "PLAYER_ACTION", playerOutput });
-  dispatchGameAction({ type: "CONSOLE_LOG", response: false });
-  setGameDeck(gameDeckUI(styles));
+
+  dispatchGameAction({
+    type: "PLAYER_ACTION",
+    playerOutput,
+  });
+  dispatchGameAction({ type: "GAME_LOG" });
+  setGameDeck(gameDeckUI());
   if (playerOutput === 2 || playerOutput === 3) {
-    compTurn();
+    opponentTurn();
   }
   gameOver(
     shuffledDeck,
     playerHand,
-    compHand,
+    opponentHand,
     playerPairs,
-    compPairs,
+    opponentPairs,
     playerTurnHandler,
     updateUI
   );

@@ -1,6 +1,17 @@
+@use "../../styles/partials/variables" as *;
+
 .game-screen {
   position: relative;
-  border: 1px solid black;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background-image: linear-gradient(
+    to bottom right,
+    rgb(0, 120, 0),
+    rgb(0, 50, 0)
+  );
+  box-shadow: $box-shadow-global;
+  border-radius: 8px;
   width: 1200px;
   height: 500px;
 }

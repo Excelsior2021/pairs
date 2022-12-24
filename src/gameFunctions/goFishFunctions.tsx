@@ -30,70 +30,69 @@ export const createPairsUI = pairs => (
 
 export const playerHandUnclickable = (
   playerHand,
-  compHand,
+  opponentHand,
   playerPairs,
-  compPairs,
+  opponentPairs,
   playerTurnHandler,
   updateUI
 ) => {
   const playerHandUnclickable = true;
   updateUI(
     playerHand,
-    compHand,
+    opponentHand,
     playerPairs,
-    compPairs,
+    opponentPairs,
     playerTurnHandler,
     playerHandUnclickable
   );
 };
 
 export const gameOver = (
-  styles,
   shuffledDeck,
   playerHand,
-  compHand,
+  opponentHand,
   playerPairs,
-  compPairs,
+  opponentPairs,
   playerTurnHandler,
   updateUI,
   dispatchGameAction
 ) => {
   if (
     playerHand.length === 0 ||
-    compHand.length === 0 ||
+    opponentHand.length === 0 ||
     shuffledDeck.length === 0
   ) {
     const playerPairsAmount = playerPairs.length;
-    const compPairsAmount = compPairs.length;
+    const opponentPairsAmount = opponentPairs.length;
     const deckRemaining = shuffledDeck.length;
     let winner;
-    if (playerPairsAmount > compPairsAmount) {
+    if (playerPairsAmount > opponentPairsAmount) {
       winner = "You won! Well done!";
-    } else if (playerPairsAmount === compPairsAmount) {
+    } else if (playerPairsAmount === opponentPairsAmount) {
       winner = "It's a draw!";
     } else {
       winner = "Your opponent won! Better luck next time!";
     }
-    const response = (
+    const log = (
       <div>
         <div>
           <h1>GAME OVER</h1>
           <h3>{winner}</h3>
         </div>
         <div>
-          <h2 className={styles["stats-heading"]}>STATS</h2>
+          <h2 class="stats-heading">STATS</h2>
           <p>Player Pairs: {playerPairsAmount}</p>
-          <p>Opponent Pairs: {compPairsAmount}</p>
+          <p>Opponent Pairs: {opponentPairsAmount}</p>
           <p>Remaining cards in deck: {deckRemaining}</p>
         </div>
       </div>
     );
-    dispatchGameAction({ type: "CONSOLE_LOG", response: response });
+    dispatchGameAction({ type: "GAME_LOG", log });
     playerHandUnclickable(
       playerHand,
-      compHand,
+      opponentHand,
       playerPairs,
-      compPairs,
+      opponentPairs,
       playerTurnHandler,
       updateUI
     );

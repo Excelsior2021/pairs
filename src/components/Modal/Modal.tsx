@@ -6,16 +6,21 @@ const Backdrop: Component = props => (
 );
 
 const Content: Component = props => (
-  <div class="modal__content">{props.children}</div>
+  <div class="modal__container">
+    <h2 class="modal__heading">{props.heading}</h2>
+    <div class="modal__content">{props.children}</div>
+  </div>
 );
 
 const Modal: Component = props => {
-  console.log(props);
   return (
     <Show when={props.showModal()} fallback={null}>
       <Backdrop>
-        <Content children={props.children} />
-        <button class="modal__button" onclick={() => props.setShowModal(false)}>
+        <Content children={props.children} heading={props.heading} />
+        <button
+          class="button modal__button"
+          onclick={() => props.setShowModal(false)}
+        >
           close
         </button>
       </Backdrop>
