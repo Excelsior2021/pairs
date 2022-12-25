@@ -1,15 +1,14 @@
-import { Component, createSignal } from "solid-js";
-import Modal from "../Modal/Modal";
-import "./Instructions.scss";
+import { Component, createSignal } from "solid-js"
+import Modal from "../Modal/Modal"
+import "./Instructions.scss"
 
-export const [showInstructions, setShowInstructions] = createSignal(false);
+export const [showInstructions, setShowInstructions] = createSignal(false)
 
-const Instructions: Component = props => (
+const Instructions: Component = () => (
   <Modal
     showModal={showInstructions}
     setShowModal={setShowInstructions}
-    heading="instructions"
-  >
+    heading="instructions">
     <div class="instructions">
       <p class="instructions__text">
         The aim is to have the most pair of cards at the end of the game.
@@ -54,6 +53,6 @@ const Instructions: Component = props => (
       <p class="instructions__text instructions__text--em">Enjoy!</p>
     </div>
   </Modal>
-);
+)
 
-export default Instructions;
+export default Instructions

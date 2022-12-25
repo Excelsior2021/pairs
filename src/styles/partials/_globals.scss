@@ -22,23 +22,6 @@ body {
   min-width: fit-content;
 }
 
-.button {
-  font-size: 1.6rem;
-  text-transform: capitalize;
-  color: white;
-  background-color: rgb(116, 34, 34);
-  box-shadow: $box-shadow-global;
-  border: none;
-  border-radius: 4px;
-  margin: 1rem 0;
-  padding: 1rem 5rem;
-  cursor: pointer;
-
-  &:hover {
-    background-color: rgb(132, 34, 34);
-  }
-}
-
 .card {
   height: 120px;
   margin: 2px 4px;
@@ -47,7 +30,7 @@ body {
 
   &--player {
     &:hover {
-      transform: scale(1.05) translateY(-8px);
+      transform: scale(1.02) translateY(-2px);
       box-shadow: 0.2em 0.2em 0.6em black;
     }
   }

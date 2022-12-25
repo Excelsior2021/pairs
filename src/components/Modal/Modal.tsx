@@ -1,30 +1,51 @@
-import { Component, createSignal, Show } from "solid-js";
-import "./Modal.scss";
+import { ParentComponent, Show, Accessor, Setter } from "solid-js"
+import "./Modal.scss"
 
-const Backdrop: Component = props => (
+type contentProps = {
+  heading: string | null
+  playerOutput?: number | boolean
+}
+
+type modalProps = {
+  heading: string | null
+  showModal: Accessor<boolean>
+  setShowModal: Setter<boolean>
+  playerOutput?: number | boolean
+}
+
+const Backdrop: ParentComponent = props => (
   <div class="modal__backdrop">{props.children}</div>
-);
+)
 
-const Content: Component = props => (
+const Content: ParentComponent<contentProps> = props => (
   <div class="modal__container">
-    <h2 class="modal__heading">{props.heading}</h2>
+    <h2
+      class={
+        props.playerOutput !== undefined
+          ? props.playerOutput < 3
+            ? "modal__heading modal__heading--match"
+            : "modal__heading modal__heading--no-match"
+          : "modal__heading"
+      }>
+      {props.heading}
+    </h2>
     <div class="modal__content">{props.children}</div>
   </div>
-);
+)
 
-const Modal: Component = props => {
-  return (
-    <Show when={props.showModal()} fallback={null}>
-      <Backdrop>
-        <Content children={props.children} heading={props.heading} />
-        <button
-          class="button modal__button"
-          onclick={() => props.setShowModal(false)}
-        >
-          close
-        </button>
-      </Backdrop>
-    </Show>
-  );
-};
-export default Modal;
+const Modal: ParentComponent<modalProps> = props => (
+  <Show when={props.showModal()} fallback={null}>
+    <Backdrop>
+      <Content
+        children={props.children}
+        heading={props.heading}
+        playerOutput={props.playerOutput}
+      />
+      <button class="modal__button" onclick={() => props.setShowModal(false)}>
+        close
+      </button>
+    </Backdrop>
+  </Show>
+)
+
+export default Modal

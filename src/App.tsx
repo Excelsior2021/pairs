@@ -1,13 +1,19 @@
-import type { Component } from "solid-js";
-import GameScreen from "./components/GameScreen/GameScreen";
+import type { Component } from "solid-js"
+import GameScreen from "./components/GameScreen/GameScreen"
 
-import "./App.scss";
+import "./App.scss"
 
 const App: Component = () => (
   <div class="app">
-    <h1 class="title">Pairs</h1>
+    <a
+      class="app__link"
+      href="https://jonathankila.vercel.app"
+      target="_blank"
+      rel="noreferrer">
+      <h1 class="app__title">Pairs</h1>
+    </a>
     <GameScreen />
   </div>
-);
+)
 
-export default App;
+export default App

@@ -11,7 +11,7 @@
     right: 0;
     left: 0;
     bottom: 0;
-    background-color: rgba(0, 0, 0, 0.8);
+    background-color: rgba(0, 0, 0, 0.9);
     border-radius: inherit;
     z-index: 10;
   }
@@ -19,8 +19,6 @@
   &__container {
     display: flex;
     flex-direction: column;
-    color: white;
-    align-items: center;
     width: 65%;
     height: 80%;
   }
@@ -30,6 +28,14 @@
     text-transform: capitalize;
     font-size: 3.5rem;
     margin: 1.6rem;
+
+    &--match {
+      color: green;
+    }
+
+    &--no-match {
+      color: red;
+    }
   }
 
   &__content {
@@ -38,5 +44,8 @@
   }
 
   &__button {
+    @include button;
+    margin-top: 3rem;
+    padding: 1rem 5rem;
   }
 }

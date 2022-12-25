@@ -1,18 +1,21 @@
 @use "../../styles/partials/variables" as *;
+@use "../../styles/partials/mixins" as *;
 
 .main-menu {
   text-align: center;
   animation: main-menu-fade-in 1s linear;
 
-  &__title {
-    font-size: 5rem;
-    margin: 2rem 0;
-    text-shadow: $text-shadow-global;
-  }
-
   &__actions {
     display: flex;
     flex-direction: column;
+  }
+
+  &__button {
+    @include button;
+    font-size: 2rem;
+    margin: 1rem 0;
+    padding: 1rem 5rem;
+    cursor: pointer;
   }
 }
 

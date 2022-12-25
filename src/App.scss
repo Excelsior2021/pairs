@@ -6,10 +6,15 @@
   align-items: center;
   min-width: fit-content;
   padding: 20px;
-}
 
-.title {
-  font-size: 5rem;
-  margin-bottom: 2rem;
-  text-shadow: $text-shadow-global;
+  &__title {
+    font-size: 5rem;
+    margin-bottom: 2rem;
+    text-shadow: $text-shadow-global;
+  }
+
+  &__link {
+    color: inherit;
+    text-decoration: none;
+  }
 }

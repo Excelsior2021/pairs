@@ -1,20 +1,23 @@
-import { Component } from "solid-js";
+import { Component, Setter } from "solid-js";
 import { setShowInstructions } from "../Instructions/Instructions";
 import "./MainMenu.scss";
 
-const MainMenu: Component = props => (
+type props = {
+  setGameStarted: Setter<boolean>;
+};
+
+const MainMenu: Component<props> = props => (
   <div class="main-menu">
-    <h2 class={"main-menu__title"}>Pairs</h2>
     <div class="main-menu__actions">
       <button
-        class="button button--gameboard"
+        class="main-menu__button"
         onclick={() => props.setGameStarted(true)}
       >
         single player
       </button>
-      <button class="button button--gameboard">multiplayer</button>
+      <button class="main-menu__button">multiplayer</button>
       <button
-        class="button button--gameboard"
+        class="main-menu__button"
         onclick={() => setShowInstructions(true)}
       >
         instructions

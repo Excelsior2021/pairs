@@ -2,4 +2,14 @@
   &__output {
     text-align: center;
   }
+
+  &__text {
+    font-weight: bold;
+    margin-bottom: 24px;
+  }
+
+  &__cards {
+    margin: 24px;
+    height: fit-content;
+  }
 }

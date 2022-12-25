@@ -1,5 +1,5 @@
 import * as deck from "./deckFunctions";
-import * as goFish from "./goFishFunctions";
+import * as pairs from "./pairsFunctions";
 import * as player from "./playerFunctions";
 
 export const opponentAsk = opponentHand =>
@@ -24,7 +24,7 @@ export const opponentMatch = (
     }
   }
 
-  goFish.playerHandUnclickable(
+  pairs.playerHandUnclickable(
     playerHand,
     opponentHand,
     playerPairs,
@@ -88,20 +88,20 @@ export const opponentTurn = (
   opponentPairs,
   playerTurnHandler,
   updateUI,
-  dispatchGameAction,
-  gameOver
+  dispatchGameAction
 ) => {
-  const gameOverCheck = gameOver(
+  const gameOverCheck = pairs.gameOver(
     shuffledDeck,
     playerHand,
     opponentHand,
     playerPairs,
     opponentPairs,
     playerTurnHandler,
-    updateUI
+    updateUI,
+    dispatchGameAction
   );
 
-  goFish.playerHandUnclickable(
+  pairs.playerHandUnclickable(
     playerHand,
     opponentHand,
     playerPairs,
@@ -112,10 +112,11 @@ export const opponentTurn = (
 
   if (!gameOverCheck) {
     const chosenCard = opponentAsk(opponentHand);
-    const question = <p class="heading">Do you have a {chosenCard.value}?</p>;
+    const question = <p class="game__log">Do you have a {chosenCard.value}?</p>;
     const yesButton = (
       <button
-        class="button button--response"
+        class="game__button"
+        value="yes"
         onClick={response => playerResponseHandler(response)}
       >
         Yes
@@ -123,7 +124,8 @@ export const opponentTurn = (
     );
     const noButton = (
       <button
-        class="button button--response"
+        class="game__button"
+        value="no"
         onClick={response => playerResponseHandler(response)}
       >
         No
@@ -145,8 +147,7 @@ export const opponentTurn = (
         yesButton,
         noButton,
         updateUI,
-        dispatchGameAction,
-        gameOver
+        dispatchGameAction
       );
 
     dispatchGameAction({
@@ -170,8 +171,7 @@ export const opponentTurn = (
         opponentMatch,
         opponentTurn,
         updateUI,
-        dispatchGameAction,
-        gameOver
+        dispatchGameAction
       );
   }
 };

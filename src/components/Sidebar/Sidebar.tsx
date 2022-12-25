@@ -10,13 +10,22 @@ export const [gameDeck, setGameDeck] = createSignal(gameDeckUI());
 const Sidebar: Component = () => (
   <div class="sidebar">
     <div class="sidebar__deck">
-      <p>deck</p>
+      <p class="sidebar__heading">deck</p>
       {gameDeck()}
     </div>
     <div class="sidebar__actions">
-      <button onclick={() => setShowPairsModal(true)}>pairs</button>
-      <button onclick={() => setShowInstructions(true)}>instructions</button>
-      <button onclick={() => setGameStarted(false)}>quit</button>
+      <button class="sidebar__button" onclick={() => setShowPairsModal(true)}>
+        pairs
+      </button>
+      <button class="sidebar__button" onclick={() => setShowInstructions(true)}>
+        instructions
+      </button>
+      <button
+        class="sidebar__button sidebar__button--quit"
+        onclick={() => setGameStarted(false)}
+      >
+        quit
+      </button>
     </div>
   </div>
 );

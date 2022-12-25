@@ -1,11 +1,16 @@
-import { Component, createSignal } from "solid-js";
-import Modal from "../Modal/Modal";
+import { Component, createSignal } from "solid-js"
+import Modal from "../Modal/Modal"
+import { gameStateProp } from "../../types/general"
+import "./PairsModal.scss"
 
-export const [showPairsModal, setShowPairsModal] = createSignal(false);
+export const [showPairsModal, setShowPairsModal] = createSignal(false)
 
-const PairsModal: Component = props => {
-  return (
-    <Modal showModal={showPairsModal} setShowModal={setShowPairsModal}>
+const PairsModal: Component<gameStateProp> = props => (
+  <Modal
+    showModal={showPairsModal}
+    setShowModal={setShowPairsModal}
+    heading={null}>
+    <div class="pairs-modal">
       <p class="pairs-modal__heading">Your Pairs</p>
       <div class="pairs-modal__pairs" data-testid="player pairs">
         {props.gameState().playerPairsState.UI()}
@@ -14,8 +19,8 @@ const PairsModal: Component = props => {
       <div class="pairs-modal__pairs" data-testid="comp pairs">
         {props.gameState().opponentPairsState.UI()}
       </div>
-    </Modal>
-  );
-};
+    </div>
+  </Modal>
+)
 
-export default PairsModal;
+export default PairsModal

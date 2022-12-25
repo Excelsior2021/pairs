@@ -1,3 +1,40 @@
+@use "../../styles/partials/mixins" as *;
+
 .sidebar {
   flex: 1;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-evenly;
+
+  &__deck {
+    margin: 0 auto;
+    width: fit-content;
+  }
+
+  &__heading {
+    text-transform: capitalize;
+    text-align: center;
+    font-weight: bold;
+    margin: 0.4rem;
+  }
+
+  &__actions {
+    display: flex;
+    flex-direction: column;
+  }
+
+  &__button {
+    @include button;
+    margin: 1rem auto;
+    width: 180px;
+    padding: 0.5rem;
+
+    &--quit {
+      background-color: rgb(190, 0, 0);
+
+      &:hover {
+        background-color: rgb(230, 0, 0);
+      }
+    }
+  }
 }
