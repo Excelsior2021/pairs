@@ -9,7 +9,7 @@ export type card = {
 }
 
 export type gameStateProp = {
-  gameState: Accessor<gameStateType>
+  gameState: Accessor<gameState>
 }
 
 export type gameStateType = {
@@ -43,5 +43,3 @@ export type gameAction = {
   noButton?: JSX.Element
   log?: JSX.Element
 }
-
-export type dispatchGameActionType

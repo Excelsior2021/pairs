@@ -1,9 +1,12 @@
 import { For } from "solid-js"
 import { JSX } from "solid-js/jsx-runtime"
-import cardBack from "../assets/cards/back.png"
+import player from "./playerFunctions"
 import opponent from "./opponentFunctions"
 import pairs from "./pairsFunctions"
-import { card } from "../types/types"
+import { dispatchGameAction } from "../components/Session/Session"
+import { setGameDeck } from "../components/Sidebar/Sidebar"
+import { card } from "../types/general"
+import cardBack from "../assets/cards/back.png"
 
 export const createDeck = () => {
   const deck: card[] = []
@@ -129,7 +132,6 @@ export const createHandUIback = (hand: card[]) => (
 )
 
 export const gameDeckHandler = (
-  playerDealt,
   cardImg,
   shuffledDeck,
   playerHand,
@@ -137,12 +139,9 @@ export const gameDeckHandler = (
   playerPairs,
   opponentPairs,
   playerTurnHandler,
-  updateUI,
-  dispatchGameAction,
-  setGameDeck,
-  opponentTurn
+  updateUI
 ) => {
-  let playerOutput = playerDealt(
+  let playerOutput = player.playerDealt(
     cardImg,
     shuffledDeck,
     playerHand,
@@ -160,8 +159,17 @@ export const gameDeckHandler = (
   dispatchGameAction({ type: "GAME_LOG" })
   setGameDeck(gameDeckUI())
   if (playerOutput === 2 || playerOutput === 3) {
-    opponentTurn()
+    opponent.opponentTurn(
+      shuffledDeck,
+      playerHand,
+      opponentHand,
+      playerPairs,
+      opponentPairs,
+      playerTurnHandler,
+      updateUI
+    )
   }
+
   pairs.gameOver(
     shuffledDeck,
     playerHand,

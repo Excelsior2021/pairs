@@ -1,4 +1,4 @@
-import { Component } from "solid-js"
+import { Component, Accessor } from "solid-js"
 import { createReducer } from "@solid-primitives/memo"
 import Game from "../Game/Game"
 import Sidebar from "../Sidebar/Sidebar"
@@ -114,7 +114,10 @@ const gameReducer = (state: gameStateType, action: gameAction) => {
   }
 }
 
-export const [gameState, dispatchGameAction] = createReducer(
+export const [gameState, dispatchGameAction]: [
+  Accessor<gameStateType>,
+  (action: gameAction) => void
+] = createReducer(
   gameReducer as () => gameStateType,
   intialGameState as gameStateType
 )

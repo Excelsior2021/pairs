@@ -39,6 +39,5 @@ export type playerTurnHandlerType = (
   playerTurnHandler: Function,
   updateUI,
   dispatchGameAction: ({}: gameAction) => void,
-  setGameDeck: Setter<JSX.EventHandlerUnion<HTMLImageElement, MouseEvent>>,
-  opponentTurn: Function
+  setGameDeck: Setter<JSX.EventHandlerUnion<HTMLImageElement, MouseEvent>>
 ) => void

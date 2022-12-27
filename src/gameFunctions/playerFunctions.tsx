@@ -1,7 +1,9 @@
 import deck from "./deckFunctions"
 import pairs from "./pairsFunctions"
 import opponent from "./opponentFunctions"
-import { card } from "../types/types"
+import { dispatchGameAction } from "../components/Session/Session"
+import { setGameDeck } from "../components/Sidebar/Sidebar"
+import { card } from "../types/general"
 
 export const playerMatch = (
   cardImg,
@@ -106,14 +108,10 @@ export const playerTurnHandler = (
   playerPairs: card[],
   opponentPairs: card[],
   playerTurnHandler,
-  updateUI,
-  dispatchGameAction,
-  setGameDeck,
-  opponentTurn
+  updateUI
 ) => {
   const gameDeckHandler = () =>
     deck.gameDeckHandler(
-      playerDealt,
       cardImg,
       shuffledDeck,
       playerHand,
@@ -121,10 +119,7 @@ export const playerTurnHandler = (
       playerPairs,
       opponentPairs,
       playerTurnHandler,
-      updateUI,
-      dispatchGameAction,
-      setGameDeck,
-      opponentTurn
+      updateUI
     )
 
   let playerOutput = playerMatch(
@@ -152,8 +147,7 @@ export const playerTurnHandler = (
     playerPairs,
     opponentPairs,
     playerTurnHandler,
-    updateUI,
-    dispatchGameAction
+    updateUI
   )
 
   if (!gameOverCheck) {
@@ -191,8 +185,7 @@ export const playerResponseHandler = (
   opponentDealt,
   yesButton,
   noButton,
-  updateUI,
-  dispatchGameAction
+  updateUI
 ) => {
   const opponentTurn = () =>
     opponent.opponentTurn(
@@ -202,8 +195,7 @@ export const playerResponseHandler = (
       playerPairs,
       opponentPairs,
       playerTurnHandler,
-      updateUI,
-      dispatchGameAction
+      updateUI
     )
 
   let log
@@ -317,9 +309,7 @@ export const playerAnswerHandler = (
   opponentAsked,
   playerTurnHandler,
   opponentMatch,
-  opponentTurn,
-  updateUI,
-  dispatchGameAction
+  updateUI
 ) => {
   const chosenCard = cardImg.target
 
@@ -334,15 +324,14 @@ export const playerAnswerHandler = (
       opponentAsked,
       cardImg
     )
-    opponentTurn(
+    opponent.opponentTurn(
       shuffledDeck,
       playerHand,
       opponentHand,
       playerPairs,
       opponentPairs,
       playerTurnHandler,
-      updateUI,
-      dispatchGameAction
+      updateUI
     )
   } else if (chosenCard.value !== opponentAsked.value) {
     const log = (

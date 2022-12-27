@@ -1,6 +1,5 @@
 import { For } from "solid-js"
 import player from "./playerFunctions"
-import opponent from "./opponentFunctions"
 import deck from "./deckFunctions"
 import { dispatchGameAction } from "../components/Session/Session"
 import { setGameDeck } from "../components/Sidebar/Sidebar"
@@ -99,20 +98,7 @@ export const startGame = (shuffledDeck: card[]) => {
       playerTurnHandler,
       updateUI,
       dispatchGameAction,
-      setGameDeck,
-      opponentTurn
-    )
-
-  const opponentTurn = () =>
-    opponent.opponentTurn(
-      shuffledDeck,
-      playerHand,
-      opponentHand,
-      playerPairs,
-      opponentPairs,
-      playerTurnHandler,
-      updateUI,
-      dispatchGameAction
+      setGameDeck
     )
 
   updateUI(
@@ -132,8 +118,7 @@ export const gameOver = (
   playerPairs,
   opponentPairs,
   playerTurnHandler,
-  updateUI,
-  dispatchGameAction
+  updateUI
 ) => {
   if (
     playerHand.length === 0 ||
