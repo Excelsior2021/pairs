@@ -9,7 +9,7 @@ export type card = {
 }
 
 export type gameStateProp = {
-  gameState: Accessor<gameState>
+  gameState: Accessor<gameStateType>
 }
 
 export type gameStateType = {
@@ -19,7 +19,7 @@ export type gameStateType = {
   opponentHandState: { data: card[]; UI: () => JSX.ArrayElement } | null
   opponentPairsState: { data: card[]; UI: () => JSX.ArrayElement } | null
   playerTurnHandler?: JSX.EventHandlerUnion<HTMLImageElement, MouseEvent>
-  playerHandUnclickable?: JSX.EventHandlerUnion<HTMLImageElement, MouseEvent>
+  playerHandUnclickable?: boolean
   playerAnswerHandler?: JSX.EventHandlerUnion<HTMLImageElement, MouseEvent>
   playerOutput?: number | boolean
   question?: JSX.Element
@@ -35,7 +35,7 @@ export type gameAction = {
   opponentHand?: card[]
   opponentPairs?: card[]
   playerTurnHandler?: JSX.EventHandlerUnion<HTMLImageElement, MouseEvent>
-  playerHandUnclickable?: JSX.EventHandlerUnion<HTMLImageElement, MouseEvent>
+  playerHandUnclickable?: boolean
   playerAnswerHandler?: JSX.EventHandlerUnion<HTMLImageElement, MouseEvent>
   playerOutput?: number | boolean
   question?: JSX.Element

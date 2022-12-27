@@ -11,27 +11,28 @@ export const opponentMatch = (
   opponentHand,
   playerPairs,
   opponentPairs,
-  playerTurn,
-  updateUI,
   opponentAsk,
-  cardImg
+  playerHandEvent,
+  shuffledDeck
 ) => {
   opponentPairs.push(opponentAsk)
   opponentHand.splice(opponentHand.indexOf(opponentAsk), 1)
-  for (let x in playerHand) {
-    if (cardImg.target.id === playerHand[x].id) {
-      opponentPairs.push(playerHand[x])
-      playerHand.splice(playerHand.indexOf(playerHand[x]), 1)
+
+  for (const card of playerHand) {
+    if (playerHandEvent.target.id === card.id) {
+      opponentPairs.push(card)
+      playerHand.splice(playerHand.indexOf(card), 1)
     }
   }
 
-  pairs.playerHandUnclickable(
+  const playerHandUnclickable = true
+  pairs.updateUI(
     playerHand,
     opponentHand,
     playerPairs,
     opponentPairs,
-    playerTurn,
-    updateUI
+    shuffledDeck,
+    playerHandUnclickable
   )
   return
 }
@@ -43,8 +44,6 @@ export const opponentDealt = (
   opponentHand,
   playerPairs,
   opponentPairs,
-  playerTurn,
-  updateUI,
   opponentAsk
 ) => {
   const dealtCard = deck.dealTopCard(shuffledDeck)
@@ -54,7 +53,13 @@ export const opponentDealt = (
     opponentPairs.push(dealtCard)
     opponentPairs.push(opponentAsk)
     opponentHand.splice(opponentHand.indexOf(opponentAsk), 1)
-    updateUI(playerHand, opponentHand, playerPairs, opponentPairs, playerTurn)
+    pairs.updateUI(
+      playerHand,
+      opponentHand,
+      playerPairs,
+      opponentPairs,
+      shuffledDeck
+    )
     return 0
   }
 
@@ -64,14 +69,26 @@ export const opponentDealt = (
       opponentPairs.push(dealtCard)
       opponentPairs.push(opponentHand[x])
       opponentHand.splice(opponentHand.indexOf(opponentHand[x]), 1)
-      updateUI(playerHand, opponentHand, playerPairs, opponentPairs, playerTurn)
+      pairs.updateUI(
+        playerHand,
+        opponentHand,
+        playerPairs,
+        opponentPairs,
+        shuffledDeck
+      )
       return 1
     }
   }
 
   //opponent adds dealt card to opponent hand
   opponentHand.push(dealtCard)
-  updateUI(playerHand, opponentHand, playerPairs, opponentPairs, playerTurn)
+  pairs.updateUI(
+    playerHand,
+    opponentHand,
+    playerPairs,
+    opponentPairs,
+    shuffledDeck
+  )
   return 2
 }
 
@@ -80,27 +97,24 @@ export const opponentTurn = (
   playerHand,
   opponentHand,
   playerPairs,
-  opponentPairs,
-  playerTurnHandler,
-  updateUI
+  opponentPairs
 ) => {
   const gameOverCheck = pairs.gameOver(
     shuffledDeck,
     playerHand,
     opponentHand,
     playerPairs,
-    opponentPairs,
-    playerTurnHandler,
-    updateUI
+    opponentPairs
   )
 
-  pairs.playerHandUnclickable(
+  const playerHandUnclickable = true
+  pairs.updateUI(
     playerHand,
     opponentHand,
     playerPairs,
     opponentPairs,
-    playerTurnHandler,
-    updateUI
+    shuffledDeck,
+    playerHandUnclickable
   )
 
   if (!gameOverCheck) {
@@ -133,11 +147,9 @@ export const opponentTurn = (
         opponentPairs,
         chosenCard,
         playerAnswerHandler,
-        playerTurnHandler,
-        opponentDealt,
+
         yesButton,
-        noButton,
-        updateUI
+        noButton
       )
 
     dispatchGameAction({
@@ -148,18 +160,15 @@ export const opponentTurn = (
       noButton,
     })
 
-    const playerAnswerHandler = cardImg =>
+    const playerAnswerHandler = playerHandEvent =>
       player.playerAnswerHandler(
-        cardImg,
+        playerHandEvent,
         shuffledDeck,
         playerHand,
         opponentHand,
         playerPairs,
         opponentPairs,
-        chosenCard,
-        playerTurnHandler,
-        opponentMatch,
-        updateUI
+        chosenCard
       )
   }
 }

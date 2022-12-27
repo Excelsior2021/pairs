@@ -5,7 +5,7 @@ import { card, gameAction } from "./general"
 //DECK FUNCTIONS
 export type gameDeckHandlerType = (
   playerDealt: playerDealtType,
-  cardImg: null,
+  playerHandEvent: null,
   shuffledDeck: card[],
   playerHand: card[],
   opponentHand: card[],
@@ -19,7 +19,7 @@ export type gameDeckHandlerType = (
 
 //PLAYER FUNCTIONS
 export type playerDealtType = (
-  cardImg: null,
+  playerHandEvent: null,
   shuffledDeck: card[],
   playerHand: card[],
   opponentHand: card[],
@@ -30,14 +30,28 @@ export type playerDealtType = (
 ) => number
 
 export type playerTurnHandlerType = (
-  cardImg: null,
+  playerHandEvent: null,
   shuffledDeck: card[],
   playerHand: card[],
   opponentHand: card[],
   playerPairs: card[],
-  opponentPairs: card[],
-  playerTurnHandler: Function,
-  updateUI,
-  dispatchGameAction: ({}: gameAction) => void,
-  setGameDeck: Setter<JSX.EventHandlerUnion<HTMLImageElement, MouseEvent>>
+  opponentPairs: card[]
 ) => void
+
+//PAIRS FUNCTIONS
+export type updateUIType = (
+  playerHand: card[],
+  opponentHand: card[],
+  playerPairs: card[],
+  opponentPairs: card[],
+  shuffledDeck: card[],
+  playerHandUnclickable?: boolean
+) => void
+
+export type gameOverType = (
+  shuffledDeck: card[],
+  playerHand: card[],
+  opponentHand: card[],
+  playerPairs: card[],
+  opponentPairs: card[]
+) => boolean | void

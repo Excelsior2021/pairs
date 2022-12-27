@@ -8,7 +8,7 @@ import deck from "../../gameFunctions/deckFunctions"
 import pairs from "../../gameFunctions/pairsFunctions"
 import { setShowPlayerModal } from "../PlayerModal/PlayerModal"
 import { setMatch } from "../PlayerModal/PlayerModal"
-import { card, gameStateType, gameAction } from "../../types/general"
+import { gameStateType, gameAction } from "../../types/general"
 import "./Session.scss"
 
 const intialGameState = {
@@ -18,9 +18,6 @@ const intialGameState = {
   opponentHandState: null,
   opponentPairsState: null,
 }
-
-const newDeck: card[] = deck.createDeck()
-const shuffledDeck: card[] = deck.shuffleDeck(newDeck)
 
 const gameReducer = (state: gameStateType, action: gameAction) => {
   switch (action.type) {
@@ -123,7 +120,7 @@ export const [gameState, dispatchGameAction]: [
 )
 
 const Session: Component = () => {
-  pairs.startGame(shuffledDeck)
+  pairs.startGame()
   return (
     <div class="session">
       <Game gameState={gameState} />

@@ -1,9 +1,10 @@
 import { For } from "solid-js"
+import { JSX } from "solid-js/jsx-runtime"
 import player from "./playerFunctions"
 import deck from "./deckFunctions"
 import { dispatchGameAction } from "../components/Session/Session"
-import { setGameDeck } from "../components/Sidebar/Sidebar"
 import { card } from "../types/general"
+import { gameOverType, updateUIType } from "../types/function-types"
 
 export const initialPairs = (hand: card[]) => {
   let pairs: card[] = []
@@ -35,33 +36,26 @@ export const createPairsUI = (pairs: card[]) => (
   </For>
 )
 
-export const playerHandUnclickable = (
+const updateUI: updateUIType = (
   playerHand,
   opponentHand,
   playerPairs,
   opponentPairs,
-  playerTurnHandler,
-  updateUI
+  shuffledDeck,
+  playerHandUnclickable = false
 ) => {
-  const playerHandUnclickable = true
-  updateUI(
-    playerHand,
-    opponentHand,
-    playerPairs,
-    opponentPairs,
-    playerTurnHandler,
-    playerHandUnclickable
-  )
-}
+  const playerTurnHandler = (
+    playerHandEvent: JSX.EventHandlerUnion<HTMLImageElement, MouseEvent>
+  ) =>
+    player.playerTurnHandler(
+      playerHandEvent,
+      shuffledDeck,
+      playerHand,
+      opponentHand,
+      playerPairs,
+      opponentPairs
+    )
 
-const updateUI = (
-  playerHand: card[],
-  opponentHand: card[],
-  playerPairs: card[],
-  opponentPairs: card[],
-  playerTurnHandler: MouseEvent,
-  playerHandUnclickable?: MouseEvent
-) =>
   dispatchGameAction({
     type: "UPDATE",
     playerHand,
@@ -71,8 +65,12 @@ const updateUI = (
     playerTurnHandler,
     playerHandUnclickable,
   })
+}
 
-export const startGame = (shuffledDeck: card[]) => {
+export const startGame = () => {
+  const newDeck: card[] = deck.createDeck()
+  const shuffledDeck: card[] = deck.shuffleDeck(newDeck)
+
   const playerHand = deck.dealHand(shuffledDeck, 7)
   const opponentHand = deck.dealHand(shuffledDeck, 7)
 
@@ -87,38 +85,16 @@ export const startGame = (shuffledDeck: card[]) => {
     </p>
   )
 
-  const playerTurnHandler = (cardImg: MouseEvent) =>
-    player.playerTurnHandler(
-      cardImg,
-      shuffledDeck,
-      playerHand,
-      opponentHand,
-      playerPairs,
-      opponentPairs,
-      playerTurnHandler,
-      updateUI,
-      dispatchGameAction,
-      setGameDeck
-    )
-
-  updateUI(
-    playerHand,
-    opponentHand,
-    playerPairs,
-    opponentPairs,
-    playerTurnHandler
-  )
+  updateUI(playerHand, opponentHand, playerPairs, opponentPairs, shuffledDeck)
   dispatchGameAction({ type: "GAME_LOG", log })
 }
 
-export const gameOver = (
+export const gameOver: gameOverType = (
   shuffledDeck,
   playerHand,
   opponentHand,
   playerPairs,
-  opponentPairs,
-  playerTurnHandler,
-  updateUI
+  opponentPairs
 ) => {
   if (
     playerHand.length === 0 ||
@@ -152,13 +128,14 @@ export const gameOver = (
       </div>
     )
     dispatchGameAction({ type: "GAME_LOG", log })
-    playerHandUnclickable(
+    const playerHandUnclickable = true
+    updateUI(
       playerHand,
       opponentHand,
       playerPairs,
       opponentPairs,
-      playerTurnHandler,
-      updateUI
+      shuffledDeck,
+      playerHandUnclickable
     )
     dispatchGameAction({ type: "GAME_OVER" })
     return true
@@ -168,7 +145,6 @@ export const gameOver = (
 export default {
   initialPairs,
   createPairsUI,
-  playerHandUnclickable,
   updateUI,
   startGame,
   gameOver,

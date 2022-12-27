@@ -93,7 +93,6 @@ export const createPlayerHandUI = (
     {(card: card) => (
       <img
         id={card.id}
-        value={card.value}
         class="card card--player"
         src={card.img}
         alt={card.id}
@@ -106,13 +105,7 @@ export const createPlayerHandUI = (
 export const createHandUI = (hand: card[]) => (
   <For each={hand}>
     {(card: card) => (
-      <img
-        class="card"
-        id={card.id}
-        value={card.value}
-        src={card.img}
-        alt={card.id}
-      />
+      <img class="card" id={card.id} src={card.img} alt={card.id} />
     )}
   </For>
 )
@@ -120,53 +113,44 @@ export const createHandUI = (hand: card[]) => (
 export const createHandUIback = (hand: card[]) => (
   <For each={hand}>
     {(card: card) => (
-      <img
-        class="card"
-        id={card.id}
-        value={card.value}
-        src={cardBack}
-        alt={card.id}
-      />
+      <img class="card" id={card.id} src={cardBack} alt={card.id} />
     )}
   </For>
 )
 
 export const gameDeckHandler = (
-  cardImg,
+  playerHandEvent,
   shuffledDeck,
   playerHand,
   opponentHand,
   playerPairs,
-  opponentPairs,
-  playerTurnHandler,
-  updateUI
+  opponentPairs
 ) => {
-  let playerOutput = player.playerDealt(
-    cardImg,
+  const playerOutput = player.playerDealt(
+    playerHandEvent,
     shuffledDeck,
     playerHand,
     opponentHand,
     playerPairs,
-    opponentPairs,
-    playerTurnHandler,
-    updateUI
+    opponentPairs
   )
 
   dispatchGameAction({
     type: "PLAYER_ACTION",
     playerOutput,
   })
+
   dispatchGameAction({ type: "GAME_LOG" })
+
   setGameDeck(gameDeckUI())
+
   if (playerOutput === 2 || playerOutput === 3) {
     opponent.opponentTurn(
       shuffledDeck,
       playerHand,
       opponentHand,
       playerPairs,
-      opponentPairs,
-      playerTurnHandler,
-      updateUI
+      opponentPairs
     )
   }
 
@@ -175,9 +159,7 @@ export const gameDeckHandler = (
     playerHand,
     opponentHand,
     playerPairs,
-    opponentPairs,
-    playerTurnHandler,
-    updateUI
+    opponentPairs
   )
 }
 

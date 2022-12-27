@@ -6,66 +6,73 @@ import { setGameDeck } from "../components/Sidebar/Sidebar"
 import { card } from "../types/general"
 
 export const playerMatch = (
-  cardImg,
+  playerHandEvent,
   playerHand: card[],
   opponentHand: card[],
   playerPairs: card[],
   opponentPairs: card[],
-  playerTurnHandler,
-  updateUI
+  shuffledDeck: card[]
 ) => {
-  const chosenCardValue = cardImg.target.value
+  let chosenCard
 
-  for (const card of opponentHand) {
-    if (card.value === chosenCardValue) {
-      playerPairs.push(card)
-      opponentHand.splice(opponentHand.indexOf(card), 1)
+  for (const card of playerHand) {
+    if (card.id === playerHandEvent.target.id) chosenCard = card
+  }
 
-      for (const card of playerHand) {
-        if (cardImg.target.id === card.id) {
-          playerPairs.push(card)
-          playerHand.splice(playerHand.indexOf(card), 1)
-          updateUI(
-            playerHand,
-            opponentHand,
-            playerPairs,
-            opponentPairs,
-            playerTurnHandler
-          )
-          return 0
+  if (chosenCard) {
+    for (const card of opponentHand) {
+      if (card.value === chosenCard.value) {
+        playerPairs.push(card)
+        opponentHand.splice(opponentHand.indexOf(card), 1)
+
+        for (const card of playerHand) {
+          if (playerHandEvent.target.id === card.id) {
+            playerPairs.push(card)
+            playerHand.splice(playerHand.indexOf(card), 1)
+            pairs.updateUI(
+              playerHand,
+              opponentHand,
+              playerPairs,
+              opponentPairs,
+              shuffledDeck
+            )
+            return 0
+          }
         }
       }
     }
+    return false
   }
-  return false
 }
 
 export const playerDealt = (
-  cardImg,
+  playerHandEvent,
   shuffledDeck: card[],
   playerHand: card[],
   opponentHand: card[],
   playerPairs: card[],
-  opponentPairs: card[],
-  playerTurnHandler,
-  updateUI
+  opponentPairs: card[]
 ) => {
   const dealtCard = deck.dealTopCard(shuffledDeck)
-  const chosenCardValue = cardImg.target.value
+  let chosenCard
 
-  if (dealtCard) {
-    if (chosenCardValue === dealtCard.value) {
+  for (const card of playerHand) {
+    if (card.id === playerHandEvent.target.id) chosenCard = card
+  }
+
+  if (chosenCard && dealtCard) {
+    if (chosenCard.value === dealtCard.value) {
       playerPairs.push(dealtCard)
       for (let card of playerHand) {
-        if (cardImg.target.id === card.id) {
+        if (chosenCard.id === card.id) {
           playerPairs.push(card)
           playerHand.splice(playerHand.indexOf(card), 1)
-          updateUI(
+          pairs.updateUI(
             playerHand,
             opponentHand,
             playerPairs,
             opponentPairs,
-            playerTurnHandler
+            shuffledDeck
           )
           return 1
         }
@@ -77,59 +84,54 @@ export const playerDealt = (
         playerPairs.push(dealtCard)
         playerPairs.push(card)
         playerHand.splice(playerHand.indexOf(card), 1)
-        updateUI(
+        pairs.updateUI(
           playerHand,
           opponentHand,
           playerPairs,
           opponentPairs,
-          playerTurnHandler
+          shuffledDeck
         )
         return 2
       }
     }
 
     playerHand.push(dealtCard)
-    updateUI(
+    pairs.updateUI(
       playerHand,
       opponentHand,
       playerPairs,
       opponentPairs,
-      playerTurnHandler
+      shuffledDeck
     )
     return 3
   }
 }
 
 export const playerTurnHandler = (
-  cardImg,
+  playerHandEvent,
   shuffledDeck: card[],
   playerHand: card[],
   opponentHand: card[],
   playerPairs: card[],
-  opponentPairs: card[],
-  playerTurnHandler,
-  updateUI
+  opponentPairs: card[]
 ) => {
   const gameDeckHandler = () =>
     deck.gameDeckHandler(
-      cardImg,
+      playerHandEvent,
       shuffledDeck,
       playerHand,
       opponentHand,
       playerPairs,
-      opponentPairs,
-      playerTurnHandler,
-      updateUI
+      opponentPairs
     )
 
-  let playerOutput = playerMatch(
-    cardImg,
+  const playerOutput = playerMatch(
+    playerHandEvent,
     playerHand,
     opponentHand,
     playerPairs,
     opponentPairs,
-    playerTurnHandler,
-    updateUI
+    shuffledDeck
   )
 
   dispatchGameAction({
@@ -145,9 +147,7 @@ export const playerTurnHandler = (
     playerHand,
     opponentHand,
     playerPairs,
-    opponentPairs,
-    playerTurnHandler,
-    updateUI
+    opponentPairs
   )
 
   if (!gameOverCheck) {
@@ -158,13 +158,15 @@ export const playerTurnHandler = (
           card from the deck.
         </p>
       )
-      pairs.playerHandUnclickable(
+
+      const playerHandUnclickable = true
+      pairs.updateUI(
         playerHand,
         opponentHand,
         playerPairs,
         opponentPairs,
-        playerTurnHandler,
-        updateUI
+        shuffledDeck,
+        playerHandUnclickable
       )
       setGameDeck(deck.gameDeckUI(gameDeckHandler))
       dispatchGameAction({ type: "GAME_LOG", log })
@@ -181,11 +183,8 @@ export const playerResponseHandler = (
   opponentPairs: card[],
   opponentAsked,
   playerAnswerHandler,
-  playerTurnHandler,
-  opponentDealt,
   yesButton,
-  noButton,
-  updateUI
+  noButton
 ) => {
   const opponentTurn = () =>
     opponent.opponentTurn(
@@ -193,9 +192,7 @@ export const playerResponseHandler = (
       playerHand,
       opponentHand,
       playerPairs,
-      opponentPairs,
-      playerTurnHandler,
-      updateUI
+      opponentPairs
     )
 
   let log
@@ -250,24 +247,24 @@ export const playerResponseHandler = (
       }
     }
 
-    const opponentOutput = opponentDealt(
+    const opponentOutput = opponent.opponentDealt(
       shuffledDeck,
       playerHand,
       opponentHand,
       playerPairs,
       opponentPairs,
-      playerTurnHandler,
-      updateUI,
       opponentAsked
     )
+
     if (opponentOutput === 0) {
-      pairs.playerHandUnclickable(
+      const playerHandUnclickable = true
+      pairs.updateUI(
         playerHand,
         opponentHand,
         playerPairs,
         opponentPairs,
-        playerTurnHandler,
-        updateUI
+        shuffledDeck,
+        playerHandUnclickable
       )
       log = (
         <p class="game__log">
@@ -300,48 +297,48 @@ export const playerResponseHandler = (
 }
 
 export const playerAnswerHandler = (
-  cardImg,
+  playerHandEvent,
   shuffledDeck: card[],
   playerHand: card[],
   opponentHand: card[],
   playerPairs: card[],
   opponentPairs: card[],
-  opponentAsked,
-  playerTurnHandler,
-  opponentMatch,
-  updateUI
+  opponentAsked
 ) => {
-  const chosenCard = cardImg.target
+  let chosenCard
 
-  if (chosenCard.value === opponentAsked.value) {
-    opponentMatch(
-      playerHand,
-      opponentHand,
-      playerPairs,
-      opponentPairs,
-      playerTurnHandler,
-      updateUI,
-      opponentAsked,
-      cardImg
-    )
-    opponent.opponentTurn(
-      shuffledDeck,
-      playerHand,
-      opponentHand,
-      playerPairs,
-      opponentPairs,
-      playerTurnHandler,
-      updateUI
-    )
-  } else if (chosenCard.value !== opponentAsked.value) {
-    const log = (
-      <p class="game__log">
-        That card does not have the value that your opponent requested. Please
-        select the card with the value your opponent requested. Your opponent
-        requested a {opponentAsked.value}.
-      </p>
-    )
-    dispatchGameAction({ type: "GAME_LOG", log })
+  for (const card of playerHand) {
+    if (card.id === playerHandEvent.target.id) chosenCard = card
+  }
+
+  if (chosenCard) {
+    if (chosenCard.value === opponentAsked.value) {
+      opponent.opponentMatch(
+        playerHand,
+        opponentHand,
+        playerPairs,
+        opponentPairs,
+        opponentAsked,
+        playerHandEvent,
+        shuffledDeck
+      )
+      opponent.opponentTurn(
+        shuffledDeck,
+        playerHand,
+        opponentHand,
+        playerPairs,
+        opponentPairs
+      )
+    } else if (chosenCard.value !== opponentAsked.value) {
+      const log = (
+        <p class="game__log">
+          That card does not have the value that your opponent requested. Please
+          select the card with the value your opponent requested. Your opponent
+          requested a {opponentAsked.value}.
+        </p>
+      )
+      dispatchGameAction({ type: "GAME_LOG", log })
+    }
   }
 }
 
