@@ -52,6 +52,8 @@ import _king_of_hearts from "./king_of_hearts.png"
 import _king_of_spades from "./king_of_spades.png"
 
 export default {
+  _2_of_clubs,
+  _2_of_diamonds,
   _2_of_hearts,
   _2_of_spades,
   _3_of_clubs,
