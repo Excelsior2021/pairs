@@ -8,9 +8,7 @@ import { setGameDeck } from "../components/Sidebar/Sidebar"
 import { card } from "../types/general"
 import cardBack from "../assets/cards/back.png"
 import { gameDeckHandlerType } from "../types/function-types"
-import deckImages from "../assets/cards/cardImages.js"
-
-console.log(deckImages[0])
+import cardImages from "../assets/cards/cardImages"
 
 export const createDeck = () => {
   const deck: card[] = []
@@ -20,7 +18,7 @@ export const createDeck = () => {
   for (const x of [...Array(9).keys()]) {
     for (const suit of suits) {
       const id = `${x + 2}_of_${suit}`
-      const img = `${deckImages[0]}`
+      const img = cardImages[`_${id}`]
       deck.push({
         id,
         value: x + 2,
@@ -34,7 +32,7 @@ export const createDeck = () => {
     if (value !== "ace") {
       for (const suit of suits) {
         const id = `${value}_of_${suit}`
-        const img = `./src/assets/cards/${id}.png`
+        const img = cardImages[`_${id}`]
         deck.push({
           id,
           value,
@@ -47,7 +45,7 @@ export const createDeck = () => {
 
   for (const suit of suits.reverse()) {
     const id = `ace_of_${suit}`
-    const img = `./src/assets/cards/${id}.png`
+    const img = cardImages[`_${id}`]
     deck.unshift({
       id,
       value: "ace",
