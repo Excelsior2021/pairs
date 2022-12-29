@@ -8,6 +8,9 @@ import { setGameDeck } from "../components/Sidebar/Sidebar"
 import { card } from "../types/general"
 import cardBack from "../assets/cards/back.png"
 import { gameDeckHandlerType } from "../types/function-types"
+import deckImages from "../assets/cards/cardImages.js"
+
+console.log(deckImages[0])
 
 export const createDeck = () => {
   const deck: card[] = []
@@ -17,7 +20,7 @@ export const createDeck = () => {
   for (const x of [...Array(9).keys()]) {
     for (const suit of suits) {
       const id = `${x + 2}_of_${suit}`
-      const img = `./src/assets/cards/${id}.png`
+      const img = `${deckImages[0]}`
       deck.push({
         id,
         value: x + 2,
