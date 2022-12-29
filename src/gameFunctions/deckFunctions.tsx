@@ -7,6 +7,7 @@ import { dispatchGameAction } from "../components/Session/Session"
 import { setGameDeck } from "../components/Sidebar/Sidebar"
 import { card } from "../types/general"
 import cardBack from "../assets/cards/back.png"
+import { gameDeckHandlerType } from "../types/function-types"
 
 export const createDeck = () => {
   const deck: card[] = []
@@ -118,7 +119,7 @@ export const createHandUIback = (hand: card[]) => (
   </For>
 )
 
-export const gameDeckHandler = (
+export const gameDeckHandler: gameDeckHandlerType = (
   playerHandEvent,
   shuffledDeck,
   playerHand,

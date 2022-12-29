@@ -1,12 +1,20 @@
 import deck from "./deckFunctions"
 import pairs from "./pairsFunctions"
 import player from "./playerFunctions"
-import { dispatchGameAction } from "../components/Session/Session"
 
-export const opponentAsk = opponentHand =>
+import { dispatchGameAction } from "../components/Session/Session"
+import { card } from "../types/general"
+import {
+  opponentDealtType,
+  opponentMatchType,
+  opponentTurnType,
+} from "../types/function-types"
+import { JSX } from "solid-js/jsx-runtime"
+
+export const opponentAsk = (opponentHand: card[]) =>
   opponentHand[Math.floor(Math.random() * opponentHand.length)]
 
-export const opponentMatch = (
+export const opponentMatch: opponentMatchType = (
   playerHand,
   opponentHand,
   playerPairs,
@@ -37,8 +45,7 @@ export const opponentMatch = (
   return
 }
 
-//If value of chosen card not in playerHand
-export const opponentDealt = (
+export const opponentDealt: opponentDealtType = (
   shuffledDeck,
   playerHand,
   opponentHand,
@@ -48,27 +55,11 @@ export const opponentDealt = (
 ) => {
   const dealtCard = deck.dealTopCard(shuffledDeck)
 
-  //opponent matches with dealt card
-  if (dealtCard.value === opponentAsk.value) {
-    opponentPairs.push(dealtCard)
-    opponentPairs.push(opponentAsk)
-    opponentHand.splice(opponentHand.indexOf(opponentAsk), 1)
-    pairs.updateUI(
-      playerHand,
-      opponentHand,
-      playerPairs,
-      opponentPairs,
-      shuffledDeck
-    )
-    return 0
-  }
-
-  //opponent matches dealt card with another card in opponent hand
-  for (let x in opponentHand) {
-    if (dealtCard.value === opponentHand[x].value) {
+  if (dealtCard) {
+    if (dealtCard.value === opponentAsk.value) {
       opponentPairs.push(dealtCard)
-      opponentPairs.push(opponentHand[x])
-      opponentHand.splice(opponentHand.indexOf(opponentHand[x]), 1)
+      opponentPairs.push(opponentAsk)
+      opponentHand.splice(opponentHand.indexOf(opponentAsk), 1)
       pairs.updateUI(
         playerHand,
         opponentHand,
@@ -76,23 +67,38 @@ export const opponentDealt = (
         opponentPairs,
         shuffledDeck
       )
-      return 1
+      return 0
     }
-  }
 
-  //opponent adds dealt card to opponent hand
-  opponentHand.push(dealtCard)
-  pairs.updateUI(
-    playerHand,
-    opponentHand,
-    playerPairs,
-    opponentPairs,
-    shuffledDeck
-  )
-  return 2
+    for (const card of opponentHand) {
+      if (dealtCard.value === card.value) {
+        opponentPairs.push(dealtCard)
+        opponentPairs.push(card)
+        opponentHand.splice(opponentHand.indexOf(card), 1)
+        pairs.updateUI(
+          playerHand,
+          opponentHand,
+          playerPairs,
+          opponentPairs,
+          shuffledDeck
+        )
+        return 1
+      }
+    }
+
+    opponentHand.push(dealtCard)
+    pairs.updateUI(
+      playerHand,
+      opponentHand,
+      playerPairs,
+      opponentPairs,
+      shuffledDeck
+    )
+    return 2
+  }
 }
 
-export const opponentTurn = (
+export const opponentTurn: opponentTurnType = (
   shuffledDeck,
   playerHand,
   opponentHand,
@@ -119,7 +125,9 @@ export const opponentTurn = (
 
   if (!gameOverCheck) {
     const chosenCard = opponentAsk(opponentHand)
-    const question = <p class="game__log">Do you have a {chosenCard.value}?</p>
+    const question = (
+      <p class="game__log">Do you have a {chosenCard.value}?</p>
+    ) as HTMLParagraphElement
     const yesButton = (
       <button
         class="game__button"
@@ -127,7 +135,7 @@ export const opponentTurn = (
         onClick={response => playerResponseHandler(response)}>
         Yes
       </button>
-    )
+    ) as HTMLButtonElement
     const noButton = (
       <button
         class="game__button"
@@ -135,9 +143,14 @@ export const opponentTurn = (
         onClick={response => playerResponseHandler(response)}>
         No
       </button>
-    )
+    ) as HTMLButtonElement
 
-    const playerResponseHandler = response =>
+    const playerResponseHandler = (
+      response: MouseEvent & {
+        currentTarget: HTMLButtonElement
+        target: Element
+      }
+    ) =>
       player.playerResponseHandler(
         response,
         shuffledDeck,
@@ -147,7 +160,6 @@ export const opponentTurn = (
         opponentPairs,
         chosenCard,
         playerAnswerHandler,
-
         yesButton,
         noButton
       )

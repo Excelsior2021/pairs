@@ -23,8 +23,8 @@ export type gameStateType = {
   playerAnswerHandler?: JSX.EventHandlerUnion<HTMLImageElement, MouseEvent>
   playerOutput?: number | boolean
   question?: JSX.Element
-  yesButton?: JSX.Element
-  noButton?: JSX.Element
+  yesButton?: HTMLButtonElement
+  noButton?: HTMLButtonElement
   log?: JSX.Element
 }
 

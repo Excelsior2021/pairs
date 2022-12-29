@@ -1,36 +1,91 @@
-import { Setter } from "solid-js"
 import { JSX } from "solid-js/jsx-runtime"
-import { card, gameAction } from "./general"
+import { card } from "./general"
 
 //DECK FUNCTIONS
 export type gameDeckHandlerType = (
-  playerDealt: playerDealtType,
-  playerHandEvent: null,
+  playerHandEvent: JSX.EventHandlerUnion<HTMLImageElement, MouseEvent>,
   shuffledDeck: card[],
   playerHand: card[],
   opponentHand: card[],
   playerPairs: card[],
-  opponentPairs: card[],
-  playerTurnHandler: Function,
-  updateUI: Function,
-  dispatchGameAction: ({}: gameAction) => void,
-  setGameDeck: Setter<JSX.EventHandlerUnion<HTMLImageElement, MouseEvent>>
+  opponentPairs: card[]
 ) => void
 
 //PLAYER FUNCTIONS
+export type playerMatchType = (
+  playerHandEvent: JSX.EventHandlerUnion<HTMLImageElement, MouseEvent>,
+  playerHand: card[],
+  opponentHand: card[],
+  playerPairs: card[],
+  opponentPairs: card[],
+  shuffledDeck: card[]
+) => number | boolean | undefined
+
 export type playerDealtType = (
-  playerHandEvent: null,
+  playerHandEvent: JSX.EventHandlerUnion<HTMLImageElement, MouseEvent>,
+  shuffledDeck: card[],
+  playerHand: card[],
+  opponentHand: card[],
+  playerPairs: card[],
+  opponentPairs: card[]
+) => number | undefined
+
+export type playerTurnHandlerType = (
+  playerHandEvent: JSX.EventHandlerUnion<HTMLImageElement, MouseEvent>,
+  shuffledDeck: card[],
+  playerHand: card[],
+  opponentHand: card[],
+  playerPairs: card[],
+  opponentPairs: card[]
+) => void
+
+export type playerResponseHandlerType = (
+  response: MouseEvent & {
+    currentTarget: HTMLButtonElement
+    target: Element
+  },
   shuffledDeck: card[],
   playerHand: card[],
   opponentHand: card[],
   playerPairs: card[],
   opponentPairs: card[],
-  playerTurnHandler: Function,
-  updateUI: Function
-) => number
+  opponentAsked: card,
+  playerAnswerHandler: playerAnswerHandlerType,
+  yesButton: HTMLButtonElement,
+  noButton: HTMLButtonElement
+) => void
 
-export type playerTurnHandlerType = (
-  playerHandEvent: null,
+export type playerAnswerHandlerType = (
+  playerHandEvent: JSX.EventHandlerUnion<HTMLImageElement, MouseEvent>,
+  shuffledDeck: card[],
+  playerHand: card[],
+  opponentHand: card[],
+  playerPairs: card[],
+  opponentPairs: card[],
+  opponentAsked: card
+) => void
+
+//OPPONENT FUNCTIONS
+export type opponentMatchType = (
+  playerHand: card[],
+  opponentHand: card[],
+  playerPairs: card[],
+  opponentPairs: card[],
+  opponentAsk: card,
+  playerHandEvent: JSX.EventHandlerUnion<HTMLImageElement, MouseEvent>,
+  shuffledDeck: card[]
+) => void
+
+export type opponentDealtType = (
+  shuffledDeck: card[],
+  playerHand: card[],
+  opponentHand: card[],
+  playerPairs: card[],
+  opponentPairs: card[],
+  opponentAsk: card
+) => number | undefined
+
+export type opponentTurnType = (
   shuffledDeck: card[],
   playerHand: card[],
   opponentHand: card[],
@@ -55,3 +110,13 @@ export type gameOverType = (
   playerPairs: card[],
   opponentPairs: card[]
 ) => boolean | void
+
+//GAME REPORT
+
+export type gameReportType = (
+  deck: card[],
+  playerHand: card[],
+  opponentHand: card[],
+  playerPairs: card[],
+  opponentPairs: card[]
+) => void

@@ -3,15 +3,21 @@ import pairs from "./pairsFunctions"
 import opponent from "./opponentFunctions"
 import { dispatchGameAction } from "../components/Session/Session"
 import { setGameDeck } from "../components/Sidebar/Sidebar"
-import { card } from "../types/general"
+import {
+  playerAnswerHandlerType,
+  playerDealtType,
+  playerMatchType,
+  playerResponseHandlerType,
+  playerTurnHandlerType,
+} from "../types/function-types"
 
-export const playerMatch = (
+export const playerMatch: playerMatchType = (
   playerHandEvent,
-  playerHand: card[],
-  opponentHand: card[],
-  playerPairs: card[],
-  opponentPairs: card[],
-  shuffledDeck: card[]
+  playerHand,
+  opponentHand,
+  playerPairs,
+  opponentPairs,
+  shuffledDeck
 ) => {
   let chosenCard
 
@@ -45,13 +51,13 @@ export const playerMatch = (
   }
 }
 
-export const playerDealt = (
+export const playerDealt: playerDealtType = (
   playerHandEvent,
-  shuffledDeck: card[],
-  playerHand: card[],
-  opponentHand: card[],
-  playerPairs: card[],
-  opponentPairs: card[]
+  shuffledDeck,
+  playerHand,
+  opponentHand,
+  playerPairs,
+  opponentPairs
 ) => {
   const dealtCard = deck.dealTopCard(shuffledDeck)
   let chosenCard
@@ -107,13 +113,13 @@ export const playerDealt = (
   }
 }
 
-export const playerTurnHandler = (
+export const playerTurnHandler: playerTurnHandlerType = (
   playerHandEvent,
-  shuffledDeck: card[],
-  playerHand: card[],
-  opponentHand: card[],
-  playerPairs: card[],
-  opponentPairs: card[]
+  shuffledDeck,
+  playerHand,
+  opponentHand,
+  playerPairs,
+  opponentPairs
 ) => {
   const gameDeckHandler = () =>
     deck.gameDeckHandler(
@@ -174,13 +180,13 @@ export const playerTurnHandler = (
   }
 }
 
-export const playerResponseHandler = (
+export const playerResponseHandler: playerResponseHandlerType = (
   response,
-  shuffledDeck: card[],
-  playerHand: card[],
-  opponentHand: card[],
-  playerPairs: card[],
-  opponentPairs: card[],
+  shuffledDeck,
+  playerHand,
+  opponentHand,
+  playerPairs,
+  opponentPairs,
   opponentAsked,
   playerAnswerHandler,
   yesButton,
@@ -296,13 +302,13 @@ export const playerResponseHandler = (
   dispatchGameAction({ type: "GAME_LOG", log })
 }
 
-export const playerAnswerHandler = (
+export const playerAnswerHandler: playerAnswerHandlerType = (
   playerHandEvent,
-  shuffledDeck: card[],
-  playerHand: card[],
-  opponentHand: card[],
-  playerPairs: card[],
-  opponentPairs: card[],
+  shuffledDeck,
+  playerHand,
+  opponentHand,
+  playerPairs,
+  opponentPairs,
   opponentAsked
 ) => {
   let chosenCard
