@@ -1,9 +1,10 @@
 import { JSX } from "solid-js/jsx-runtime"
 import { card } from "./general"
+import { playerHandEventType } from "./general"
 
 //DECK FUNCTIONS
 export type gameDeckHandlerType = (
-  playerHandEvent: JSX.EventHandlerUnion<HTMLImageElement, MouseEvent>,
+  playerHandEvent: playerHandEventType,
   shuffledDeck: card[],
   playerHand: card[],
   opponentHand: card[],
@@ -13,7 +14,7 @@ export type gameDeckHandlerType = (
 
 //PLAYER FUNCTIONS
 export type playerMatchType = (
-  playerHandEvent: JSX.EventHandlerUnion<HTMLImageElement, MouseEvent>,
+  playerHandEvent: playerHandEventType,
   playerHand: card[],
   opponentHand: card[],
   playerPairs: card[],
@@ -22,7 +23,7 @@ export type playerMatchType = (
 ) => number | boolean | undefined
 
 export type playerDealtType = (
-  playerHandEvent: JSX.EventHandlerUnion<HTMLImageElement, MouseEvent>,
+  playerHandEvent: playerHandEventType,
   shuffledDeck: card[],
   playerHand: card[],
   opponentHand: card[],
@@ -31,7 +32,7 @@ export type playerDealtType = (
 ) => number | undefined
 
 export type playerTurnHandlerType = (
-  playerHandEvent: JSX.EventHandlerUnion<HTMLImageElement, MouseEvent>,
+  playerHandEvent: playerHandEventType,
   shuffledDeck: card[],
   playerHand: card[],
   opponentHand: card[],
@@ -51,12 +52,12 @@ export type playerResponseHandlerType = (
   opponentPairs: card[],
   opponentAsked: card,
   playerAnswerHandler: playerAnswerHandlerType,
-  yesButton: HTMLButtonElement,
-  noButton: HTMLButtonElement
+  yesButton: JSX.Element,
+  noButton: JSX.Element
 ) => void
 
 export type playerAnswerHandlerType = (
-  playerHandEvent: JSX.EventHandlerUnion<HTMLImageElement, MouseEvent>,
+  playerHandEvent: playerHandEventType,
   shuffledDeck: card[],
   playerHand: card[],
   opponentHand: card[],
@@ -72,7 +73,7 @@ export type opponentMatchType = (
   playerPairs: card[],
   opponentPairs: card[],
   opponentAsk: card,
-  playerHandEvent: JSX.EventHandlerUnion<HTMLImageElement, MouseEvent>,
+  playerHandEvent: playerHandEventType,
   shuffledDeck: card[]
 ) => void
 

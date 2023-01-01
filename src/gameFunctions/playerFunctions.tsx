@@ -203,13 +203,13 @@ export const playerResponseHandler: playerResponseHandlerType = (
 
   let log
 
-  if (response.target.value === "yes") {
+  if (response.currentTarget.value === "yes") {
     for (const card of playerHand) {
       if (card.value === opponentAsked.value) {
         log = (
           <p class="game__log">
-            Please select the card with the same value as the one your opponent
-            requested. Then it will be your opponent's turn again.
+            Please select the card with the value of {opponentAsked.value}. Then
+            it will be your opponent's turn again.
           </p>
         )
         dispatchGameAction({ type: "GAME_LOG", log })
@@ -235,7 +235,7 @@ export const playerResponseHandler: playerResponseHandlerType = (
     })
     return
   }
-  if (response.target.value === "no") {
+  if (response.currentTarget.value === "no") {
     for (const card of playerHand) {
       if (card.value === opponentAsked.value) {
         log = (

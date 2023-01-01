@@ -12,11 +12,11 @@ import { gameStateType, gameAction } from "../../types/general"
 import "./Session.scss"
 
 const intialGameState = {
-  playerHandState: null,
-  playerHandState2: null,
-  playerPairsState: null,
-  opponentHandState: null,
-  opponentPairsState: null,
+  playerHandState: { data: [], UI: () => [] },
+  playerHandState2: { data: [], UI: () => [] },
+  playerPairsState: { data: [], UI: () => [] },
+  opponentHandState: { data: [], UI: () => [] },
+  opponentPairsState: { data: [], UI: () => [] },
 }
 
 const gameReducer = (state: gameStateType, action: gameAction) => {
@@ -114,10 +114,7 @@ const gameReducer = (state: gameStateType, action: gameAction) => {
 export const [gameState, dispatchGameAction]: [
   Accessor<gameStateType>,
   (action: gameAction) => void
-] = createReducer(
-  gameReducer as () => gameStateType,
-  intialGameState as gameStateType
-)
+] = createReducer(gameReducer as () => gameStateType, intialGameState)
 
 const Session: Component = () => {
   pairs.startGame()

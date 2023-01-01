@@ -45,7 +45,9 @@ const updateUI: updateUIType = (
   playerHandUnclickable = false
 ) => {
   const playerTurnHandler = (
-    playerHandEvent: JSX.EventHandlerUnion<HTMLImageElement, MouseEvent>
+    playerHandEvent: JSX.EventHandlerUnion<HTMLImageElement, MouseEvent> & {
+      target: Element
+    }
   ) =>
     player.playerTurnHandler(
       playerHandEvent,

@@ -1,4 +1,4 @@
-import { Accessor, Component } from "solid-js"
+import { Component } from "solid-js"
 import { gameStateProp } from "../../types/general"
 import "./Game.scss"
 

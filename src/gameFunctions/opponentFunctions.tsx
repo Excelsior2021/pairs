@@ -3,7 +3,7 @@ import pairs from "./pairsFunctions"
 import player from "./playerFunctions"
 
 import { dispatchGameAction } from "../components/Session/Session"
-import { card } from "../types/general"
+import { card, playerHandEventType } from "../types/general"
 import {
   opponentDealtType,
   opponentMatchType,
@@ -114,6 +114,7 @@ export const opponentTurn: opponentTurnType = (
   )
 
   const playerHandUnclickable = true
+
   pairs.updateUI(
     playerHand,
     opponentHand,
@@ -127,7 +128,7 @@ export const opponentTurn: opponentTurnType = (
     const chosenCard = opponentAsk(opponentHand)
     const question = (
       <p class="game__log">Do you have a {chosenCard.value}?</p>
-    ) as HTMLParagraphElement
+    ) as JSX.Element
     const yesButton = (
       <button
         class="game__button"
@@ -135,7 +136,7 @@ export const opponentTurn: opponentTurnType = (
         onClick={response => playerResponseHandler(response)}>
         Yes
       </button>
-    ) as HTMLButtonElement
+    ) as JSX.Element
     const noButton = (
       <button
         class="game__button"
@@ -143,7 +144,7 @@ export const opponentTurn: opponentTurnType = (
         onClick={response => playerResponseHandler(response)}>
         No
       </button>
-    ) as HTMLButtonElement
+    ) as JSX.Element
 
     const playerResponseHandler = (
       response: MouseEvent & {
@@ -172,7 +173,7 @@ export const opponentTurn: opponentTurnType = (
       noButton,
     })
 
-    const playerAnswerHandler = playerHandEvent =>
+    const playerAnswerHandler = (playerHandEvent: playerHandEventType) =>
       player.playerAnswerHandler(
         playerHandEvent,
         shuffledDeck,
