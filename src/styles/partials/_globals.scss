@@ -51,6 +51,8 @@ body {
   }
 }
 
-.counterimg {
+.counter {
   display: none;
+  position: absolute;
+  top: -1000px;
 }
