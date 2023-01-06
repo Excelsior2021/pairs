@@ -114,9 +114,7 @@ export const createHandUI = (hand: card[]) => (
 
 export const createHandUIback = (hand: card[]) => (
   <For each={hand}>
-    {(card: card) => (
-      <img class="card" id={card.id} src={cardBack} alt={card.id} />
-    )}
+    {() => <img class="card" src={cardBack} alt="opponent card" />}
   </For>
 )
 
