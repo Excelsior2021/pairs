@@ -1,15 +1,13 @@
 import { Component } from "solid-js"
-import { gameStateProp } from "../../types/general"
-import "./Game.scss"
+import "../Game/Game.scss"
 
-const Game: Component<gameStateProp> = props => {
+const MultiplayerGame: Component = props => {
+  console.log(props)
   return (
     <div class="game">
       <div class="game__opponent-hand">
         <p class="game__heading">Opponent's Hand</p>
-        <div class="game__hand">
-          {props.gameState().opponentHandState?.UI()}
-        </div>
+        <div class="game__hand">{props.gameState().opponentHandUI()}</div>
       </div>
       <div class="game__console">
         {props.gameState().question}
@@ -18,10 +16,10 @@ const Game: Component<gameStateProp> = props => {
       </div>
       <div class="game__player-hand">
         <p class="game__heading">Your Hand</p>
-        <div class="game__hand">{props.gameState().playerHandState?.UI()}</div>
+        <div class="game__hand">{props.gameState().playerHandUI()}</div>
       </div>
     </div>
   )
 }
 
-export default Game
+export default MultiplayerGame

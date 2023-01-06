@@ -1,11 +1,14 @@
-import { Component, createSignal } from "solid-js";
-import { setShowPairsModal } from "../PairsModal/PairsModal";
-import { setShowInstructions } from "../Instructions/Instructions";
-import { setGameStarted } from "../GameScreen/GameScreen";
-import { gameDeckUI } from "../../gameFunctions/deckFunctions";
-import "./Sidebar.scss";
+import { Component, createSignal } from "solid-js"
+import { setShowPairsModal } from "../PairsModal/PairsModal"
+import { setShowInstructions } from "../Instructions/Instructions"
+import {
+  setMultiplayerStarted,
+  setSinglePlayerStarted,
+} from "../GameScreen/GameScreen"
+import { gameDeckUI } from "../../gameFunctions/deckFunctions"
+import "./Sidebar.scss"
 
-export const [gameDeck, setGameDeck] = createSignal(gameDeckUI());
+export const [gameDeck, setGameDeck] = createSignal(gameDeckUI())
 
 const Sidebar: Component = () => (
   <div class="sidebar">
@@ -22,12 +25,14 @@ const Sidebar: Component = () => (
       </button>
       <button
         class="sidebar__button sidebar__button--quit"
-        onclick={() => setGameStarted(false)}
-      >
+        onclick={() => {
+          setSinglePlayerStarted(false)
+          setMultiplayerStarted(false)
+        }}>
         quit
       </button>
     </div>
   </div>
-);
+)
 
-export default Sidebar;
+export default Sidebar

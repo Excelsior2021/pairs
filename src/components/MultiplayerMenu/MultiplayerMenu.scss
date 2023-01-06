@@ -1,6 +1,6 @@
-@use "../../styles/partials/variables" as *;
 @use "../../styles/partials/mixins" as *;
 
-.main-menu {
+.multiplayer-menu {
   @include menu;
+  animation: none;
 }

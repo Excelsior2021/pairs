@@ -15,6 +15,34 @@
   }
 }
 
+@mixin menu-button {
+  @include button;
+  font-size: 2rem;
+  margin: 1rem 0;
+  padding: 1rem 5rem;
+  cursor: pointer;
+}
+
+@mixin menu {
+  text-align: center;
+  animation: main-menu-fade-in 1s linear;
+
+  &__actions {
+    display: flex;
+    flex-direction: column;
+  }
+
+  &__button {
+    @include menu-button;
+  }
+}
+
+@keyframes main-menu-fade-in {
+  0% {
+    opacity: 0;
+  }
+}
+
 @mixin scrollbars {
   /* width */
   ::-webkit-scrollbar {

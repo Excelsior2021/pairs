@@ -11,7 +11,7 @@ import { setMatch } from "../PlayerModal/PlayerModal"
 import { gameStateType, gameAction } from "../../types/general"
 import "./Session.scss"
 
-const intialGameState = {
+const initialGameState = {
   playerHandState: { data: [], UI: () => [] },
   playerHandState2: { data: [], UI: () => [] },
   playerPairsState: { data: [], UI: () => [] },
@@ -107,14 +107,14 @@ const gameReducer = (state: gameStateType, action: gameAction) => {
       return state
     }
     default:
-      return intialGameState
+      return initialGameState
   }
 }
 
 export const [gameState, dispatchGameAction]: [
   Accessor<gameStateType>,
   (action: gameAction) => void
-] = createReducer(gameReducer as () => gameStateType, intialGameState)
+] = createReducer(gameReducer as () => gameStateType, initialGameState)
 
 const Session: Component = () => {
   pairs.startGame()
