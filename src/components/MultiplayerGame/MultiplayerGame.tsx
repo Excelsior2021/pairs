@@ -2,7 +2,6 @@ import { Component } from "solid-js"
 import "../Game/Game.scss"
 
 const MultiplayerGame: Component = props => {
-  console.log(props)
   return (
     <div class="game">
       <div class="game__opponent-hand">
@@ -11,7 +10,7 @@ const MultiplayerGame: Component = props => {
       </div>
       <div class="game__console">
         {props.gameState().question}
-        {props.gameState().log}
+        <p class="game__log">{props.gameState().log}</p>
         {props.gameState().yesButton} {props.gameState().noButton}
       </div>
       <div class="game__player-hand">

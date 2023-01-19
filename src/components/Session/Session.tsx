@@ -6,8 +6,7 @@ import PlayerModal from "../PlayerModal/PlayerModal"
 import PairsModal from "../PairsModal/PairsModal"
 import deck from "../../gameFunctions/deckFunctions"
 import pairs from "../../gameFunctions/pairsFunctions"
-import { setShowPlayerModal } from "../PlayerModal/PlayerModal"
-import { setMatch } from "../PlayerModal/PlayerModal"
+import { setShowPlayerModal, setMatch } from "../PlayerModal/PlayerModal"
 import { gameStateType, gameAction } from "../../types/general"
 import "./Session.scss"
 
@@ -121,7 +120,7 @@ const Session: Component = () => {
   return (
     <div class="session">
       <Game gameState={gameState} />
-      <Sidebar />
+      <Sidebar gameMode="single player" />
       <PlayerModal gameState={gameState} />
       <PairsModal gameState={gameState} />
     </div>

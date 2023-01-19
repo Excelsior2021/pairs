@@ -10,13 +10,18 @@ import "./Sidebar.scss"
 
 export const [gameDeck, setGameDeck] = createSignal(gameDeckUI())
 
-const Sidebar: Component = () => (
+type sidebarProps = {
+  gameMode: string
+}
+
+const Sidebar: Component<sidebarProps> = props => (
   <div class="sidebar">
     <div class="sidebar__deck">
       <p class="sidebar__heading">deck</p>
       {gameDeck()}
     </div>
     <div class="sidebar__actions">
+      <p class="sidebar__heading">{props.gameMode}</p>
       <button class="sidebar__button" onclick={() => setShowPairsModal(true)}>
         pairs
       </button>

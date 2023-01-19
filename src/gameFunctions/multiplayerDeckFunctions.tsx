@@ -107,62 +107,35 @@ export const createPlayerHandUI = (
 export const createHandUI = (hand: card[]) => (
   <For each={hand}>
     {(card: card) => (
-      <img class="card" id={card.id} src={card.img} alt={card.id} />
+      <img class="card" id={card.id} src={cardImages[card.img]} alt={card.id} />
     )}
   </For>
 )
 
 export const createHandUIback = (hand: card[]) => (
   <For each={hand}>
-    {(card: card) => (
-      <img class="card" id={card.id} src={cardBack} alt={card.id} />
-    )}
+    {() => <img class="card" src={cardBack} alt="opponent card" />}
   </For>
 )
 
-export const gameDeckHandler: gameDeckHandlerType = (
-  playerHandEvent,
-  shuffledDeck,
-  playerHand,
-  opponentHand,
-  playerPairs,
-  opponentPairs
-) => {
-  const playerOutput = player.playerDealt(
-    playerHandEvent,
-    shuffledDeck,
-    playerHand,
-    opponentHand,
-    playerPairs,
-    opponentPairs
-  )
+export const gameDeckHandler = (shuffledDeck, playerRequest) => {
+  const dealtCard = dealTopCard(shuffledDeck)
 
   dispatchGameAction({
-    type: "PLAYER_ACTION",
-    playerOutput,
+    type: "PLAYER_DEALT",
+    dealtCard,
+    playerRequest,
   })
-
-  dispatchGameAction({ type: "GAME_LOG" })
 
   setGameDeck(gameDeckUI())
 
-  if (playerOutput === 2 || playerOutput === 3) {
-    opponent.opponentTurn(
-      shuffledDeck,
-      playerHand,
-      opponentHand,
-      playerPairs,
-      opponentPairs
-    )
-  }
-
-  pairs.gameOver(
-    shuffledDeck,
-    playerHand,
-    opponentHand,
-    playerPairs,
-    opponentPairs
-  )
+  // pairs.gameOver(
+  //   shuffledDeck,
+  //   playerHand,
+  //   opponentHand,
+  //   playerPairs,
+  //   opponentPairs
+  // )
 }
 
 export default {
