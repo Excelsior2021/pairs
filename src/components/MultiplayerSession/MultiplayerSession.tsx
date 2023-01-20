@@ -5,8 +5,7 @@ import Sidebar from "../Sidebar/Sidebar"
 import MultiplayerPlayerModal from "../MultiplayerPlayerModal/MultiplayerPlayerModal"
 import PairsModal from "../PairsModal/PairsModal"
 import Connection from "../Connection/Connection"
-import deck from "../../gameFunctions/multiplayerDeckFunctions"
-import pairs from "../../gameFunctions/multiplayerPairsFunctions"
+import UI from "../../gameFunctions/multiplayerUIFunctions"
 import player from "../../gameFunctions/multiplayerPlayerFunctions"
 import {
   setShowMultiplayerPlayerModal,
@@ -45,16 +44,16 @@ const multiplayerReducer = (state, action) => {
         if (action.playerTurn === "player1") {
           const playerTurnHandler = playerHandEvent =>
             player.playerTurnHandler(playerHandEvent, playerHand)
-          playerHandUI = deck.createPlayerHandUI(playerHand, playerTurnHandler)
+          playerHandUI = UI.createPlayerHandUI(playerHand, playerTurnHandler)
         } else {
-          playerHandUI = deck.createHandUI(playerHand)
+          playerHandUI = UI.createHandUI(playerHand)
         }
-        opponentHandUI = deck.createHandUIback(opponentHand)
+        opponentHandUI = UI.createHandUIback(opponentHand)
 
         playerPairs = player1Pairs
         opponentPairs = player2Pairs
-        playerPairsUI = pairs.createPairsUI(player1Pairs)
-        opponentPairsUI = pairs.createPairsUI(player2Pairs)
+        playerPairsUI = UI.createPairsUI(player1Pairs)
+        opponentPairsUI = UI.createPairsUI(player2Pairs)
 
         gameState = {
           player1Hand: playerHand,
@@ -74,16 +73,16 @@ const multiplayerReducer = (state, action) => {
         if (action.playerTurn === "player2") {
           const playerTurnHandler = playerHandEvent =>
             player.playerTurnHandler(playerHandEvent, playerHand)
-          playerHandUI = deck.createPlayerHandUI(playerHand, playerTurnHandler)
+          playerHandUI = UI.createPlayerHandUI(playerHand, playerTurnHandler)
         } else {
-          playerHandUI = deck.createHandUI(playerHand)
+          playerHandUI = UI.createHandUI(playerHand)
         }
-        opponentHandUI = deck.createHandUIback(opponentHand)
+        opponentHandUI = UI.createHandUIback(opponentHand)
 
         playerPairs = player2Pairs
         opponentPairs = player1Pairs
-        playerPairsUI = pairs.createPairsUI(player2Pairs)
-        opponentPairsUI = pairs.createPairsUI(player1Pairs)
+        playerPairsUI = UI.createPairsUI(player2Pairs)
+        opponentPairsUI = UI.createPairsUI(player1Pairs)
 
         gameState = {
           player1Hand: opponentHand,
@@ -120,7 +119,7 @@ const multiplayerReducer = (state, action) => {
         action.playerRequest
       )
       const log = "Waiting for you opponent to respond..."
-      const playerHandUI = deck.createHandUI(state.playerHand)
+      const playerHandUI = UI.createHandUI(state.playerHand)
 
       return {
         ...state,
@@ -204,8 +203,8 @@ const multiplayerReducer = (state, action) => {
     }
     case "PLAYER_DEALS": {
       setGameDeck(
-        deck.gameDeckUI(() =>
-          deck.gameDeckHandler(state.shuffledDeck, action.playerRequest)
+        UI.gameDeckUI(() =>
+          UI.gameDeckHandler(state.shuffledDeck, action.playerRequest)
         )
       )
       const log =
@@ -238,18 +237,25 @@ const multiplayerReducer = (state, action) => {
           setMatch("Match (Dealt Card)")
           const log = "It's your turn again."
           state.socket.emit("player_response_message", action.playerOutput)
+          const playerTurnHandler = playerHandEvent =>
+            player.playerTurnHandler(playerHandEvent, state.playerHand)
+          const playerHandUI = UI.createPlayerHandUI(
+            state.playerHand,
+            playerTurnHandler
+          )
           return {
             ...state,
             log,
+            playerHandUI,
             playerOutput: action.playerOutput,
           }
         }
         if (action.playerOutput === 2) {
           setMatch("Match (Your Hand)")
           const log = "It's your opponent's turn."
-          const playerHandUI = deck.createHandUI(state.playerHand)
+          const playerHandUI = UI.createHandUI(state.playerHand)
           state.socket.emit("player_response_message", action.playerOutput)
-          state.socket.emit("player_turn_switch", state.clientPlayer)
+          state.socket.emit("player_turn_switch")
           return {
             ...state,
             log,
@@ -260,7 +266,7 @@ const multiplayerReducer = (state, action) => {
         if (action.playerOutput === 3) {
           setMatch("No Match")
           const log = "It's your opponent's turn."
-          const playerHandUI = deck.createHandUI(state.playerHand)
+          const playerHandUI = UI.createHandUI(state.playerHand)
           state.socket.emit("player_response_message", action.playerOutput)
           state.socket.emit("player_turn_switch", state.clientPlayer)
           return {
@@ -295,7 +301,7 @@ const multiplayerReducer = (state, action) => {
       const playerTurnHandler = playerHandEvent =>
         player.playerTurnHandler(playerHandEvent, state.playerHand)
 
-      const playerHandUI = deck.createPlayerHandUI(
+      const playerHandUI = UI.createPlayerHandUI(
         state.playerHand,
         playerTurnHandler
       )
@@ -304,6 +310,49 @@ const multiplayerReducer = (state, action) => {
         ...state,
         playerHandUI,
       }
+    }
+    case "GAME_OVER": {
+      console.log(state.playerHand, state.opponentHand, state.shuffledDeck)
+      if (
+        state.playerHand.length === 0 ||
+        state.opponentHand.length === 0 ||
+        state.shuffledDeck.length === 0
+      ) {
+        let outcome
+        if (state.playerPairs.length > state.opponentPairs.length) {
+          outcome = "You won! Well done!"
+        } else if (state.playerPairs.length === state.opponentPairs.length) {
+          outcome = "It's a draw!"
+        } else {
+          outcome = "Your opponent won! Better luck next time!"
+        }
+
+        const log = (
+          <div class="game__game-over">
+            <div class="game__outcome">
+              <h2 class="game__game-over-heading">GAME OVER</h2>
+              <p class="game__game-over-text">{outcome}</p>
+            </div>
+            <div class="game__stats">
+              <h2 class="game__game-over-heading">STATS</h2>
+              <p class="game__game-over-text">
+                Player Pairs: {state.playerPairs.length}
+              </p>
+              <p class="game__game-over-text">
+                Opponent Pairs: {state.opponentPairs.length}
+              </p>
+              <p class="game__game-over-text">
+                Remaining cards in deck: {state.shuffledDeck.length}
+              </p>
+            </div>
+          </div>
+        )
+        return {
+          ...state,
+          log,
+        }
+      }
+      return state
     }
     default:
       return null
@@ -347,10 +396,12 @@ const MultiplayerSession: Component = () => {
     })
     setStartGame(true)
     setServerGameState(serverState)
+    dispatchGameAction({ type: "GAME_OVER" })
   })
 
   socket.on("player_requested", playerRequest => {
     dispatchGameAction({ type: "PLAYER_RESPONSE", playerRequest })
+    dispatchGameAction({ type: "GAME_OVER" })
   })
 
   socket.on("player_match", (serverState, playerOutput, requestPlayer) => {
@@ -362,6 +413,7 @@ const MultiplayerSession: Component = () => {
       playerTurn: requestPlayer,
     })
     dispatchGameAction({ type: "PLAYER_RESULT", playerOutput, requestPlayer })
+    dispatchGameAction({ type: "GAME_OVER" })
   })
 
   socket.on("player_to_deal", playerRequest => {
@@ -369,6 +421,7 @@ const MultiplayerSession: Component = () => {
       type: "PLAYER_DEALS",
       playerRequest,
     })
+    dispatchGameAction({ type: "GAME_OVER" })
   })
 
   socket.on("player_dealt", (serverState, playerOutput, requestPlayer) => {
@@ -379,14 +432,17 @@ const MultiplayerSession: Component = () => {
       socket,
     })
     dispatchGameAction({ type: "PLAYER_RESULT", playerOutput, requestPlayer })
+    dispatchGameAction({ type: "GAME_OVER" })
   })
 
   socket.on("player_response_message", playerOutput => {
     dispatchGameAction({ type: "PLAYER_RESPONSE_MESSAGE", playerOutput })
+    dispatchGameAction({ type: "GAME_OVER" })
   })
 
-  socket.on("player_turn_switch", player => {
+  socket.on("player_turn_switch", () => {
     dispatchGameAction({ type: "PLAYER_TURN_SWITCH" })
+    dispatchGameAction({ type: "GAME_OVER" })
   })
 
   return (

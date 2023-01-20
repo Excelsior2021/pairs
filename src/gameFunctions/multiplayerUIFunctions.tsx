@@ -1,13 +1,9 @@
 import { For } from "solid-js"
 import { JSX } from "solid-js/jsx-runtime"
-import player from "./playerFunctions"
-import opponent from "./opponentFunctions"
-import pairs from "./pairsFunctions"
 import { dispatchGameAction } from "../components/MultiplayerSession/MultiplayerSession"
 import { setGameDeck } from "../components/Sidebar/Sidebar"
 import { card } from "../types/general"
 import cardBack from "../assets/cards/back.png"
-import { gameDeckHandlerType } from "../types/function-types"
 import cardImages from "../assets/cards/cardImages"
 
 export const createDeck = () => {
@@ -67,25 +63,7 @@ export const gameDeckUI = (
   />
 )
 
-export const shuffleDeck = (deck: card[]) => {
-  const shuffledDeck = [...deck]
-  for (const x in shuffledDeck) {
-    const y = Math.floor(Math.random() * parseInt(x))
-    const temp = shuffledDeck[x]
-    shuffledDeck[x] = shuffledDeck[y]
-    shuffledDeck[y] = temp
-  }
-  return shuffledDeck
-}
-
-export const dealTopCard = (deck: card[]) => deck.shift()
-
-export const dealHand = (deck: card[], handSize: number) => {
-  const hand: card[] = []
-  while (hand.length < handSize) hand.push(dealTopCard(deck)!)
-
-  return hand
-}
+const dealCard = (deck: card[]) => deck.shift()
 
 export const createPlayerHandUI = (
   hand: card[],
@@ -118,8 +96,16 @@ export const createHandUIback = (hand: card[]) => (
   </For>
 )
 
+export const createPairsUI = (pairs: card[]) => (
+  <For each={pairs}>
+    {card => (
+      <img id={card.id} class="card" src={cardImages[card.img]} alt={card.id} />
+    )}
+  </For>
+)
+
 export const gameDeckHandler = (shuffledDeck, playerRequest) => {
-  const dealtCard = dealTopCard(shuffledDeck)
+  const dealtCard = dealCard(shuffledDeck)
 
   dispatchGameAction({
     type: "PLAYER_DEALT",
@@ -128,24 +114,14 @@ export const gameDeckHandler = (shuffledDeck, playerRequest) => {
   })
 
   setGameDeck(gameDeckUI())
-
-  // pairs.gameOver(
-  //   shuffledDeck,
-  //   playerHand,
-  //   opponentHand,
-  //   playerPairs,
-  //   opponentPairs
-  // )
 }
 
 export default {
   createDeck,
   gameDeckUI,
-  shuffleDeck,
-  dealTopCard,
-  dealHand,
   createPlayerHandUI,
   createHandUI,
   createHandUIback,
+  createPairsUI,
   gameDeckHandler,
 }

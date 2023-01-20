@@ -7,7 +7,7 @@ import { card } from "../types/general"
 import { gameOverType, updateUIType } from "../types/function-types"
 
 export const initialPairs = (hand: card[]) => {
-  let pairs: card[] = []
+  const pairs: card[] = []
   hand.forEach(cardX =>
     hand.forEach(cardY => {
       if (

@@ -1,50 +1,4 @@
-import pairs from "./pairsFunctions"
-import opponent from "./opponentFunctions"
 import { dispatchGameAction } from "../components/MultiplayerSession/MultiplayerSession"
-import {
-  playerAnswerHandlerType,
-  playerMatchType,
-} from "../types/function-types"
-
-export const playerMatch: playerMatchType = (
-  playerHandEvent,
-  playerHand,
-  opponentHand,
-  playerPairs,
-  opponentPairs,
-  shuffledDeck
-) => {
-  let chosenCard
-
-  for (const card of playerHand) {
-    if (card.id === playerHandEvent.target.id) chosenCard = card
-  }
-
-  if (chosenCard) {
-    for (const card of opponentHand) {
-      if (card.value === chosenCard.value) {
-        playerPairs.push(card)
-        opponentHand.splice(opponentHand.indexOf(card), 1)
-
-        for (const card of playerHand) {
-          if (playerHandEvent.target.id === card.id) {
-            playerPairs.push(card)
-            playerHand.splice(playerHand.indexOf(card), 1)
-            pairs.updateUI(
-              playerHand,
-              opponentHand,
-              playerPairs,
-              opponentPairs,
-              shuffledDeck
-            )
-            return 0
-          }
-        }
-      }
-    }
-    return false
-  }
-}
 
 export const playerTurnHandler = (playerHandEvent, playerHand) => {
   let chosenCard
@@ -105,55 +59,7 @@ export const playerResponseHandler = (
   }
 }
 
-export const playerAnswerHandler: playerAnswerHandlerType = (
-  playerHandEvent,
-  shuffledDeck,
-  playerHand,
-  opponentHand,
-  playerPairs,
-  opponentPairs,
-  opponentAsked
-) => {
-  let chosenCard
-
-  for (const card of playerHand) {
-    if (card.id === playerHandEvent.target.id) chosenCard = card
-  }
-
-  if (chosenCard) {
-    if (chosenCard.value === opponentAsked.value) {
-      opponent.opponentMatch(
-        playerHand,
-        opponentHand,
-        playerPairs,
-        opponentPairs,
-        opponentAsked,
-        playerHandEvent,
-        shuffledDeck
-      )
-      opponent.opponentTurn(
-        shuffledDeck,
-        playerHand,
-        opponentHand,
-        playerPairs,
-        opponentPairs
-      )
-    } else if (chosenCard.value !== opponentAsked.value) {
-      const log = (
-        <p class="game__log">
-          That card does not have the value that your opponent requested. Please
-          select the card with the value your opponent requested. Your opponent
-          requested a {opponentAsked.value}.
-        </p>
-      )
-      dispatchGameAction({ type: "GAME_LOG", log })
-    }
-  }
-}
-
 export default {
-  playerMatch,
   playerTurnHandler,
   playerResponseHandler,
-  playerAnswerHandler,
 }
