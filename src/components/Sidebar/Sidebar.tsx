@@ -2,7 +2,7 @@ import { Component, createSignal } from "solid-js"
 import { setShowPairsModal } from "../PairsModal/PairsModal"
 import { setShowInstructions } from "../Instructions/Instructions"
 import {
-  setMultiplayerStarted,
+  setMultiplayerSessionStarted,
   setSinglePlayerStarted,
 } from "../GameScreen/GameScreen"
 import { gameDeckUI } from "../../gameFunctions/deckFunctions"
@@ -32,7 +32,7 @@ const Sidebar: Component<sidebarProps> = props => (
         class="sidebar__button sidebar__button--quit"
         onclick={() => {
           setSinglePlayerStarted(false)
-          setMultiplayerStarted(false)
+          setMultiplayerSessionStarted(false)
         }}>
         quit
       </button>

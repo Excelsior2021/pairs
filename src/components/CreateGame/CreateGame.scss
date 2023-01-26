@@ -1,0 +1,27 @@
+@use "../../styles/partials/variables" as *;
+@use "../../styles/partials/mixins" as *;
+
+.create-game {
+  text-align: center;
+  &__heading {
+    margin-bottom: 2rem;
+  }
+
+  &__text {
+    font-size: 2rem;
+  }
+
+  &__id {
+    font-size: 3rem;
+  }
+
+  &__actions {
+    display: flex;
+    justify-content: space-around;
+    margin-top: 4rem;
+  }
+
+  &__button {
+    @include menu-button;
+  }
+}

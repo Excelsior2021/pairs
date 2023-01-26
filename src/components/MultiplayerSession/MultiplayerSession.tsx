@@ -4,7 +4,7 @@ import MultiplayerGame from "../MultiplayerGame/MultiplayerGame"
 import Sidebar from "../Sidebar/Sidebar"
 import MultiplayerPlayerModal from "../MultiplayerPlayerModal/MultiplayerPlayerModal"
 import PairsModal from "../PairsModal/PairsModal"
-import Connection from "../Connection/Connection"
+import AwaitConnection from "../AwaitConnection/AwaitConnection"
 import UI from "../../gameFunctions/multiplayerUIFunctions"
 import player from "../../gameFunctions/multiplayerPlayerFunctions"
 import {
@@ -17,6 +17,26 @@ import "../Session/Session.scss"
 
 const multiplayerReducer = (state, action) => {
   switch (action.type) {
+    case "START_SESSION": {
+      return {
+        socket: action.socket,
+      }
+    }
+    case "CREATE_SESSION": {
+      state.socket.emit("create_session", action.sessionID)
+      return {
+        ...state,
+        sessionID: action.sessionID.toString(),
+      }
+    }
+    case "JOIN_SESSION": {
+      state.socket.emit("join_session", action.sessionID)
+      console.log(action.sessionID)
+      return {
+        ...state,
+        sessionID: action.sessionID.toString(),
+      }
+    }
     case "UPDATE": {
       const {
         player1Hand,
@@ -25,6 +45,7 @@ const multiplayerReducer = (state, action) => {
         player2Pairs,
         shuffledDeck,
       } = action.serverState
+      console.log(state)
 
       let playerHand
       let playerHandUI
@@ -109,14 +130,14 @@ const multiplayerReducer = (state, action) => {
         log,
         gameState,
         clientPlayer: action.clientPlayer,
-        socket: action.socket,
       }
     }
     case "PLAYER_REQUEST": {
       state.socket.emit(
         "player_request",
         state.clientPlayer,
-        action.playerRequest
+        action.playerRequest,
+        state.sessionID
       )
       const log = "Waiting for you opponent to respond..."
       const playerHandUI = UI.createHandUI(state.playerHand)
@@ -178,7 +199,8 @@ const multiplayerReducer = (state, action) => {
           action.opponentRequest,
           action.playerCard,
           state.gameState,
-          playerOutput
+          playerOutput,
+          state.sessionID
         )
         return {
           ...state,
@@ -193,7 +215,11 @@ const multiplayerReducer = (state, action) => {
       }
     }
     case "NO_PLAYER_MATCH": {
-      state.socket.emit("no_player_match", action.opponentRequest)
+      state.socket.emit(
+        "no_player_match",
+        action.opponentRequest,
+        state.sessionID
+      )
       return {
         ...state,
         log: action.log,
@@ -217,7 +243,8 @@ const multiplayerReducer = (state, action) => {
         action.dealtCard,
         state.shuffledDeck,
         action.playerRequest,
-        state.gameState
+        state.gameState,
+        state.sessionID
       )
       return state
     }
@@ -236,7 +263,11 @@ const multiplayerReducer = (state, action) => {
         if (action.playerOutput === 1) {
           setMatch("Match (Dealt Card)")
           const log = "It's your turn again."
-          state.socket.emit("player_response_message", action.playerOutput)
+          state.socket.emit(
+            "player_response_message",
+            action.playerOutput,
+            state.sessionID
+          )
           const playerTurnHandler = playerHandEvent =>
             player.playerTurnHandler(playerHandEvent, state.playerHand)
           const playerHandUI = UI.createPlayerHandUI(
@@ -254,8 +285,12 @@ const multiplayerReducer = (state, action) => {
           setMatch("Match (Your Hand)")
           const log = "It's your opponent's turn."
           const playerHandUI = UI.createHandUI(state.playerHand)
-          state.socket.emit("player_response_message", action.playerOutput)
-          state.socket.emit("player_turn_switch")
+          state.socket.emit(
+            "player_response_message",
+            action.playerOutput,
+            state.sessionID
+          )
+          state.socket.emit("player_turn_switch", state.sessionID)
           return {
             ...state,
             log,
@@ -267,8 +302,12 @@ const multiplayerReducer = (state, action) => {
           setMatch("No Match")
           const log = "It's your opponent's turn."
           const playerHandUI = UI.createHandUI(state.playerHand)
-          state.socket.emit("player_response_message", action.playerOutput)
-          state.socket.emit("player_turn_switch", state.clientPlayer)
+          state.socket.emit(
+            "player_response_message",
+            action.playerOutput,
+            state.sessionID
+          )
+          state.socket.emit("player_turn_switch", state.sessionID)
           return {
             ...state,
             log,
@@ -364,21 +403,23 @@ export const [gameState, dispatchGameAction] = createReducer(
   null
 )
 
-const MultiplayerSession: Component = () => {
+const MultiplayerSession: Component = props => {
   const socket = io("http://localhost:8080")
   const [player, setPlayer] = createSignal("")
   const [startGame, setStartGame] = createSignal(false)
-  const [serverGameState, setServerGameState] = createSignal(null)
 
-  socket.on("setPlayer", players => {
-    if (players === 1) {
+  dispatchGameAction({ type: "START_SESSION", socket })
+
+  socket.on("setPlayer", player => {
+    if (player === 1) {
       setPlayer("player1")
     } else {
       setPlayer("player2")
     }
   })
 
-  socket.on("start", (serverState, playerTurn) => {
+  socket.on("start", (serverState, playerTurn, sessionID) => {
+    console.log("started")
     const player1Log =
       "The cards have been dealt. Any initial pairs of cards have been added to your Pairs.\
     Please select a card from your hand to request a match with your opponent."
@@ -393,9 +434,9 @@ const MultiplayerSession: Component = () => {
       player1Log,
       player2Log,
       playerTurn,
+      sessionID,
     })
     setStartGame(true)
-    setServerGameState(serverState)
     dispatchGameAction({ type: "GAME_OVER" })
   })
 
@@ -447,7 +488,9 @@ const MultiplayerSession: Component = () => {
 
   return (
     <div class="session">
-      <Show when={startGame()} fallback={<Connection />}>
+      <Show
+        when={startGame()}
+        fallback={<AwaitConnection sessionID={props.sessionID} />}>
         <MultiplayerGame gameState={gameState} />
         <MultiplayerPlayerModal gameState={gameState} />
         <PairsModal gameState={gameState} />
