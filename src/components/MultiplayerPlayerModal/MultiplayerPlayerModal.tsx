@@ -20,18 +20,18 @@ const MultiplayerPlayerModal: Component<gameStateProp> = props => (
             You have a match! Both cards will be added to your pairs. It's your
             turn again!
           </p>
-          {/* <div class="player-modal__cards">
+          <div class="player-modal__cards">
             {
-              props.gameState().playerPairsState.UI()[
-                props.gameState().playerPairsState.UI().length - 1
+              props.gameState().playerPairsUI()[
+                props.gameState().playerPairsUI().length - 1
               ]
             }
             {
-              props.gameState().playerPairsState.UI()[
-                props.gameState().playerPairsState.UI().length - 2
+              props.gameState().playerPairsUI()[
+                props.gameState().playerPairsUI().length - 2
               ]
             }
-          </div> */}
+          </div>
         </Match>
         <Match when={props.gameState().playerOutput === 1}>
           <p class="player-modal__text">
@@ -39,18 +39,18 @@ const MultiplayerPlayerModal: Component<gameStateProp> = props => (
             dealt from the deck! Both cards will be added to your pairs. It's
             your turn again!
           </p>
-          {/* <div class="player-modal__cards">
+          <div class="player-modal__cards">
             {
-              props.gameState().playerPairsState.UI()[
-                props.gameState().playerPairsState.UI().length - 1
+              props.gameState().playerPairsUI()[
+                props.gameState().playerPairsUI().length - 1
               ]
             }
             {
-              props.gameState().playerPairsState.UI()[
-                props.gameState().playerPairsState.UI().length - 2
+              props.gameState().playerPairsUI()[
+                props.gameState().playerPairsUI().length - 2
               ]
             }
-          </div> */}
+          </div>
         </Match>
         <Match when={props.gameState().playerOutput === 2}>
           <>
@@ -59,18 +59,18 @@ const MultiplayerPlayerModal: Component<gameStateProp> = props => (
               dealt card but you had another match in your hand, both cards will
               be added to your pairs. It's your opponent's turn.
             </p>
-            {/* <div class="player-modal__cards">
+            <div class="player-modal__cards">
               {
-                props.gameState().playerPairsState.UI()[
-                  props.gameState().playerPairsState.UI().length - 1
+                props.gameState().playerPairsUI()[
+                  props.gameState().playerPairsUI().length - 1
                 ]
               }
               {
-                props.gameState().playerPairsState.UI()[
-                  props.gameState().playerPairsState.UI().length - 2
+                props.gameState().playerPairsUI()[
+                  props.gameState().playerPairsUI().length - 2
                 ]
               }
-            </div> */}
+            </div>
           </>
         </Match>
         <Match when={props.gameState().playerOutput === 3}>
@@ -78,13 +78,13 @@ const MultiplayerPlayerModal: Component<gameStateProp> = props => (
             No matches, the dealt card has been added to your hand. It's your
             opponent's turn.
           </p>
-          {/* <div class="player-modal__cards">
+          <div class="player-modal__cards">
             {
-              props.gameState().playerHandState2.UI()[
-                props.gameState().playerHandState2.UI().length - 1
+              props.gameState().playerHand2UI()[
+                props.gameState().playerHand2UI().length - 1
               ]
             }
-          </div> */}
+          </div>
         </Match>
       </Switch>
     </div>

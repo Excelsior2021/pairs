@@ -25,7 +25,12 @@
 
 @mixin menu {
   text-align: center;
-  animation: main-menu-fade-in 1s linear;
+  animation: menu-fade-in 0.5s linear;
+
+  &__heading {
+    text-transform: capitalize;
+    margin-bottom: 1rem;
+  }
 
   &__actions {
     display: flex;
@@ -37,7 +42,7 @@
   }
 }
 
-@keyframes main-menu-fade-in {
+@keyframes menu-fade-in {
   0% {
     opacity: 0;
   }

@@ -7,36 +7,52 @@ import {
 } from "../GameScreen/GameScreen"
 import "./JoinGame.scss"
 
+export const [sessionExists, setSessionExists] = createSignal(false)
+
 const JoinGame: Component = () => {
   const [sessionID, setSessionID] = createSignal("")
+
   return (
     <div class="join-game">
-      <h2>Join a Game Session</h2>
-      <p>Please enter the session ID from your opponent below.</p>
+      <h2 class="join-game__heading">Join a Game Session</h2>
+      <p class="join-game__text">
+        Please enter the session ID from your opponent below
+      </p>
       <input
-        type="text"
+        class="join-game__input"
+        type="number"
         value={sessionID()}
         onchange={event => setSessionID(event.target.value)}
       />
-      <button
-        class="create-game__button"
-        onclick={() => {
-          setJoinGame(false),
-            setMultiplayerSessionStarted(true),
+      <div class="join-game__actions">
+        <button
+          class="join-game__button"
+          onclick={() => {
+            setJoinGame(false)
+            setMultiplayerSessionStarted(true)
+
             dispatchGameAction({
               type: "JOIN_SESSION",
               sessionID: sessionID(),
             })
-        }}>
-        join
-      </button>
-      <button
-        class="create-game__button"
-        onclick={() => {
-          setJoinGame(false), setMultiplayerMenu(true)
-        }}>
-        ←
-      </button>
+
+            if (sessionExists()) {
+              setJoinGame(false)
+              setMultiplayerSessionStarted(true)
+            } else {
+              console.log("session does not exist")
+            }
+          }}>
+          join
+        </button>
+        <button
+          class="join-game__button"
+          onclick={() => {
+            setJoinGame(false), setMultiplayerMenu(true)
+          }}>
+          ←
+        </button>
+      </div>
     </div>
   )
 }

@@ -7,6 +7,7 @@ import PairsModal from "../PairsModal/PairsModal"
 import AwaitConnection from "../AwaitConnection/AwaitConnection"
 import UI from "../../gameFunctions/multiplayerUIFunctions"
 import player from "../../gameFunctions/multiplayerPlayerFunctions"
+import { setSessionExists } from "../JoinGame/JoinGame"
 import {
   setShowMultiplayerPlayerModal,
   setMatch,
@@ -23,15 +24,15 @@ const multiplayerReducer = (state, action) => {
       }
     }
     case "CREATE_SESSION": {
-      state.socket.emit("create_session", action.sessionID)
+      state.socket.emit("create_session", action.sessionID.toString())
       return {
         ...state,
         sessionID: action.sessionID.toString(),
       }
     }
     case "JOIN_SESSION": {
+      console.log(state)
       state.socket.emit("join_session", action.sessionID)
-      console.log(action.sessionID)
       return {
         ...state,
         sessionID: action.sessionID.toString(),
@@ -45,10 +46,10 @@ const multiplayerReducer = (state, action) => {
         player2Pairs,
         shuffledDeck,
       } = action.serverState
-      console.log(state)
 
       let playerHand
       let playerHandUI
+      let playerHand2UI
       let opponentHand
       let opponentHandUI
       let playerPairs
@@ -69,6 +70,7 @@ const multiplayerReducer = (state, action) => {
         } else {
           playerHandUI = UI.createHandUI(playerHand)
         }
+        playerHand2UI = UI.createHandUI(playerHand)
         opponentHandUI = UI.createHandUIback(opponentHand)
 
         playerPairs = player1Pairs
@@ -98,6 +100,7 @@ const multiplayerReducer = (state, action) => {
         } else {
           playerHandUI = UI.createHandUI(playerHand)
         }
+        playerHand2UI = UI.createHandUI(playerHand)
         opponentHandUI = UI.createHandUIback(opponentHand)
 
         playerPairs = player2Pairs
@@ -121,6 +124,7 @@ const multiplayerReducer = (state, action) => {
         playerHand,
         opponentHand,
         playerHandUI,
+        playerHand2UI,
         opponentHandUI,
         playerPairs,
         opponentPairs,
@@ -351,7 +355,6 @@ const multiplayerReducer = (state, action) => {
       }
     }
     case "GAME_OVER": {
-      console.log(state.playerHand, state.opponentHand, state.shuffledDeck)
       if (
         state.playerHand.length === 0 ||
         state.opponentHand.length === 0 ||
@@ -419,7 +422,6 @@ const MultiplayerSession: Component = props => {
   })
 
   socket.on("start", (serverState, playerTurn, sessionID) => {
-    console.log("started")
     const player1Log =
       "The cards have been dealt. Any initial pairs of cards have been added to your Pairs.\
     Please select a card from your hand to request a match with your opponent."
@@ -485,6 +487,8 @@ const MultiplayerSession: Component = props => {
     dispatchGameAction({ type: "PLAYER_TURN_SWITCH" })
     dispatchGameAction({ type: "GAME_OVER" })
   })
+
+  socket.on("no-sessionID", () => setSessionExists(true))
 
   return (
     <div class="session">

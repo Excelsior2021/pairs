@@ -3,4 +3,8 @@
 
 .main-menu {
   @include menu;
+
+  &--no-animation {
+    animation: none;
+  }
 }
