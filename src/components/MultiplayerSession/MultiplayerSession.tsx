@@ -7,35 +7,34 @@ import PairsModal from "../PairsModal/PairsModal"
 import AwaitConnection from "../AwaitConnection/AwaitConnection"
 import UI from "../../gameFunctions/multiplayerUIFunctions"
 import player from "../../gameFunctions/multiplayerPlayerFunctions"
-import { setSessionExists } from "../JoinGame/JoinGame"
 import {
   setShowMultiplayerPlayerModal,
   setMatch,
 } from "../MultiplayerPlayerModal/MultiplayerPlayerModal"
 import { setGameDeck } from "../Sidebar/Sidebar"
-import { io } from "socket.io-client"
 import "../Session/Session.scss"
 
 const multiplayerReducer = (state, action) => {
   switch (action.type) {
     case "START_SESSION": {
       return {
+        ...state,
         socket: action.socket,
       }
     }
     case "CREATE_SESSION": {
       state.socket.emit("create_session", action.sessionID.toString())
+      console.log(action.sessionID)
       return {
         ...state,
         sessionID: action.sessionID.toString(),
       }
     }
     case "JOIN_SESSION": {
-      console.log(state)
-      state.socket.emit("join_session", action.sessionID)
+      console.log(action.sessionID)
       return {
         ...state,
-        sessionID: action.sessionID.toString(),
+        sessionID: action.sessionID,
       }
     }
     case "UPDATE": {
@@ -46,6 +45,8 @@ const multiplayerReducer = (state, action) => {
         player2Pairs,
         shuffledDeck,
       } = action.serverState
+
+      console.log(state)
 
       let playerHand
       let playerHandUI
@@ -196,6 +197,7 @@ const multiplayerReducer = (state, action) => {
       }
     }
     case "PLAYER_MATCH": {
+      console.log(state)
       if (action.playerCard && action.opponentRequest) {
         const playerOutput = 0
         state.socket.emit(
@@ -407,13 +409,12 @@ export const [gameState, dispatchGameAction] = createReducer(
 )
 
 const MultiplayerSession: Component = props => {
-  const socket = io("http://localhost:8080")
   const [player, setPlayer] = createSignal("")
   const [startGame, setStartGame] = createSignal(false)
 
-  dispatchGameAction({ type: "START_SESSION", socket })
+  dispatchGameAction({ type: "START_SESSION", socket: props.socket })
 
-  socket.on("setPlayer", player => {
+  props.socket.on("setPlayer", player => {
     if (player === 1) {
       setPlayer("player1")
     } else {
@@ -421,7 +422,7 @@ const MultiplayerSession: Component = props => {
     }
   })
 
-  socket.on("start", (serverState, playerTurn, sessionID) => {
+  props.socket.on("start", (serverState, playerTurn, sessionID) => {
     const player1Log =
       "The cards have been dealt. Any initial pairs of cards have been added to your Pairs.\
     Please select a card from your hand to request a match with your opponent."
@@ -432,7 +433,6 @@ const MultiplayerSession: Component = props => {
       type: "UPDATE",
       serverState,
       clientPlayer: player(),
-      socket,
       player1Log,
       player2Log,
       playerTurn,
@@ -442,24 +442,28 @@ const MultiplayerSession: Component = props => {
     dispatchGameAction({ type: "GAME_OVER" })
   })
 
-  socket.on("player_requested", playerRequest => {
+  props.socket.on("player_requested", playerRequest => {
     dispatchGameAction({ type: "PLAYER_RESPONSE", playerRequest })
     dispatchGameAction({ type: "GAME_OVER" })
   })
 
-  socket.on("player_match", (serverState, playerOutput, requestPlayer) => {
-    dispatchGameAction({
-      type: "UPDATE",
-      serverState,
-      clientPlayer: player(),
-      socket,
-      playerTurn: requestPlayer,
-    })
-    dispatchGameAction({ type: "PLAYER_RESULT", playerOutput, requestPlayer })
-    dispatchGameAction({ type: "GAME_OVER" })
-  })
+  props.socket.on(
+    "player_match",
+    (serverState, playerOutput, requestPlayer) => {
+      console.log("player_match")
+      dispatchGameAction({
+        type: "UPDATE",
+        serverState,
+        clientPlayer: player(),
+        playerTurn: requestPlayer,
+      })
+      dispatchGameAction({ type: "PLAYER_RESULT", playerOutput, requestPlayer })
+      dispatchGameAction({ type: "GAME_OVER" })
+    }
+  )
 
-  socket.on("player_to_deal", playerRequest => {
+  props.socket.on("player_to_deal", playerRequest => {
+    console.log("test")
     dispatchGameAction({
       type: "PLAYER_DEALS",
       playerRequest,
@@ -467,28 +471,28 @@ const MultiplayerSession: Component = props => {
     dispatchGameAction({ type: "GAME_OVER" })
   })
 
-  socket.on("player_dealt", (serverState, playerOutput, requestPlayer) => {
-    dispatchGameAction({
-      type: "UPDATE",
-      serverState,
-      clientPlayer: player(),
-      socket,
-    })
-    dispatchGameAction({ type: "PLAYER_RESULT", playerOutput, requestPlayer })
-    dispatchGameAction({ type: "GAME_OVER" })
-  })
+  props.socket.on(
+    "player_dealt",
+    (serverState, playerOutput, requestPlayer) => {
+      dispatchGameAction({
+        type: "UPDATE",
+        serverState,
+        clientPlayer: player(),
+      })
+      dispatchGameAction({ type: "PLAYER_RESULT", playerOutput, requestPlayer })
+      dispatchGameAction({ type: "GAME_OVER" })
+    }
+  )
 
-  socket.on("player_response_message", playerOutput => {
+  props.socket.on("player_response_message", playerOutput => {
     dispatchGameAction({ type: "PLAYER_RESPONSE_MESSAGE", playerOutput })
     dispatchGameAction({ type: "GAME_OVER" })
   })
 
-  socket.on("player_turn_switch", () => {
+  props.socket.on("player_turn_switch", () => {
     dispatchGameAction({ type: "PLAYER_TURN_SWITCH" })
     dispatchGameAction({ type: "GAME_OVER" })
   })
-
-  socket.on("no-sessionID", () => setSessionExists(true))
 
   return (
     <div class="session">
@@ -499,7 +503,7 @@ const MultiplayerSession: Component = props => {
         <MultiplayerPlayerModal gameState={gameState} />
         <PairsModal gameState={gameState} />
       </Show>
-      <Sidebar gameMode="multiplayer" />
+      <Sidebar gameMode="multiplayer" socket={props.socket} />
     </div>
   )
 }

@@ -5,13 +5,17 @@ import {
   setMultiplayerMenu,
   sessionID,
   setSessionID,
+  setSocket,
 } from "../GameScreen/GameScreen"
 import { dispatchGameAction } from "../MultiplayerSession/MultiplayerSession"
+import { io } from "socket.io-client"
 import "./CreateGame.scss"
 
 const roomIDGenerator = () => Math.floor(Math.random() * 10 ** 4)
 
 const CreateGame: Component = () => {
+  const socket = io("http://localhost:8080")
+  setSocket(socket)
   setSessionID(roomIDGenerator())
   return (
     <div class="create-game">
@@ -25,6 +29,7 @@ const CreateGame: Component = () => {
         <button
           class="create-game__button"
           onclick={() => {
+            console.log(sessionID())
             setCreateGame(false),
               setMultiplayerSessionStarted(true),
               dispatchGameAction({
@@ -37,7 +42,7 @@ const CreateGame: Component = () => {
         <button
           class="create-game__button"
           onclick={() => {
-            setCreateGame(false), setMultiplayerMenu(true)
+            setCreateGame(false), setMultiplayerMenu(true), socket.disconnect()
           }}>
           ←
         </button>

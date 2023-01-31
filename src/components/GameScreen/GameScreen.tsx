@@ -15,6 +15,7 @@ export const [joinGame, setJoinGame] = createSignal(false)
 export const [multiplayerSessionStarted, setMultiplayerSessionStarted] =
   createSignal(false)
 export const [sessionID, setSessionID] = createSignal(null)
+export const [socket, setSocket] = createSignal(null)
 
 const GameScreen: Component = () => (
   <main class="game-screen">
@@ -32,7 +33,7 @@ const GameScreen: Component = () => (
         <JoinGame />
       </Match>
       <Match when={multiplayerSessionStarted()}>
-        <MultiplayerSession sessionID={sessionID} />
+        <MultiplayerSession socket={socket()} sessionID={sessionID} />
       </Match>
     </Switch>
     <Instructions />
