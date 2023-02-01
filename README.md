@@ -1,3 +1,3 @@
 # Pairs
 
-An interactive card game developed with SolidJS.
+An interactive card game developed with SolidJS and TypeScript.
