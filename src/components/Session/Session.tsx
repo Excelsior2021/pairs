@@ -4,6 +4,7 @@ import Game from "../Game/Game"
 import Sidebar from "../Sidebar/Sidebar"
 import PlayerModal from "../PlayerModal/PlayerModal"
 import PairsModal from "../PairsModal/PairsModal"
+import QuitGameModal from "../QuitGameModal/QuitGameModal"
 import deck from "../../gameFunctions/deckFunctions"
 import pairs from "../../gameFunctions/pairsFunctions"
 import { setShowPlayerModal, setMatch } from "../PlayerModal/PlayerModal"
@@ -120,6 +121,7 @@ const Session: Component = () => {
       <Sidebar gameMode="single player" />
       <PlayerModal gameState={gameState} />
       <PairsModal gameState={gameState} />
+      <QuitGameModal />
     </div>
   )
 }

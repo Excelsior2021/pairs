@@ -33,7 +33,8 @@
       color: green;
     }
 
-    &--no-match {
+    &--no-match,
+    &--quit-game {
       color: red;
     }
   }
@@ -44,8 +45,6 @@
   }
 
   &__button {
-    @include button;
-    margin-top: 3rem;
-    padding: 1rem 5rem;
+    @include modal-button;
   }
 }

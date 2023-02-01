@@ -1,0 +1,16 @@
+@use "../../styles/partials/variables" as *;
+@use "../../styles/partials/mixins" as *;
+
+.quit-game-modal {
+  text-align: center;
+  margin-top: 20px;
+
+  &__text {
+    font-size: 2rem;
+  }
+
+  &__button {
+    @include modal-button;
+    @include button-red;
+  }
+}

@@ -30,11 +30,7 @@
     padding: 0.5rem;
 
     &--quit {
-      background-color: rgb(190, 0, 0);
-
-      &:hover {
-        background-color: rgb(230, 0, 0);
-      }
+      @include button-red;
     }
   }
 }

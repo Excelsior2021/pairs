@@ -23,6 +23,20 @@
   cursor: pointer;
 }
 
+@mixin modal-button {
+  @include button;
+  margin-top: 3rem;
+  padding: 1rem 5rem;
+}
+
+@mixin button-red {
+  background-color: rgb(190, 0, 0);
+
+  &:hover {
+    background-color: rgb(230, 0, 0);
+  }
+}
+
 @mixin menu {
   text-align: center;
   animation: menu-fade-in 0.5s linear;

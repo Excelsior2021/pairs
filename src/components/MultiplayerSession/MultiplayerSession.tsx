@@ -4,6 +4,7 @@ import Game from "../Game/Game"
 import Sidebar from "../Sidebar/Sidebar"
 import PlayerModal from "../PlayerModal/PlayerModal"
 import PairsModal from "../PairsModal/PairsModal"
+import QuitGameModal from "../QuitGameModal/QuitGameModal"
 import UI from "../../gameFunctions/multiplayerUIFunctions"
 import player from "../../gameFunctions/multiplayerPlayerFunctions"
 import { setShowPlayerModal, setMatch } from "../PlayerModal/PlayerModal"
@@ -27,7 +28,6 @@ const multiplayerReducer = (state, action) => {
       }
     }
     case "JOIN_SESSION": {
-      console.log(action.sessionID)
       return {
         ...state,
         sessionID: action.sessionID,
@@ -41,8 +41,6 @@ const multiplayerReducer = (state, action) => {
         player2Pairs,
         shuffledDeck,
       } = action.serverState
-
-      console.log(state)
 
       let playerHand
       let playerHandUI
@@ -193,7 +191,6 @@ const multiplayerReducer = (state, action) => {
       }
     }
     case "PLAYER_MATCH": {
-      console.log(state)
       if (action.playerCard && action.opponentRequest) {
         const playerOutput = 0
         state.socket.emit(
@@ -446,7 +443,6 @@ const MultiplayerSession: Component = props => {
   props.socket.on(
     "player_match",
     (serverState, playerOutput, requestPlayer) => {
-      console.log("player_match")
       dispatchGameAction({
         type: "UPDATE",
         serverState,
@@ -459,7 +455,6 @@ const MultiplayerSession: Component = props => {
   )
 
   props.socket.on("player_to_deal", playerRequest => {
-    console.log("test")
     dispatchGameAction({
       type: "PLAYER_DEALS",
       playerRequest,
@@ -497,7 +492,8 @@ const MultiplayerSession: Component = props => {
         <PlayerModal gameState={gameState} />
         <PairsModal gameState={gameState} />
       </Show>
-      <Sidebar gameMode="multiplayer" socket={props.socket} />
+      <QuitGameModal multiplayer={true} socket={props.socket} />
+      <Sidebar gameMode="multiplayer" />
     </div>
   )
 }
