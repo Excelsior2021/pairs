@@ -1,10 +1,7 @@
 import { Component, createSignal } from "solid-js"
 import { setShowPairsModal } from "../PairsModal/PairsModal"
 import { setShowInstructions } from "../Instructions/Instructions"
-import {
-  setMultiplayerSessionStarted,
-  setSinglePlayerStarted,
-} from "../GameScreen/GameScreen"
+import { setShowQuitGameModal } from "../QuitGameModal/QuitGameModal"
 import { gameDeckUI } from "../../gameFunctions/deckFunctions"
 import "./Sidebar.scss"
 
@@ -30,11 +27,7 @@ const Sidebar: Component<sidebarProps> = props => (
       </button>
       <button
         class="sidebar__button sidebar__button--quit"
-        onclick={() => {
-          setSinglePlayerStarted(false)
-          setMultiplayerSessionStarted(false)
-          if (props.gameMode === "multiplayer") props.socket.disconnect()
-        }}>
+        onclick={() => setShowQuitGameModal(true)}>
         quit
       </button>
     </div>
