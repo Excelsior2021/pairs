@@ -3,8 +3,6 @@ import GameScreen from "./components/GameScreen/GameScreen"
 
 import "./App.scss"
 
-console.log(import.meta.env.VITE_SERVER_URL)
-
 const App: Component = () => (
   <div class="app">
     <a
