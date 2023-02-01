@@ -1,6 +1,5 @@
 import { Component, createSignal } from "solid-js"
 import Modal from "../Modal/Modal"
-
 import "./PairsModal.scss"
 
 export const [showPairsModal, setShowPairsModal] = createSignal(false)

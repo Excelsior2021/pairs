@@ -2,26 +2,19 @@
 @use "../../styles/partials/mixins" as *;
 
 .create-game {
-  text-align: center;
-  &__heading {
-    margin-bottom: 2rem;
-  }
+  flex: 4;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
 
   &__text {
-    font-size: 2rem;
+    font-size: 2.5rem;
+    margin: 2rem;
   }
 
   &__id {
     font-size: 3rem;
-  }
-
-  &__actions {
-    display: flex;
-    justify-content: space-around;
-    margin-top: 4rem;
-  }
-
-  &__button {
-    @include menu-button;
+    font-weight: bold;
   }
 }

@@ -11,11 +11,11 @@ import { gameStateType, gameAction } from "../../types/general"
 import "./Session.scss"
 
 const initialGameState = {
-  playerHandState: { data: [], UI: () => [] },
-  playerHandState2: { data: [], UI: () => [] },
-  playerPairsState: { data: [], UI: () => [] },
-  opponentHandState: { data: [], UI: () => [] },
-  opponentPairsState: { data: [], UI: () => [] },
+  playerHandUI: () => [],
+  playerHand2UI: () => [],
+  playerPairsUI: () => [],
+  opponentHandUI: () => [],
+  opponentPairsUI: () => [],
 }
 
 const gameReducer = (state: gameStateType, action: gameAction) => {
@@ -32,7 +32,7 @@ const gameReducer = (state: gameStateType, action: gameAction) => {
           action.playerHand,
           action.playerTurnHandler
         )
-        let playerHandUI2 = deck.createPlayerHandUI(
+        let playerHand2UI = deck.createPlayerHandUI(
           action.playerHand,
           action.playerTurnHandler
         )
@@ -43,19 +43,16 @@ const gameReducer = (state: gameStateType, action: gameAction) => {
 
         if (action.playerHandUnclickable) {
           playerHandUI = deck.createHandUI(action.playerHand)
-          playerHandUI2 = deck.createHandUI(action.playerHand)
+          playerHand2UI = deck.createHandUI(action.playerHand)
         }
 
         return {
           ...state,
-          playerHandState: { data: action.playerHand, UI: playerHandUI },
-          playerHandState2: { data: action.playerHand, UI: playerHandUI2 },
-          playerPairsState: { data: action.playerPairs, UI: playerPairsUI },
-          opponentHandState: { data: action.opponentHand, UI: opponentHandUI },
-          opponentPairsState: {
-            data: action.opponentPairs,
-            UI: opponentPairsUI,
-          },
+          playerHandUI,
+          playerHand2UI,
+          playerPairsUI,
+          opponentHandUI,
+          opponentPairsUI,
         }
       }
     }
@@ -91,7 +88,7 @@ const gameReducer = (state: gameStateType, action: gameAction) => {
         )
         return {
           ...state,
-          playerHandState: { ...state.playerHandState, UI: playerHandUI },
+          playerHandUI,
         }
       }
     }

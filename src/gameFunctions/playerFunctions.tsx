@@ -158,12 +158,8 @@ export const playerTurnHandler: playerTurnHandlerType = (
 
   if (!gameOverCheck) {
     if (playerOutput === false) {
-      const log = (
-        <p class="game__log">
-          You didn't match with any card in your opponent's hand. Please deal a
-          card from the deck.
-        </p>
-      )
+      const log =
+        "You didn't match with any card in your opponent's hand. Please deal a card from the deck."
 
       const playerHandUnclickable = true
       pairs.updateUI(
@@ -206,12 +202,8 @@ export const playerResponseHandler: playerResponseHandlerType = (
   if (response.currentTarget.value === "yes") {
     for (const card of playerHand) {
       if (card.value === opponentAsked.value) {
-        log = (
-          <p class="game__log">
-            Please select the card with the value of {opponentAsked.value}. Then
-            it will be your opponent's turn again.
-          </p>
-        )
+        log = `Please select the card with the value of ${opponentAsked.value}. Then it will be your opponent's turn again.`
+
         dispatchGameAction({ type: "GAME_LOG", log })
         dispatchGameAction({
           type: "PLAYER_ANSWER",
@@ -222,11 +214,8 @@ export const playerResponseHandler: playerResponseHandlerType = (
         return
       }
     }
-    log = (
-      <p class="game__log">
-        Are you sure? Do you have a {opponentAsked.value}?
-      </p>
-    )
+    log = `Are you sure? Do you have a ${opponentAsked.value}?`
+
     dispatchGameAction({
       type: "GAME_LOG",
       yesButton,
@@ -235,14 +224,12 @@ export const playerResponseHandler: playerResponseHandlerType = (
     })
     return
   }
+
   if (response.currentTarget.value === "no") {
     for (const card of playerHand) {
       if (card.value === opponentAsked.value) {
-        log = (
-          <p class="game__log">
-            Are you sure? Do you have a {opponentAsked.value}?
-          </p>
-        )
+        log = `Are you sure? Do you have a ${opponentAsked.value}?`
+
         dispatchGameAction({
           type: "GAME_LOG",
           yesButton,
@@ -272,31 +259,19 @@ export const playerResponseHandler: playerResponseHandlerType = (
         shuffledDeck,
         playerHandUnclickable
       )
-      log = (
-        <p class="game__log">
-          Your opponent has dealt a card from the deck and the value they chose
-          matched with the dealt card's value. It's your opponent's turn again.
-        </p>
-      )
+      log =
+        "Your opponent has dealt a card from the deck and the value they chose matched with the dealt card's value. It's your opponent's turn again."
+
       dispatchGameAction({ type: "GAME_LOG", log })
       setTimeout(opponentTurn, 4000)
     }
     if (opponentOutput === 1) {
-      log = (
-        <p class="game__log">
-          Your opponent has dealt a card from the deck. The value they chose did
-          not match with the dealt card's value but they matched with another
-          card in their deck. It's your turn.
-        </p>
-      )
+      log =
+        "Your opponent has dealt a card from the deck. The value they chose did not match with the dealt card's value but they matched with another card in their deck. It's your turn."
     }
     if (opponentOutput === 2) {
-      log = (
-        <p class="game__log">
-          Your opponent has dealt a card from the deck and added it to their
-          hand. There were no matches. It's your turn.
-        </p>
-      )
+      log =
+        "Your opponent has dealt a card from the deck and added it to their hand. There were no matches. It's your turn."
     }
   }
   dispatchGameAction({ type: "GAME_LOG", log })
@@ -336,13 +311,9 @@ export const playerAnswerHandler: playerAnswerHandlerType = (
         opponentPairs
       )
     } else if (chosenCard.value !== opponentAsked.value) {
-      const log = (
-        <p class="game__log">
-          That card does not have the value that your opponent requested. Please
-          select the card with the value your opponent requested. Your opponent
-          requested a {opponentAsked.value}.
-        </p>
-      )
+      const log =
+        "That card does not have the value that your opponent requested. Please select the card with the value your opponent requested. Your opponent requested a {opponentAsked.value}."
+
       dispatchGameAction({ type: "GAME_LOG", log })
     }
   }

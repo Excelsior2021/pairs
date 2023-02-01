@@ -11,13 +11,24 @@ export const createDeck = () => {
   const non_num_cards = ["ace", "jack", "queen", "king"]
   const suits = ["clubs", "diamonds", "hearts", "spades"]
 
-  for (const x of [...Array(9).keys()]) {
+  for (const suit of suits) {
+    const id = `ace_of_${suit}`
+    const img = cardImages[`_${id}`]
+    deck.push({
+      id,
+      value: "ace",
+      suit,
+      img,
+    })
+  }
+
+  for (let value = 2; value < 11; value++) {
     for (const suit of suits) {
-      const id = `${x + 2}_of_${suit}`
+      const id = `${value}_of_${suit}`
       const img = cardImages[`_${id}`]
       deck.push({
         id,
-        value: x + 2,
+        value,
         suit,
         img,
       })
@@ -39,16 +50,6 @@ export const createDeck = () => {
     }
   }
 
-  for (const suit of suits.reverse()) {
-    const id = `ace_of_${suit}`
-    const img = cardImages[`_${id}`]
-    deck.unshift({
-      id,
-      value: "ace",
-      suit,
-      img,
-    })
-  }
   return deck
 }
 
@@ -63,7 +64,7 @@ export const gameDeckUI = (
   />
 )
 
-const dealCard = (deck: card[]) => deck.shift()
+const dealCard = (deck: card[]) => deck.pop()
 
 export const createPlayerHandUI = (
   hand: card[],

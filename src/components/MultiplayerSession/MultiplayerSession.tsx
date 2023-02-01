@@ -1,18 +1,15 @@
 import { Component, createSignal, Show } from "solid-js"
 import { createReducer } from "@solid-primitives/memo"
-import MultiplayerGame from "../MultiplayerGame/MultiplayerGame"
+import Game from "../Game/Game"
 import Sidebar from "../Sidebar/Sidebar"
-import MultiplayerPlayerModal from "../MultiplayerPlayerModal/MultiplayerPlayerModal"
+import PlayerModal from "../PlayerModal/PlayerModal"
 import PairsModal from "../PairsModal/PairsModal"
-import AwaitConnection from "../AwaitConnection/AwaitConnection"
 import UI from "../../gameFunctions/multiplayerUIFunctions"
 import player from "../../gameFunctions/multiplayerPlayerFunctions"
-import {
-  setShowMultiplayerPlayerModal,
-  setMatch,
-} from "../MultiplayerPlayerModal/MultiplayerPlayerModal"
+import { setShowPlayerModal, setMatch } from "../PlayerModal/PlayerModal"
 import { setGameDeck } from "../Sidebar/Sidebar"
 import "../Session/Session.scss"
+import CreateGame from "../CreateGame/CreateGame"
 
 const multiplayerReducer = (state, action) => {
   switch (action.type) {
@@ -23,11 +20,10 @@ const multiplayerReducer = (state, action) => {
       }
     }
     case "CREATE_SESSION": {
-      state.socket.emit("create_session", action.sessionID.toString())
-      console.log(action.sessionID)
+      state.socket.emit("create_session", action.sessionID)
       return {
         ...state,
-        sessionID: action.sessionID.toString(),
+        sessionID: action.sessionID,
       }
     }
     case "JOIN_SESSION": {
@@ -256,7 +252,7 @@ const multiplayerReducer = (state, action) => {
     }
     case "PLAYER_RESULT": {
       if (action.requestPlayer === state.clientPlayer) {
-        setShowMultiplayerPlayerModal(true)
+        setShowPlayerModal(true)
         if (action.playerOutput === 0) {
           setMatch("Match (Opponent's Hand)")
           const log = "It's your turn again."
@@ -496,11 +492,9 @@ const MultiplayerSession: Component = props => {
 
   return (
     <div class="session">
-      <Show
-        when={startGame()}
-        fallback={<AwaitConnection sessionID={props.sessionID} />}>
-        <MultiplayerGame gameState={gameState} />
-        <MultiplayerPlayerModal gameState={gameState} />
+      <Show when={startGame()} fallback={<CreateGame />}>
+        <Game gameState={gameState} />
+        <PlayerModal gameState={gameState} />
         <PairsModal gameState={gameState} />
       </Show>
       <Sidebar gameMode="multiplayer" socket={props.socket} />

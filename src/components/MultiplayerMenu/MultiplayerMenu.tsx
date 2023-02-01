@@ -1,10 +1,13 @@
 import { Component } from "solid-js"
 import {
   setMultiplayerMenu,
-  setCreateGame,
+  setMultiplayerSessionStarted,
   setJoinGame,
+  setSocket,
+  setSessionID,
 } from "../GameScreen/GameScreen"
 import { dispatchGameAction } from "../MultiplayerSession/MultiplayerSession"
+import { io } from "socket.io-client"
 import "./MultiplayerMenu.scss"
 
 const MultiplayerMenu: Component = () => (
@@ -14,7 +17,17 @@ const MultiplayerMenu: Component = () => (
       <button
         class="multiplayer-menu__button"
         onclick={() => {
-          setMultiplayerMenu(false), setCreateGame(true)
+          const socket = io(import.meta.env.VITE_SERVER_URL)
+          setSocket(socket)
+          const sessionIDGenerator = () => Math.floor(Math.random() * 10 ** 4)
+          const sessionID = sessionIDGenerator().toString().padStart(4, "0")
+          setSessionID(sessionID)
+          setMultiplayerMenu(false),
+            setMultiplayerSessionStarted(true),
+            dispatchGameAction({
+              type: "CREATE_SESSION",
+              sessionID,
+            })
         }}>
         create game
       </button>

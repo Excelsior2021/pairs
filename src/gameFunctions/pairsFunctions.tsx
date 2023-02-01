@@ -79,13 +79,8 @@ export const startGame = () => {
   const playerPairs = initialPairs(playerHand)
   const opponentPairs = initialPairs(opponentHand)
 
-  const log = (
-    <p class="game__log">
-      The cards have been dealt. Any initial pairs of cards have been added to
-      your Pairs. <br /> Please select a card from your hand to request a match
-      with your opponent.
-    </p>
-  )
+  const log =
+    "The cards have been dealt. Any initial pairs of cards have been added to your Pairs. Please select a card from your hand to request a matchwith your opponent."
 
   updateUI(playerHand, opponentHand, playerPairs, opponentPairs, shuffledDeck)
   dispatchGameAction({ type: "GAME_LOG", log })

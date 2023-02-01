@@ -24,11 +24,11 @@ export type gameStateProp = {
 }
 
 export type gameStateType = {
-  playerHandState: { data: card[]; UI: () => JSX.ArrayElement }
-  playerHandState2: { data: card[]; UI: () => JSX.ArrayElement }
-  playerPairsState: { data: card[]; UI: () => JSX.ArrayElement }
-  opponentHandState: { data: card[]; UI: () => JSX.ArrayElement }
-  opponentPairsState: { data: card[]; UI: () => JSX.ArrayElement }
+  playerHandUI: () => JSX.ArrayElement
+  playerHand2UI: () => JSX.ArrayElement
+  playerPairsUI: () => JSX.ArrayElement
+  opponentHandUI: () => JSX.ArrayElement
+  opponentPairsUI: () => JSX.ArrayElement
   playerHandUnclickable?: boolean
   playerTurnHandler?: playerTurnHandlerType
   playerAnswerHandler?: playerAnswerHandlerType

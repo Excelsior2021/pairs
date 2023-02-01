@@ -21,13 +21,13 @@ const PlayerModal: Component<gameStateProp> = props => (
           </p>
           <div class="player-modal__cards">
             {
-              props.gameState().playerPairsState.UI()[
-                props.gameState().playerPairsState.UI().length - 1
+              props.gameState().playerPairsUI()[
+                props.gameState().playerPairsUI().length - 1
               ]
             }
             {
-              props.gameState().playerPairsState.UI()[
-                props.gameState().playerPairsState.UI().length - 2
+              props.gameState().playerPairsUI()[
+                props.gameState().playerPairsUI().length - 2
               ]
             }
           </div>
@@ -40,13 +40,13 @@ const PlayerModal: Component<gameStateProp> = props => (
           </p>
           <div class="player-modal__cards">
             {
-              props.gameState().playerPairsState.UI()[
-                props.gameState().playerPairsState.UI().length - 1
+              props.gameState().playerPairsUI()[
+                props.gameState().playerPairsUI().length - 1
               ]
             }
             {
-              props.gameState().playerPairsState.UI()[
-                props.gameState().playerPairsState.UI().length - 2
+              props.gameState().playerPairsUI()[
+                props.gameState().playerPairsUI().length - 2
               ]
             }
           </div>
@@ -60,13 +60,13 @@ const PlayerModal: Component<gameStateProp> = props => (
             </p>
             <div class="player-modal__cards">
               {
-                props.gameState().playerPairsState.UI()[
-                  props.gameState().playerPairsState.UI().length - 1
+                props.gameState().playerPairsUI()[
+                  props.gameState().playerPairsUI().length - 1
                 ]
               }
               {
-                props.gameState().playerPairsState.UI()[
-                  props.gameState().playerPairsState.UI().length - 2
+                props.gameState().playerPairsUI()[
+                  props.gameState().playerPairsUI().length - 2
                 ]
               }
             </div>
@@ -79,8 +79,8 @@ const PlayerModal: Component<gameStateProp> = props => (
           </p>
           <div class="player-modal__cards">
             {
-              props.gameState().playerHandState2.UI()[
-                props.gameState().playerHandState2.UI().length - 1
+              props.gameState().playerHand2UI()[
+                props.gameState().playerHand2UI().length - 1
               ]
             }
           </div>

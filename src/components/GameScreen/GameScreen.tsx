@@ -5,12 +5,10 @@ import Instructions from "../Instructions/Instructions"
 import "./GameScreen.scss"
 import MultiplayerMenu from "../MultiplayerMenu/MultiplayerMenu"
 import MultiplayerSession from "../MultiplayerSession/MultiplayerSession.jsx"
-import CreateGame from "../CreateGame/CreateGame"
 import JoinGame from "../JoinGame/JoinGame"
 
 export const [singlePlayerStarted, setSinglePlayerStarted] = createSignal(false)
 export const [multiplayerMenu, setMultiplayerMenu] = createSignal(false)
-export const [createGame, setCreateGame] = createSignal(false)
 export const [joinGame, setJoinGame] = createSignal(false)
 export const [multiplayerSessionStarted, setMultiplayerSessionStarted] =
   createSignal(false)
@@ -25,9 +23,6 @@ const GameScreen: Component = () => (
       </Match>
       <Match when={multiplayerMenu()}>
         <MultiplayerMenu />
-      </Match>
-      <Match when={createGame()}>
-        <CreateGame />
       </Match>
       <Match when={joinGame()}>
         <JoinGame />

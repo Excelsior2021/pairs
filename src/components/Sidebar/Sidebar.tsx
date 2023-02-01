@@ -33,7 +33,7 @@ const Sidebar: Component<sidebarProps> = props => (
         onclick={() => {
           setSinglePlayerStarted(false)
           setMultiplayerSessionStarted(false)
-          props.socket.disconnect()
+          if (props.gameMode === "multiplayer") props.socket.disconnect()
         }}>
         quit
       </button>

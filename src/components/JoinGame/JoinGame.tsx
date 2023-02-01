@@ -5,9 +5,9 @@ import {
   setMultiplayerMenu,
   setSocket,
 } from "../GameScreen/GameScreen"
+import { dispatchGameAction } from "../MultiplayerSession/MultiplayerSession"
 import { io } from "socket.io-client"
 import "./JoinGame.scss"
-import { dispatchGameAction } from "../MultiplayerSession/MultiplayerSession"
 
 const [sessionIDNotValid, setSessionIDNotValid] = createSignal(false)
 const [noSessionExists, setNoSessionExists] = createSignal(false)
@@ -36,7 +36,7 @@ const joinGameHandler = (socket, sessionID) => {
 }
 
 const JoinGame: Component = () => {
-  const socket = io("http://localhost:8080")
+  const socket = io(import.meta.env.VITE_SERVER_URL)
   setSocket(socket)
   const [sessionID, setSessionID] = createSignal("")
   return (
