@@ -11,10 +11,16 @@ import "./JoinGame.scss"
 
 const [sessionIDNotValid, setSessionIDNotValid] = createSignal(false)
 const [noSessionExists, setNoSessionExists] = createSignal(false)
+const [serverConnected, setServerConnected] = createSignal(true)
 
 const joinGameHandler = (socket, sessionID) => {
+  if (!socket.connected) {
+    setServerConnected(false)
+    return
+  }
   setSessionIDNotValid(false)
   setNoSessionExists(false)
+  setServerConnected(true)
   if (!sessionID) {
     setSessionIDNotValid(true)
     return
@@ -63,6 +69,12 @@ const JoinGame: Component = () => {
           correct.
         </p>
       )}
+      {!serverConnected() && (
+        <p class="join-game__text join-game__text--error">
+          There seems to be an issue connecting to the server. Please check your
+          internet connection or try again later.
+        </p>
+      )}
       <div class="join-game__actions">
         <button
           class="join-game__button"
@@ -72,7 +84,12 @@ const JoinGame: Component = () => {
         <button
           class="join-game__button"
           onclick={() => {
-            setJoinGame(false), setMultiplayerMenu(true), socket.disconnect()
+            setJoinGame(false)
+            setMultiplayerMenu(true)
+            setServerConnected(true)
+            setSessionIDNotValid(false)
+            setNoSessionExists(false)
+            socket.disconnect()
           }}>
           ←
         </button>

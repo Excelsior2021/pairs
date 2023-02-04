@@ -24,7 +24,10 @@ const QuitGameModal: Component = props => (
           setSinglePlayerStarted(false)
           setMultiplayerSessionStarted(false)
           setShowQuitGameModal(false)
-          if (props.multiplayer) props.socket.disconnect()
+          if (props.multiplayer) {
+            props.socket.emit("player_disconnected", props.sessionID)
+            props.socket.disconnect()
+          }
         }}>
         confirm
       </button>

@@ -28,7 +28,7 @@ const GameScreen: Component = () => (
         <JoinGame />
       </Match>
       <Match when={multiplayerSessionStarted()}>
-        <MultiplayerSession socket={socket()} sessionID={sessionID} />
+        <MultiplayerSession socket={socket()} />
       </Match>
     </Switch>
     <Instructions />

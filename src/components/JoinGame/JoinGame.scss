@@ -29,7 +29,9 @@
   &__actions {
     display: flex;
     justify-content: space-around;
+    margin: auto;
     margin-top: 2rem;
+    max-width: 482px;
   }
 
   &__button {

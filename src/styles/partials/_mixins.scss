@@ -20,6 +20,7 @@
   font-size: 2rem;
   margin: 1rem 0;
   padding: 1rem 5rem;
+  max-width: 22.5rem;
   cursor: pointer;
 }
 
@@ -39,6 +40,9 @@
 
 @mixin menu {
   text-align: center;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
   animation: menu-fade-in 0.5s linear;
 
   &__heading {
