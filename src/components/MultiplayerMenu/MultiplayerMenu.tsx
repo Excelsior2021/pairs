@@ -10,58 +10,62 @@ import { dispatchGameAction } from "../MultiplayerSession/MultiplayerSession"
 import { io } from "socket.io-client"
 import "./MultiplayerMenu.scss"
 
-const [serverConnected, setServerConnected] = createSignal(true)
+const [serverNotConnected, setServerNotConnected] = createSignal(false)
 
-const MultiplayerMenu: Component = () => (
-  <div class="multiplayer-menu">
-    <h2 class="multiplayer-menu__heading">multiplayer</h2>
-    <div class="multiplayer-menu__actions">
-      <button
-        class="multiplayer-menu__button"
-        onclick={() => {
-          const socket = io(import.meta.env.VITE_SERVER_URL)
-          // if (!socket.connected) {
-          //   setServerConnected(false)
-          //   return
-          // }
-          setSocket(socket)
-          const sessionIDGenerator = () => Math.floor(Math.random() * 10 ** 4)
-          const sessionID = sessionIDGenerator().toString().padStart(4, "0")
-          setSessionID(sessionID)
-          setMultiplayerMenu(false)
-          setMultiplayerSessionStarted(true)
-          dispatchGameAction({
-            type: "CREATE_SESSION",
-            sessionID,
-          })
-        }}>
-        create game
-      </button>
-      <button
-        class="multiplayer-menu__button"
-        onclick={() => {
-          setMultiplayerMenu(false)
-          setJoinGame(true)
-          setServerConnected(true)
-        }}>
-        join game
-      </button>
-      <button
-        class="multiplayer-menu__button"
-        onclick={() => {
-          setMultiplayerMenu(false)
-          setServerConnected(true)
-        }}>
-        ←
-      </button>
+const MultiplayerMenu: Component = () => {
+  setServerNotConnected(false)
+  return (
+    <div class="multiplayer-menu">
+      <h2 class="multiplayer-menu__heading">multiplayer</h2>
+      <div class="multiplayer-menu__actions">
+        <button
+          class="multiplayer-menu__button"
+          onclick={() => {
+            const socket = io(import.meta.env.VITE_SERVER_URL)
+            setSocket(socket)
+            const sessionIDGenerator = () => Math.floor(Math.random() * 10 ** 4)
+            const sessionID = sessionIDGenerator().toString().padStart(4, "0")
+            setSessionID(sessionID)
+            socket.emit("recieve_sessionID")
+            socket.on("recieved_sessionID", () => {
+              setMultiplayerMenu(false)
+              setMultiplayerSessionStarted(true)
+              dispatchGameAction({
+                type: "CREATE_SESSION",
+                sessionID,
+              })
+              setServerNotConnected(false)
+            })
+            setTimeout(() => setServerNotConnected(true), 100)
+          }}>
+          create game
+        </button>
+        <button
+          class="multiplayer-menu__button"
+          onclick={() => {
+            setMultiplayerMenu(false)
+            setJoinGame(true)
+            setServerNotConnected(false)
+          }}>
+          join game
+        </button>
+        <button
+          class="multiplayer-menu__button"
+          onclick={() => {
+            setMultiplayerMenu(false)
+            setServerNotConnected(false)
+          }}>
+          ←
+        </button>
+      </div>
+      {serverNotConnected() && (
+        <p class="multiplayer-menu__text">
+          There seems to be an issue connecting to the server. Please check your
+          internet connection or try again later.
+        </p>
+      )}
     </div>
-    {!serverConnected() && (
-      <p class="multiplayer-menu__text">
-        There seems to be an issue connecting to the server. Please check your
-        internet connection or try again later.
-      </p>
-    )}
-  </div>
-)
+  )
+}
 
 export default MultiplayerMenu
