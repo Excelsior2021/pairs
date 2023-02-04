@@ -18,24 +18,22 @@ const MultiplayerMenu: Component = () => (
     <div class="multiplayer-menu__actions">
       <button
         class="multiplayer-menu__button"
-        onclick={async () => {
+        onclick={() => {
           const socket = io(import.meta.env.VITE_SERVER_URL)
-          setTimeout(() => {
-            if (!socket.connected) {
-              setServerConnected(false)
-              return
-            }
-            setSocket(socket)
-            const sessionIDGenerator = () => Math.floor(Math.random() * 10 ** 4)
-            const sessionID = sessionIDGenerator().toString().padStart(4, "0")
-            setSessionID(sessionID)
-            setMultiplayerMenu(false)
-            setMultiplayerSessionStarted(true)
-            dispatchGameAction({
-              type: "CREATE_SESSION",
-              sessionID,
-            })
-          }, 100)
+          if (!socket.connected) {
+            setServerConnected(false)
+            return
+          }
+          setSocket(socket)
+          const sessionIDGenerator = () => Math.floor(Math.random() * 10 ** 4)
+          const sessionID = sessionIDGenerator().toString().padStart(4, "0")
+          setSessionID(sessionID)
+          setMultiplayerMenu(false)
+          setMultiplayerSessionStarted(true)
+          dispatchGameAction({
+            type: "CREATE_SESSION",
+            sessionID,
+          })
         }}>
         create game
       </button>
