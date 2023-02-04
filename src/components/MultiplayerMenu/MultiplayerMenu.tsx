@@ -20,10 +20,10 @@ const MultiplayerMenu: Component = () => (
         class="multiplayer-menu__button"
         onclick={() => {
           const socket = io(import.meta.env.VITE_SERVER_URL)
-          if (!socket.connected) {
-            setServerConnected(false)
-            return
-          }
+          // if (!socket.connected) {
+          //   setServerConnected(false)
+          //   return
+          // }
           setSocket(socket)
           const sessionIDGenerator = () => Math.floor(Math.random() * 10 ** 4)
           const sessionID = sessionIDGenerator().toString().padStart(4, "0")
