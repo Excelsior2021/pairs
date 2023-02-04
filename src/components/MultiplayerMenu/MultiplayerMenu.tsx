@@ -42,7 +42,7 @@ const MultiplayerMenu: Component = () => {
             setTimeout(() => {
               setPleaseWait(false)
               setServerNotConnected(true)
-            }, 100)
+            }, 1000)
           }}>
           create game
         </button>
@@ -65,7 +65,7 @@ const MultiplayerMenu: Component = () => {
         </button>
       </div>
       {pleaseWait() && <p class="multiplayer-menu__text">please wait...</p>}
-      {serverNotConnected() && (
+      {serverNotConnected() && !pleaseWait() && (
         <p class="multiplayer-menu__text">
           There seems to be an issue connecting to the server. Please check your
           internet connection or try again later.
