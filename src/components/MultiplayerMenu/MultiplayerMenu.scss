@@ -3,4 +3,10 @@
 .multiplayer-menu {
   @include menu;
   animation: none;
+
+  &__text {
+    font-size: 2rem;
+    margin-top: 2rem;
+    color: orange;
+  }
 }

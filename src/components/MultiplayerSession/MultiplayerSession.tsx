@@ -2,6 +2,7 @@ import { Component, createSignal, Show } from "solid-js"
 import { createReducer } from "@solid-primitives/memo"
 import Game from "../Game/Game"
 import Sidebar from "../Sidebar/Sidebar"
+import CreateGame from "../CreateGame/CreateGame"
 import PlayerModal from "../PlayerModal/PlayerModal"
 import PairsModal from "../PairsModal/PairsModal"
 import QuitGameModal from "../QuitGameModal/QuitGameModal"
@@ -10,7 +11,6 @@ import player from "../../gameFunctions/multiplayerPlayerFunctions"
 import { setShowPlayerModal, setMatch } from "../PlayerModal/PlayerModal"
 import { setGameDeck } from "../Sidebar/Sidebar"
 import "../Session/Session.scss"
-import CreateGame from "../CreateGame/CreateGame"
 
 const multiplayerReducer = (state, action) => {
   switch (action.type) {
@@ -349,6 +349,19 @@ const multiplayerReducer = (state, action) => {
         playerHandUI,
       }
     }
+    case "PLAYER_DISCONNECTED": {
+      const log =
+        "Unfortunately, your opponent has disconnected. The game has ended."
+
+      const playerHandUI = UI.createHandUI(state.playerHand)
+      setGameDeck(UI.gameDeckUI())
+
+      return {
+        ...state,
+        log,
+        playerHandUI,
+      }
+    }
     case "GAME_OVER": {
       if (
         state.playerHand.length === 0 ||
@@ -485,6 +498,10 @@ const MultiplayerSession: Component = props => {
     dispatchGameAction({ type: "GAME_OVER" })
   })
 
+  props.socket.on("player_disconnected", () =>
+    dispatchGameAction({ type: "PLAYER_DISCONNECTED" })
+  )
+
   return (
     <div class="session">
       <Show when={startGame()} fallback={<CreateGame />}>
@@ -492,7 +509,11 @@ const MultiplayerSession: Component = props => {
         <PlayerModal gameState={gameState} />
         <PairsModal gameState={gameState} />
       </Show>
-      <QuitGameModal multiplayer={true} socket={props.socket} />
+      <QuitGameModal
+        multiplayer={true}
+        socket={props.socket}
+        sessionID={gameState().sessionID}
+      />
       <Sidebar gameMode="multiplayer" />
     </div>
   )
