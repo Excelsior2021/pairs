@@ -11,6 +11,7 @@ import { io } from "socket.io-client"
 import "./MultiplayerMenu.scss"
 
 const [serverNotConnected, setServerNotConnected] = createSignal(false)
+const [pleaseWait, setPleaseWait] = createSignal(false)
 
 const MultiplayerMenu: Component = () => {
   setServerNotConnected(false)
@@ -21,6 +22,7 @@ const MultiplayerMenu: Component = () => {
         <button
           class="multiplayer-menu__button"
           onclick={() => {
+            setPleaseWait(true)
             const socket = io(import.meta.env.VITE_SERVER_URL)
             setSocket(socket)
             const sessionIDGenerator = () => Math.floor(Math.random() * 10 ** 4)
@@ -34,9 +36,13 @@ const MultiplayerMenu: Component = () => {
                 type: "CREATE_SESSION",
                 sessionID,
               })
+              setPleaseWait(false)
               setServerNotConnected(false)
             })
-            setTimeout(() => setServerNotConnected(true), 100)
+            setTimeout(() => {
+              setPleaseWait(false)
+              setServerNotConnected(true)
+            }, 100)
           }}>
           create game
         </button>
@@ -58,6 +64,7 @@ const MultiplayerMenu: Component = () => {
           ←
         </button>
       </div>
+      {pleaseWait() && <p class="multiplayer-menu__text">please wait...</p>}
       {serverNotConnected() && (
         <p class="multiplayer-menu__text">
           There seems to be an issue connecting to the server. Please check your
