@@ -6,6 +6,7 @@ import CreateGame from "../CreateGame/CreateGame"
 import PlayerModal from "../PlayerModal/PlayerModal"
 import PairsModal from "../PairsModal/PairsModal"
 import QuitGameModal from "../QuitGameModal/QuitGameModal"
+import { gameDeckUI } from "../../gameFunctions/deckFunctions"
 import UI from "../../gameFunctions/multiplayerUIFunctions"
 import player from "../../gameFunctions/multiplayerPlayerFunctions"
 import { setShowPlayerModal, setMatch } from "../PlayerModal/PlayerModal"
@@ -41,6 +42,8 @@ const multiplayerReducer = (state, action) => {
         player2Pairs,
         shuffledDeck,
       } = action.serverState
+
+      console.log(player1Hand)
 
       let playerHand
       let playerHandUI
@@ -228,7 +231,7 @@ const multiplayerReducer = (state, action) => {
     }
     case "PLAYER_DEALS": {
       setGameDeck(
-        UI.gameDeckUI(() =>
+        gameDeckUI(() =>
           UI.gameDeckHandler(state.shuffledDeck, action.playerRequest)
         )
       )
@@ -354,7 +357,7 @@ const multiplayerReducer = (state, action) => {
         "Unfortunately, your opponent has disconnected. The game has ended."
 
       const playerHandUI = UI.createHandUI(state.playerHand)
-      setGameDeck(UI.gameDeckUI())
+      setGameDeck(gameDeckUI())
 
       return {
         ...state,
@@ -431,7 +434,7 @@ const MultiplayerSession: Component = props => {
   props.socket.on("start", (serverState, playerTurn, sessionID) => {
     const player1Log =
       "The cards have been dealt. Any initial pairs of cards have been added to your Pairs.\
-    Please select a card from your hand to request a match with your opponent."
+      You get to go first! Please select a card from your hand to request a match with your opponent."
 
     const player2Log = "Waiting for your opponent to request a value..."
 
@@ -509,11 +512,7 @@ const MultiplayerSession: Component = props => {
         <PlayerModal gameState={gameState} />
         <PairsModal gameState={gameState} />
       </Show>
-      <QuitGameModal
-        multiplayer={true}
-        socket={props.socket}
-        sessionID={gameState().sessionID}
-      />
+      <QuitGameModal multiplayer={true} socket={props.socket} />
       <Sidebar gameMode="multiplayer" />
     </div>
   )

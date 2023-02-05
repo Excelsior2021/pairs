@@ -14,6 +14,7 @@ const [noSessionExists, setNoSessionExists] = createSignal(false)
 const [serverConnected, setServerConnected] = createSignal(true)
 
 const joinGameHandler = (socket, sessionID) => {
+  console.log(socket)
   if (!socket.connected) {
     setServerConnected(false)
     return
