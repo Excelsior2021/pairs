@@ -51,7 +51,7 @@ import _king_of_diamonds from "./king_of_diamonds.png"
 import _king_of_hearts from "./king_of_hearts.png"
 import _king_of_spades from "./king_of_spades.png"
 
-export default {
+const images = {
   _2_of_clubs,
   _2_of_diamonds,
   _2_of_hearts,
@@ -105,3 +105,5 @@ export default {
   _king_of_hearts,
   _king_of_spades,
 }
+
+export default images

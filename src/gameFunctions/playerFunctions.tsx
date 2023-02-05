@@ -59,7 +59,7 @@ export const playerDealt: playerDealtType = (
   playerPairs,
   opponentPairs
 ) => {
-  const dealtCard = deck.dealTopCard(shuffledDeck)
+  const dealtCard = deck.dealCard(shuffledDeck)
   let chosenCard
 
   for (const card of playerHand) {

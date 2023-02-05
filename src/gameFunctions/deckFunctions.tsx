@@ -78,11 +78,11 @@ export const shuffleDeck = (deck: card[]) => {
   return deck
 }
 
-export const dealTopCard = (deck: card[]) => deck.pop()
+export const dealCard = (deck: card[]) => deck.pop()
 
 export const dealHand = (deck: card[], handSize: number) => {
   const hand: card[] = []
-  while (hand.length < handSize) hand.push(dealTopCard(deck)!)
+  while (hand.length < handSize) hand.push(dealCard(deck)!)
 
   return hand
 }
@@ -167,7 +167,7 @@ export default {
   createDeck,
   gameDeckUI,
   shuffleDeck,
-  dealTopCard,
+  dealCard,
   dealHand,
   createPlayerHandUI,
   createHandUI,
