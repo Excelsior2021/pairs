@@ -42,8 +42,6 @@ const gameReducer = (state: gameStateType, action: gameAction) => {
         const opponentHandUI = deck.createHandUIback(action.opponentHand)
         const opponentPairsUI = pairs.createPairsUI(action.opponentPairs)
 
-        console.log(action.playerHand)
-
         if (action.playerHandUnclickable) {
           playerHandUI = deck.createHandUI(action.playerHand)
           playerHand2UI = deck.createHandUI(action.playerHand)

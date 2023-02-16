@@ -53,7 +53,7 @@ export const opponentDealt: opponentDealtType = (
   opponentPairs,
   opponentAsk
 ) => {
-  const dealtCard = deck.dealTopCard(shuffledDeck)
+  const dealtCard = deck.dealCard(shuffledDeck)
 
   if (dealtCard) {
     if (dealtCard.value === opponentAsk.value) {

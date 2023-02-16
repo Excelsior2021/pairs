@@ -5,7 +5,6 @@ import { setGameDeck } from "../components/Sidebar/Sidebar"
 import { card } from "../types/general"
 import { gameDeckUI, dealCard } from "./deckFunctions"
 import cardBack from "../assets/cards/back.png"
-import cardImages from "../assets/cards/cardImages"
 
 export const createPlayerHandUI = (
   hand: card[],
@@ -16,7 +15,7 @@ export const createPlayerHandUI = (
       <img
         id={card.id}
         class="card card--player"
-        src={cardImages[card.img]}
+        src={`./src/assets/cards/${card.id}.png`}
         alt={card.id}
         onclick={cardHandler}
       />
@@ -27,7 +26,12 @@ export const createPlayerHandUI = (
 export const createHandUI = (hand: card[]) => (
   <For each={hand}>
     {(card: card) => (
-      <img class="card" id={card.id} src={cardImages[card.img]} alt={card.id} />
+      <img
+        class="card"
+        id={card.id}
+        src={`./src/assets/cards/${card.id}.png`}
+        alt={card.id}
+      />
     )}
   </For>
 )
@@ -41,7 +45,12 @@ export const createHandUIback = (hand: card[]) => (
 export const createPairsUI = (pairs: card[]) => (
   <For each={pairs}>
     {card => (
-      <img id={card.id} class="card" src={cardImages[card.img]} alt={card.id} />
+      <img
+        id={card.id}
+        class="card"
+        src={`./src/assets/cards/${card.id}.png`}
+        alt={card.id}
+      />
     )}
   </For>
 )
