@@ -4,8 +4,6 @@ import { dispatchGameAction } from "../components/MultiplayerSession/Multiplayer
 import { setGameDeck } from "../components/Sidebar/Sidebar"
 import { card } from "../types/general"
 import { gameDeckUI, dealCard } from "./deckFunctions"
-import cardBack from "../assets/cards/back.png"
-import cardImages from "../assets/cards/cardImages"
 
 export const createPlayerHandUI = (
   hand: card[],
@@ -39,7 +37,7 @@ export const createHandUI = (hand: card[]) => (
 
 export const createHandUIback = (hand: card[]) => (
   <For each={hand}>
-    {() => <img class="card" src={cardBack} alt="opponent card" />}
+    {() => <img class="card" src={`./cards/back.png`} alt="opponent card" />}
   </For>
 )
 

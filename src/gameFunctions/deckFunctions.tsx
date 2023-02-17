@@ -6,9 +6,8 @@ import pairs from "./pairsFunctions"
 import { dispatchGameAction } from "../components/Session/Session"
 import { setGameDeck } from "../components/Sidebar/Sidebar"
 import { card } from "../types/general"
-import cardBack from "../assets/cards/back.png"
+import cardBack from "../assets/back.png"
 import { gameDeckHandlerType } from "../types/function-types"
-import cardImages from "../assets/cards/cardImages"
 
 export const createDeck = () => {
   const deck: card[] = []
@@ -62,7 +61,7 @@ export const gameDeckUI = (
 ) => (
   <img
     class="card card--deck"
-    src={cardBack}
+    src={`./cards/back.png`}
     alt="game deck"
     onclick={gameDeckHandler}
   />
@@ -114,7 +113,7 @@ export const createHandUI = (hand: card[]) => (
 
 export const createHandUIback = (hand: card[]) => (
   <For each={hand}>
-    {() => <img class="card" src={cardBack} alt="opponent card" />}
+    {() => <img class="card" src={`./cards/back.png`} alt="opponent card" />}
   </For>
 )
 
