@@ -17,7 +17,7 @@ export const createDeck = () => {
 
   for (const suit of suits) {
     const id = `ace_of_${suit}`
-    const img = cardImages[`_${id}`]
+    const img = `./cards/${id}.png`
     deck.push({
       id,
       value: "ace",
@@ -29,7 +29,7 @@ export const createDeck = () => {
   for (let value = 2; value < 11; value++) {
     for (const suit of suits) {
       const id = `${value}_of_${suit}`
-      const img = cardImages[`_${id}`]
+      const img = `./cards/${id}.png`
       deck.push({
         id,
         value,
@@ -43,7 +43,7 @@ export const createDeck = () => {
     if (value !== "ace") {
       for (const suit of suits) {
         const id = `${value}_of_${suit}`
-        const img = cardImages[`_${id}`]
+        const img = `./cards/${id}.png`
         deck.push({
           id,
           value,

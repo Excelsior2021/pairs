@@ -16,7 +16,7 @@ export const createPlayerHandUI = (
       <img
         id={card.id}
         class="card card--player"
-        src={cardImages[card.img]}
+        src={`./cards/${card.id}.png`}
         alt={card.id}
         onclick={cardHandler}
       />
@@ -27,7 +27,12 @@ export const createPlayerHandUI = (
 export const createHandUI = (hand: card[]) => (
   <For each={hand}>
     {(card: card) => (
-      <img class="card" id={card.id} src={cardImages[card.img]} alt={card.id} />
+      <img
+        class="card"
+        id={card.id}
+        src={`./cards/${card.id}.png`}
+        alt={card.id}
+      />
     )}
   </For>
 )
@@ -41,7 +46,12 @@ export const createHandUIback = (hand: card[]) => (
 export const createPairsUI = (pairs: card[]) => (
   <For each={pairs}>
     {card => (
-      <img id={card.id} class="card" src={cardImages[card.img]} alt={card.id} />
+      <img
+        id={card.id}
+        class="card"
+        src={`./cards/${card.id}.png`}
+        alt={card.id}
+      />
     )}
   </For>
 )
