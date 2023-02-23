@@ -3,8 +3,21 @@
 
 .main-menu {
   @include menu;
+  position: relative;
 
   &--no-animation {
     animation: none;
+  }
+
+  &__button {
+    &:disabled {
+      opacity: 0.5;
+    }
+  }
+
+  &__text {
+    position: absolute;
+    bottom: -60px;
+    color: orange;
   }
 }
