@@ -1,10 +1,11 @@
 import { Component, createSignal } from "solid-js"
+import { gameStateProp } from "../../types/general"
 import Modal from "../Modal/Modal"
 import "./PairsModal.scss"
 
 export const [showPairsModal, setShowPairsModal] = createSignal(false)
 
-const PairsModal: Component = props => (
+const PairsModal: Component<gameStateProp> = props => (
   <Modal
     showModal={showPairsModal}
     setShowModal={setShowPairsModal}

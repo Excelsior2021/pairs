@@ -11,6 +11,7 @@ import UI from "../../gameFunctions/multiplayerUIFunctions"
 import player from "../../gameFunctions/multiplayerPlayerFunctions"
 import { setShowPlayerModal, setMatch } from "../PlayerModal/PlayerModal"
 import { setGameDeck } from "../Sidebar/Sidebar"
+import { multiplayerSessionProps } from "../../types/general"
 import "../Session/Session.scss"
 
 const multiplayerReducer = (state, action) => {
@@ -42,8 +43,6 @@ const multiplayerReducer = (state, action) => {
         player2Pairs,
         shuffledDeck,
       } = action.serverState
-
-      console.log(player1Hand)
 
       let playerHand
       let playerHandUI
@@ -417,7 +416,7 @@ export const [gameState, dispatchGameAction] = createReducer(
   null
 )
 
-const MultiplayerSession: Component = props => {
+const MultiplayerSession: Component<multiplayerSessionProps> = props => {
   const [player, setPlayer] = createSignal("")
   const [startGame, setStartGame] = createSignal(false)
 

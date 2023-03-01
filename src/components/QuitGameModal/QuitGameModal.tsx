@@ -5,10 +5,11 @@ import {
   setSinglePlayerStarted,
 } from "../GameScreen/GameScreen"
 import "./QuitGameModal.scss"
+import { quitGameModalProps } from "../../types/general"
 
 export const [showQuitGameModal, setShowQuitGameModal] = createSignal(false)
 
-const QuitGameModal: Component = props => (
+const QuitGameModal: Component<quitGameModalProps> = props => (
   <Modal
     showModal={showQuitGameModal}
     setShowModal={setShowQuitGameModal}
@@ -24,7 +25,7 @@ const QuitGameModal: Component = props => (
           setSinglePlayerStarted(false)
           setMultiplayerSessionStarted(false)
           setShowQuitGameModal(false)
-          if (props.multiplayer) props.socket.disconnect()
+          if (props.multiplayer) props.socket?.disconnect()
         }}>
         confirm
       </button>

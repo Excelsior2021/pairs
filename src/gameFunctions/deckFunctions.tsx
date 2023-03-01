@@ -6,7 +6,6 @@ import pairs from "./pairsFunctions"
 import { dispatchGameAction } from "../components/Session/Session"
 import { setGameDeck } from "../components/Sidebar/Sidebar"
 import { card } from "../types/general"
-import cardBack from "../assets/back.png"
 import { gameDeckHandlerType } from "../types/function-types"
 
 export const createDeck = () => {
