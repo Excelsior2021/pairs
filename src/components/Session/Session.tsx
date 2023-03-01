@@ -121,7 +121,7 @@ const Session: Component = () => {
       <Sidebar gameMode="single player" />
       <PlayerModal gameState={gameState} />
       <PairsModal gameState={gameState} />
-      <QuitGameModal />
+      <QuitGameModal multiplayer={false} socket={null} />
     </div>
   )
 }

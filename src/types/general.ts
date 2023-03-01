@@ -1,5 +1,6 @@
 import { Accessor } from "solid-js"
 import { JSX } from "solid-js/jsx-runtime"
+import { Socket } from "socket.io-client"
 import {
   playerTurnHandlerType,
   playerAnswerHandlerType,
@@ -21,6 +22,15 @@ export type playerHandEventType = JSX.EventHandlerUnion<
 
 export type gameStateProp = {
   gameState: Accessor<gameStateType>
+}
+
+export type multiplayerSessionProps = {
+  socket: Socket
+}
+
+export type quitGameModalProps = {
+  multiplayer: boolean
+  socket: Socket | null
 }
 
 export type gameStateType = {

@@ -6,15 +6,14 @@ import {
   setSocket,
 } from "../GameScreen/GameScreen"
 import { dispatchGameAction } from "../MultiplayerSession/MultiplayerSession"
-import { io } from "socket.io-client"
+import { io, Socket } from "socket.io-client"
 import "./JoinGame.scss"
 
 const [sessionIDNotValid, setSessionIDNotValid] = createSignal(false)
 const [noSessionExists, setNoSessionExists] = createSignal(false)
 const [serverConnected, setServerConnected] = createSignal(true)
 
-const joinGameHandler = (socket, sessionID) => {
-  console.log(socket)
+const joinGameHandler = (socket: Socket, sessionID: string) => {
   if (!socket.connected) {
     setServerConnected(false)
     return
