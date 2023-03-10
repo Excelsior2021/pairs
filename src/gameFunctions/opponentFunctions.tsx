@@ -160,7 +160,7 @@ export const opponentTurn: opponentTurnType = (
         playerPairs,
         opponentPairs,
         chosenCard,
-        playerAnswerHandler,
+        playerAnswerHandlerX,
         yesButton,
         noButton
       )
@@ -173,7 +173,7 @@ export const opponentTurn: opponentTurnType = (
       noButton,
     })
 
-    const playerAnswerHandler = (playerHandEvent: playerHandEventType) =>
+    const playerAnswerHandlerX = (playerHandEvent: playerHandEventType) =>
       player.playerAnswerHandler(
         playerHandEvent,
         shuffledDeck,

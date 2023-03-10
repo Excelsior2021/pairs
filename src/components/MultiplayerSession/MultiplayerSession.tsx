@@ -1,4 +1,5 @@
 import { Component, createSignal, Show } from "solid-js"
+import { JSX } from "solid-js"
 import { createReducer } from "@solid-primitives/memo"
 import Game from "../Game/Game"
 import Sidebar from "../Sidebar/Sidebar"
@@ -11,15 +12,49 @@ import UI from "../../gameFunctions/multiplayerUIFunctions"
 import player from "../../gameFunctions/multiplayerPlayerFunctions"
 import { setShowPlayerModal, setMatch } from "../PlayerModal/PlayerModal"
 import { setGameDeck } from "../Sidebar/Sidebar"
-import { multiplayerSessionProps } from "../../types/general"
+import {
+  card,
+  clickEventHandlerType,
+  gameActionMultiplayer,
+  gameStateMultiplayerType,
+  multiplayerSessionProps,
+  playerHandEventType,
+} from "../../types/general"
 import "../Session/Session.scss"
 
-const multiplayerReducer = (state, action) => {
+const initialGameState = {
+  playerHandUI: () => [],
+  playerHand2UI: () => [],
+  playerPairsUI: () => [],
+  opponentHandUI: () => [],
+  opponentPairsUI: () => [],
+  shuffledDeck: [],
+  playerHand: [],
+  opponentHand: [],
+  playerPairs: [],
+  opponentPairs: [],
+  playerHandUnclickable: null,
+  playerTurnHandler: null,
+  playerAnswerHandler: null,
+  playerOutput: null,
+  yesButton: null,
+  noButton: null,
+  log: null,
+  socket: null,
+  clientPlayer: "",
+  sessionID: "",
+  gameState: null,
+}
+
+const multiplayerReducer = (
+  state: gameStateMultiplayerType,
+  action: gameActionMultiplayer
+): gameStateMultiplayerType => {
   switch (action.type) {
     case "START_SESSION": {
       return {
         ...state,
-        socket: action.socket,
+        socket: action.socket!,
       }
     }
     case "CREATE_SESSION": {
@@ -42,32 +77,34 @@ const multiplayerReducer = (state, action) => {
         player1Pairs,
         player2Pairs,
         shuffledDeck,
-      } = action.serverState
+      } = action.serverState!
 
-      let playerHand
-      let playerHandUI
-      let playerHand2UI
-      let opponentHand
-      let opponentHandUI
-      let playerPairs
-      let playerPairsUI
-      let opponentPairs
-      let opponentPairsUI
+      let playerHand: card[] = []
+      let playerHandUI: JSX.Element
+      let opponentHand: card[] = []
+      let opponentHandUI: JSX.Element
+      let playerPairs: card[] = []
+      let playerPairsUI: JSX.Element
+      let opponentPairs: card[] = []
+      let opponentPairsUI: JSX.Element
       let log
-      let gameState
+      let gameState = action.serverState!
 
       if (action.clientPlayer === "player1") {
         playerHand = player1Hand
         opponentHand = player2Hand
 
         if (action.playerTurn === "player1") {
-          const playerTurnHandler = playerHandEvent =>
-            player.playerTurnHandler(playerHandEvent, playerHand)
+          const playerTurnHandler = (playerHandEvent: playerHandEventType) =>
+            player.playerTurnHandler(
+              playerHandEvent,
+              playerHand,
+              action.playerTurn!
+            )
           playerHandUI = UI.createPlayerHandUI(playerHand, playerTurnHandler)
         } else {
           playerHandUI = UI.createHandUI(playerHand)
         }
-        playerHand2UI = UI.createHandUI(playerHand)
         opponentHandUI = UI.createHandUIback(opponentHand)
 
         playerPairs = player1Pairs
@@ -91,13 +128,16 @@ const multiplayerReducer = (state, action) => {
         opponentHand = player1Hand
 
         if (action.playerTurn === "player2") {
-          const playerTurnHandler = playerHandEvent =>
-            player.playerTurnHandler(playerHandEvent, playerHand)
+          const playerTurnHandler = (playerHandEvent: playerHandEventType) =>
+            player.playerTurnHandler(
+              playerHandEvent,
+              playerHand,
+              state.clientPlayer
+            )
           playerHandUI = UI.createPlayerHandUI(playerHand, playerTurnHandler)
         } else {
           playerHandUI = UI.createHandUI(playerHand)
         }
-        playerHand2UI = UI.createHandUI(playerHand)
         opponentHandUI = UI.createHandUIback(opponentHand)
 
         playerPairs = player2Pairs
@@ -121,7 +161,6 @@ const multiplayerReducer = (state, action) => {
         playerHand,
         opponentHand,
         playerHandUI,
-        playerHand2UI,
         opponentHandUI,
         playerPairs,
         opponentPairs,
@@ -130,14 +169,14 @@ const multiplayerReducer = (state, action) => {
         shuffledDeck,
         log,
         gameState,
-        clientPlayer: action.clientPlayer,
+        clientPlayer: action.clientPlayer!,
       }
     }
     case "PLAYER_REQUEST": {
       state.socket.emit(
         "player_request",
         state.clientPlayer,
-        action.playerRequest,
+        action.playerRequest!.card,
         state.sessionID
       )
       const log = "Waiting for you opponent to respond..."
@@ -150,8 +189,8 @@ const multiplayerReducer = (state, action) => {
       }
     }
     case "PLAYER_RESPONSE": {
-      const { card } = action.playerRequest
-      let playerHand
+      const { card } = action.playerRequest!
+      let playerHand: card[]
 
       if (state.clientPlayer === "player1") {
         playerHand = state.playerHand
@@ -160,13 +199,12 @@ const multiplayerReducer = (state, action) => {
         playerHand = state.playerHand
       }
 
-      const playerResponseHandler = responseEvent =>
+      const playerResponseHandler = (responseEvent: clickEventHandlerType) =>
         player.playerResponseHandler(
           responseEvent,
-          action.playerRequest,
+          action.playerRequest!,
           playerHand,
-          state.clientPlayer,
-          state.shuffledDeck
+          state.clientPlayer
         )
 
       const log = `Do you have a ${card.value}?`
@@ -231,7 +269,7 @@ const multiplayerReducer = (state, action) => {
     case "PLAYER_DEALS": {
       setGameDeck(
         gameDeckUI(() =>
-          UI.gameDeckHandler(state.shuffledDeck, action.playerRequest)
+          UI.gameDeckHandler(state.shuffledDeck, action.playerRequest!)
         )
       )
       const log =
@@ -252,6 +290,39 @@ const multiplayerReducer = (state, action) => {
     case "PLAYER_RESULT": {
       if (action.requestPlayer === state.clientPlayer) {
         setShowPlayerModal(true)
+
+        let playerHand: card[] = []
+        let playerPairs: card[] = []
+
+        if (action.requestPlayer === "player1" && action.serverState) {
+          const { player1Hand, player1Pairs } = action.serverState
+          playerHand = player1Hand
+          playerPairs = player1Pairs
+        }
+        if (action.requestPlayer === "player2" && action.serverState) {
+          const { player2Hand, player2Pairs } = action.serverState
+          playerHand = player2Hand
+          playerPairs = player2Pairs
+        }
+
+        let playerPairsLast: JSX.Element
+        let playerPairsSecondLast: JSX.Element
+        let playerHandLast: JSX.Element
+
+        if (playerPairs.length > 0) {
+          playerPairsLast = UI.createPairsUI([
+            playerPairs[playerPairs.length - 1],
+          ])
+
+          playerPairsSecondLast = UI.createPairsUI([
+            playerPairs[playerPairs.length - 2],
+          ])
+        }
+
+        if (playerHand.length > 0) {
+          playerHandLast = UI.createHandUI([playerHand[playerHand.length - 1]])
+        }
+
         if (action.playerOutput === 0) {
           setMatch("Match (Opponent's Hand)")
           const log = "It's your turn again."
@@ -259,6 +330,8 @@ const multiplayerReducer = (state, action) => {
             ...state,
             log,
             playerOutput: action.playerOutput,
+            playerPairsLast,
+            playerPairsSecondLast,
           }
         }
         if (action.playerOutput === 1) {
@@ -269,8 +342,12 @@ const multiplayerReducer = (state, action) => {
             action.playerOutput,
             state.sessionID
           )
-          const playerTurnHandler = playerHandEvent =>
-            player.playerTurnHandler(playerHandEvent, state.playerHand)
+          const playerTurnHandler = (playerHandEvent: playerHandEventType) =>
+            player.playerTurnHandler(
+              playerHandEvent,
+              state.playerHand,
+              state.clientPlayer
+            )
           const playerHandUI = UI.createPlayerHandUI(
             state.playerHand,
             playerTurnHandler
@@ -280,6 +357,8 @@ const multiplayerReducer = (state, action) => {
             log,
             playerHandUI,
             playerOutput: action.playerOutput,
+            playerPairsLast,
+            playerPairsSecondLast,
           }
         }
         if (action.playerOutput === 2) {
@@ -297,6 +376,8 @@ const multiplayerReducer = (state, action) => {
             log,
             playerOutput: action.playerOutput,
             playerHandUI,
+            playerPairsLast,
+            playerPairsSecondLast,
           }
         }
         if (action.playerOutput === 3) {
@@ -314,6 +395,7 @@ const multiplayerReducer = (state, action) => {
             log,
             playerOutput: action.playerOutput,
             playerHandUI,
+            playerHandLast,
           }
         }
       }
@@ -338,8 +420,12 @@ const multiplayerReducer = (state, action) => {
       return { ...state, log }
     }
     case "PLAYER_TURN_SWITCH": {
-      const playerTurnHandler = playerHandEvent =>
-        player.playerTurnHandler(playerHandEvent, state.playerHand)
+      const playerTurnHandler = (playerHandEvent: playerHandEventType) =>
+        player.playerTurnHandler(
+          playerHandEvent,
+          state.playerHand,
+          state.clientPlayer
+        )
 
       const playerHandUI = UI.createPlayerHandUI(
         state.playerHand,
@@ -407,13 +493,13 @@ const multiplayerReducer = (state, action) => {
       return state
     }
     default:
-      return null
+      return state
   }
 }
 
 export const [gameState, dispatchGameAction] = createReducer(
   multiplayerReducer,
-  null
+  initialGameState
 )
 
 const MultiplayerSession: Component<multiplayerSessionProps> = props => {
@@ -464,7 +550,12 @@ const MultiplayerSession: Component<multiplayerSessionProps> = props => {
         clientPlayer: player(),
         playerTurn: requestPlayer,
       })
-      dispatchGameAction({ type: "PLAYER_RESULT", playerOutput, requestPlayer })
+      dispatchGameAction({
+        type: "PLAYER_RESULT",
+        playerOutput,
+        requestPlayer,
+        serverState,
+      })
       dispatchGameAction({ type: "GAME_OVER" })
     }
   )
@@ -485,7 +576,12 @@ const MultiplayerSession: Component<multiplayerSessionProps> = props => {
         serverState,
         clientPlayer: player(),
       })
-      dispatchGameAction({ type: "PLAYER_RESULT", playerOutput, requestPlayer })
+      dispatchGameAction({
+        type: "PLAYER_RESULT",
+        playerOutput,
+        requestPlayer,
+        serverState,
+      })
       dispatchGameAction({ type: "GAME_OVER" })
     }
   )
