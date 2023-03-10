@@ -90,7 +90,7 @@ export const createPlayerHandUI = (
   cardHandler: JSX.EventHandlerUnion<HTMLImageElement, MouseEvent>
 ) => (
   <For each={hand}>
-    {(card: card) => (
+    {card => (
       <img
         id={card.id}
         class="card card--player"
@@ -136,6 +136,8 @@ export const gameDeckHandler: gameDeckHandlerType = (
   dispatchGameAction({
     type: "PLAYER_ACTION",
     playerOutput,
+    playerHand,
+    playerPairs,
   })
 
   dispatchGameAction({ type: "GAME_LOG" })
