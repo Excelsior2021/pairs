@@ -22,7 +22,7 @@ export const playerMatch: playerMatchType = (
   let chosenCard
 
   for (const card of playerHand) {
-    if (card.id === playerHandEvent.target.id) chosenCard = card
+    if (card.id === playerHandEvent.target!.id) chosenCard = card
   }
 
   if (chosenCard) {
@@ -32,7 +32,7 @@ export const playerMatch: playerMatchType = (
         opponentHand.splice(opponentHand.indexOf(card), 1)
 
         for (const card of playerHand) {
-          if (playerHandEvent.target.id === card.id) {
+          if (playerHandEvent.target!.id === card.id) {
             playerPairs.push(card)
             playerHand.splice(playerHand.indexOf(card), 1)
             pairs.updateUI(
@@ -63,7 +63,7 @@ export const playerDealt: playerDealtType = (
   let chosenCard
 
   for (const card of playerHand) {
-    if (card.id === playerHandEvent.target.id) chosenCard = card
+    if (card.id === playerHandEvent.target!.id) chosenCard = card
   }
 
   if (chosenCard && dealtCard) {
@@ -289,7 +289,7 @@ export const playerAnswerHandler: playerAnswerHandlerType = (
   let chosenCard
 
   for (const card of playerHand) {
-    if (card.id === playerHandEvent.target.id) chosenCard = card
+    if (card.id === playerHandEvent.target!.id) chosenCard = card
   }
 
   if (chosenCard) {

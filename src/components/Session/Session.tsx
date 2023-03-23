@@ -17,7 +17,7 @@ const initialGameState = {
   opponentHandUI: () => [],
   opponentPairsUI: () => [],
   playerHandUnclickable: null,
-  playerTurnHandler: null,
+  playerTurnEventHandler: null,
   playerAnswerHandler: null,
   playerOutput: null,
   question: null,
@@ -40,11 +40,11 @@ const gameReducer = (
         action.playerPairs &&
         action.opponentHand &&
         action.opponentPairs &&
-        action.playerTurnHandler
+        action.playerTurnEventHandler
       ) {
         let playerHandUI = deck.createPlayerHandUI(
           action.playerHand,
-          action.playerTurnHandler
+          action.playerTurnEventHandler
         )
         const playerPairsUI = pairs.createPairsUI(action.playerPairs)
 

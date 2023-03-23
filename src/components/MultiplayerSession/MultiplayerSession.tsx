@@ -14,7 +14,7 @@ import { setShowPlayerModal, setMatch } from "../PlayerModal/PlayerModal"
 import { setGameDeck } from "../Sidebar/Sidebar"
 import {
   card,
-  clickEventHandlerType,
+  responseEventHandlerType,
   gameActionMultiplayer,
   gameStateMultiplayerType,
   multiplayerSessionProps,
@@ -199,7 +199,7 @@ const multiplayerReducer = (
         playerHand = state.playerHand
       }
 
-      const playerResponseHandler = (responseEvent: clickEventHandlerType) =>
+      const playerResponseHandler = (responseEvent: responseEventHandlerType) =>
         player.playerResponseHandler(
           responseEvent,
           action.playerRequest!,

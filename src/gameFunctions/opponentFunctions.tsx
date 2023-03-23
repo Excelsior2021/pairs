@@ -3,7 +3,11 @@ import pairs from "./pairsFunctions"
 import player from "./playerFunctions"
 
 import { dispatchGameAction } from "../components/Session/Session"
-import { card, playerHandEventType } from "../types/general"
+import {
+  card,
+  playerHandEventType,
+  responseEventHandlerType,
+} from "../types/general"
 import {
   opponentDealtType,
   opponentMatchType,
@@ -27,7 +31,7 @@ export const opponentMatch: opponentMatchType = (
   opponentHand.splice(opponentHand.indexOf(opponentAsk), 1)
 
   for (const card of playerHand) {
-    if (playerHandEvent.target.id === card.id) {
+    if (playerHandEvent.target!.id === card.id) {
       opponentPairs.push(card)
       playerHand.splice(playerHand.indexOf(card), 1)
     }
@@ -146,12 +150,7 @@ export const opponentTurn: opponentTurnType = (
       </button>
     ) as JSX.Element
 
-    const playerResponseHandler = (
-      response: MouseEvent & {
-        currentTarget: HTMLButtonElement
-        target: Element
-      }
-    ) =>
+    const playerResponseHandler = (response: responseEventHandlerType) =>
       player.playerResponseHandler(
         response,
         shuffledDeck,
@@ -160,7 +159,7 @@ export const opponentTurn: opponentTurnType = (
         playerPairs,
         opponentPairs,
         chosenCard,
-        playerAnswerHandlerX,
+        playerAnswerEventHandler,
         yesButton,
         noButton
       )
@@ -173,7 +172,7 @@ export const opponentTurn: opponentTurnType = (
       noButton,
     })
 
-    const playerAnswerHandlerX = (playerHandEvent: playerHandEventType) =>
+    const playerAnswerEventHandler = (playerHandEvent: playerHandEventType) =>
       player.playerAnswerHandler(
         playerHandEvent,
         shuffledDeck,

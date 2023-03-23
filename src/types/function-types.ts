@@ -1,5 +1,9 @@
 import { JSX } from "solid-js/jsx-runtime"
-import { card, cardRequestMultiplayer, clickEventHandlerType } from "./general"
+import {
+  card,
+  cardRequestMultiplayer,
+  responseEventHandlerType,
+} from "./general"
 import { playerHandEventType } from "./general"
 
 //DECK FUNCTIONS
@@ -52,7 +56,7 @@ export type playerTurnHandlerMultiplayerType = (
 ) => void
 
 export type playerResponseHandlerType = (
-  response: clickEventHandlerType,
+  response: responseEventHandlerType,
   shuffledDeck: card[],
   playerHand: card[],
   opponentHand: card[],
@@ -65,7 +69,7 @@ export type playerResponseHandlerType = (
 ) => void
 
 export type playerResponseHandlerMultiplayerType = (
-  response: clickEventHandlerType,
+  response: responseEventHandlerType,
   oppenentRequest: cardRequestMultiplayer,
   playerHand: card[],
   player: string

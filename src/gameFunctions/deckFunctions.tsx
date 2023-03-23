@@ -5,7 +5,7 @@ import opponent from "./opponentFunctions"
 import pairs from "./pairsFunctions"
 import { dispatchGameAction } from "../components/Session/Session"
 import { setGameDeck } from "../components/Sidebar/Sidebar"
-import { card } from "../types/general"
+import { card, playerHandEventType } from "../types/general"
 import { gameDeckHandlerType } from "../types/function-types"
 
 export const createDeck = () => {
@@ -87,7 +87,7 @@ export const dealHand = (deck: card[], handSize: number) => {
 
 export const createPlayerHandUI = (
   hand: card[],
-  cardHandler: JSX.EventHandlerUnion<HTMLImageElement, MouseEvent>
+  cardHandler: (playerHandEvent: playerHandEventType) => void
 ) => (
   <For each={hand}>
     {card => (
@@ -96,7 +96,7 @@ export const createPlayerHandUI = (
         class="card card--player"
         src={card.img}
         alt={card.id}
-        onclick={cardHandler}
+        onclick={e => cardHandler(e)}
       />
     )}
   </For>
