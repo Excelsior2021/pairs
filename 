@@ -1,0 +1,398 @@
+[33mcommit 2a696dcfcf5986e92918a059ecf1b47828b9eea1[m[33m ([m[1;36mHEAD -> [m[1;32mserver-down[m[33m, [m[1;31morigin/main[m[33m, [m[1;32mmain[m[33m)[m
+Merge: 6aa4ffa cc6fff2
+Author: Jonathan Kila <temidee11@yahoo.co.uk>
+Date:   Fri Mar 10 17:11:51 2023 +0000
+
+    Merge branch 'develop'
+
+[33mcommit cc6fff2155b4e1d6b9ccd7c2f3cc433e6536dbb8[m
+Author: Jonathan Kila <temidee11@yahoo.co.uk>
+Date:   Fri Mar 10 17:09:52 2023 +0000
+
+    updates
+
+[33mcommit 6aa4ffab2991b1278607f026518fbf092c4ac9af[m
+Merge: 44bca96 245c18a
+Author: Jonathan Kila <temidee11@yahoo.co.uk>
+Date:   Wed Mar 1 11:05:59 2023 +0000
+
+    Merge branch 'develop'
+
+[33mcommit 245c18a76f1e0707c516c8b658763dc53b4b572a[m
+Author: Jonathan Kila <temidee11@yahoo.co.uk>
+Date:   Wed Mar 1 11:05:49 2023 +0000
+
+    updates
+
+[33mcommit 44bca96d5aebaa281e7009ada87233d39623f140[m
+Author: Jonathan Kila <temidee11@yahoo.co.uk>
+Date:   Wed Mar 1 09:51:16 2023 +0000
+
+    updates
+
+[33mcommit d7156779a4e79a69de5475966f67013f7f755a0f[m
+Merge: 447ac88 b8d0c8f
+Author: Jonathan Kila <temidee11@yahoo.co.uk>
+Date:   Thu Feb 23 08:46:51 2023 +0000
+
+    Merge branch 'server-down'
+
+[33mcommit b8d0c8fbb9b336e899f4d289f7aec320016e5dbb[m
+Author: Jonathan Kila <temidee11@yahoo.co.uk>
+Date:   Thu Feb 23 08:46:35 2023 +0000
+
+    server down
+
+[33mcommit 447ac88293a79752354c8aa19c6e89ecb756fff5[m
+Merge: efeea29 8dcbae8
+Author: Jonathan Kila <temidee11@yahoo.co.uk>
+Date:   Fri Feb 17 10:31:29 2023 +0000
+
+    Merge branch 'develop'
+
+[33mcommit 8dcbae80d801d716f91fa212219442b18bd9a105[m
+Author: Jonathan Kila <temidee11@yahoo.co.uk>
+Date:   Fri Feb 17 10:31:21 2023 +0000
+
+    updates
+
+[33mcommit efeea29eadbf162308d01a14930f7ac2682f9e71[m
+Merge: e54452d d9585c8
+Author: Jonathan Kila <temidee11@yahoo.co.uk>
+Date:   Fri Feb 17 10:15:53 2023 +0000
+
+    Merge branch 'develop'
+
+[33mcommit d9585c8142b38a63a2e34e48227cff64c32c65ba[m
+Author: Jonathan Kila <temidee11@yahoo.co.uk>
+Date:   Fri Feb 17 10:15:45 2023 +0000
+
+    updates
+
+[33mcommit e54452de1b1a9b991fbd5cd379f6261d4ff5187d[m
+Merge: e2b3daf f9522c6
+Author: Jonathan Kila <temidee11@yahoo.co.uk>
+Date:   Thu Feb 16 20:48:18 2023 +0000
+
+    Merge branch 'develop'
+
+[33mcommit f9522c6a440e20103e733eb8fd7c294fb8ac0da5[m
+Author: Jonathan Kila <temidee11@yahoo.co.uk>
+Date:   Thu Feb 16 20:47:26 2023 +0000
+
+    updates
+
+[33mcommit e2b3daf667b22e9312acaf7b142cfc4e257c1e77[m
+Merge: de11a92 ca11ffc
+Author: Jonathan Kila <temidee11@yahoo.co.uk>
+Date:   Thu Feb 16 20:37:21 2023 +0000
+
+    Merge branch 'develop'
+
+[33mcommit ca11ffcefde04dda53ffe65a5db6fc0716d7e02b[m
+Author: Jonathan Kila <temidee11@yahoo.co.uk>
+Date:   Thu Feb 16 20:36:35 2023 +0000
+
+    updates, single player bug fix
+
+[33mcommit de11a925ab7a9dcf4516a95194e4d8502a458b58[m
+Merge: 8c72bdb bb46cc4
+Author: Jonathan Kila <temidee11@yahoo.co.uk>
+Date:   Sun Feb 5 18:50:32 2023 +0000
+
+    Merge branch 'develop'
+
+[33mcommit bb46cc495343265fc35b29ab44d2ae3fdaf7492a[m
+Author: Jonathan Kila <temidee11@yahoo.co.uk>
+Date:   Sun Feb 5 18:50:21 2023 +0000
+
+    updates
+
+[33mcommit 8c72bdbcc69c562b5e90659ca39e1d7730ffd28f[m
+Merge: 78f84da 9339712
+Author: Jonathan Kila <temidee11@yahoo.co.uk>
+Date:   Sat Feb 4 15:54:31 2023 +0000
+
+    Merge branch 'develop'
+
+[33mcommit 9339712bf2f77393777569f753f8ce543b243eec[m
+Author: Jonathan Kila <temidee11@yahoo.co.uk>
+Date:   Sat Feb 4 15:54:20 2023 +0000
+
+    updates
+
+[33mcommit 78f84daa71a77f8ad9fbdee77c601155830eb13d[m
+Author: Jonathan Kila <temidee11@yahoo.co.uk>
+Date:   Sat Feb 4 15:51:00 2023 +0000
+
+    updates
+
+[33mcommit d174815df11f4aa9bc43ebe8ce81b2577f104008[m
+Author: Jonathan Kila <temidee11@yahoo.co.uk>
+Date:   Sat Feb 4 15:49:58 2023 +0000
+
+    updates
+
+[33mcommit 26106f363d01df8c48f88019aeee4d92250d4bfb[m
+Author: Jonathan Kila <temidee11@yahoo.co.uk>
+Date:   Sat Feb 4 15:43:23 2023 +0000
+
+    updates
+
+[33mcommit f5bf88a664b2d7843325c1184328c9dbc391053d[m
+Author: Jonathan Kila <temidee11@yahoo.co.uk>
+Date:   Sat Feb 4 14:55:22 2023 +0000
+
+    updates
+
+[33mcommit 847dfe6e05e1d5b0a4752d660e9696b5cfb3b989[m
+Merge: 9b025d4 87a0cd4
+Author: Jonathan Kila <temidee11@yahoo.co.uk>
+Date:   Sat Feb 4 14:51:34 2023 +0000
+
+    Merge branch 'develop'
+
+[33mcommit 87a0cd47c4e3af35bf29ef43721737bffeee7b07[m
+Author: Jonathan Kila <temidee11@yahoo.co.uk>
+Date:   Sat Feb 4 14:51:26 2023 +0000
+
+    testing
+
+[33mcommit 9b025d4bb3856ca79bf09b4f3f86e53e1c984367[m
+Merge: a12899f c1fdbc6
+Author: Jonathan Kila <temidee11@yahoo.co.uk>
+Date:   Sat Feb 4 13:35:14 2023 +0000
+
+    Merge branch 'develop'
+
+[33mcommit c1fdbc6af6656f3bb9536d248296e959e6de1ce2[m
+Author: Jonathan Kila <temidee11@yahoo.co.uk>
+Date:   Sat Feb 4 13:35:06 2023 +0000
+
+    updates
+
+[33mcommit a12899f6751ab34910500c650ed41321ba21abef[m
+Merge: eab485e 9a656d5
+Author: Jonathan Kila <temidee11@yahoo.co.uk>
+Date:   Wed Feb 1 16:38:40 2023 +0000
+
+    Merge branch 'main' of https://github.com/Excelsior2021/pairs
+
+[33mcommit eab485e5fd02598768e61f29fb9e7e9846eda937[m
+Author: Jonathan Kila <temidee11@yahoo.co.uk>
+Date:   Wed Feb 1 16:38:17 2023 +0000
+
+    uodates
+
+[33mcommit 9a656d51480972f4913daa0011eda717af5ac838[m
+Author: Jonathan Kila <90631155+Excelsior2021@users.noreply.github.com>
+Date:   Wed Feb 1 16:37:09 2023 +0000
+
+    Update README.md
+
+[33mcommit e9fb05e427acd0637e69d1b8ab23cb8cb8be04f3[m
+Merge: 038059a 52c96b4
+Author: Jonathan Kila <temidee11@yahoo.co.uk>
+Date:   Wed Feb 1 16:35:59 2023 +0000
+
+    Merge branch 'develop'
+
+[33mcommit 52c96b44a67a03dad1c311514b642f30662a64ae[m
+Author: Jonathan Kila <temidee11@yahoo.co.uk>
+Date:   Wed Feb 1 16:35:50 2023 +0000
+
+    quit game modal
+
+[33mcommit 038059af053f70eb9a5239899cb72a534ae54fc9[m
+Author: Jonathan Kila <temidee11@yahoo.co.uk>
+Date:   Wed Feb 1 15:35:19 2023 +0000
+
+    updates
+
+[33mcommit d4f37f8eb1eaf931111629d4f693e2c477a7ce3a[m
+Author: Jonathan Kila <temidee11@yahoo.co.uk>
+Date:   Wed Feb 1 15:17:03 2023 +0000
+
+    server test
+
+[33mcommit 1de79417e9ae90653ae719e6340cc2bae9a36163[m
+Author: Jonathan Kila <temidee11@yahoo.co.uk>
+Date:   Wed Feb 1 15:03:26 2023 +0000
+
+    updates
+
+[33mcommit 8aa3eee66c86e7cf395224854f93bca8ff9cfb32[m[33m ([m[1;31morigin/multiplayer[m[33m)[m
+Author: Jonathan Kila <temidee11@yahoo.co.uk>
+Date:   Wed Feb 1 14:56:40 2023 +0000
+
+    multiplayer branch, push to GitHub
+
+[33mcommit ac8e0a6ee5d6cbc1c30de285b2bbcd300d44cf18[m
+Author: Jonathan Kila <temidee11@yahoo.co.uk>
+Date:   Tue Jan 31 16:55:29 2023 +0000
+
+    pre create game refactor
+
+[33mcommit 1a271c75d847c4c147eb595530802f4650615b45[m
+Author: Jonathan Kila <temidee11@yahoo.co.uk>
+Date:   Sat Jan 28 10:52:48 2023 +0000
+
+    pre socket-client re-design
+
+[33mcommit 2a43ab295763b9d49bb0df962fcd4761a8c2a911[m
+Author: Jonathan Kila <temidee11@yahoo.co.uk>
+Date:   Thu Jan 26 22:40:51 2023 +0000
+
+    configure for rooms/sessions
+
+[33mcommit 9a1bc9015dbacc03a4e31915cb0a3053f110adb5[m
+Author: Jonathan Kila <temidee11@yahoo.co.uk>
+Date:   Fri Jan 20 11:16:03 2023 +0000
+
+    updates, pre rooms configuration
+
+[33mcommit e919826323f5a660cbe68dacf88fa904e6b7724f[m
+Author: Jonathan Kila <temidee11@yahoo.co.uk>
+Date:   Thu Jan 19 13:02:46 2023 +0000
+
+    major updates, multiplayer game logic complete, pre game over functionality
+
+[33mcommit 9e80cfe740d0425b591dabb7d29074aff65235ba[m
+Merge: de52f16 d359f76
+Author: Jonathan Kila <temidee11@yahoo.co.uk>
+Date:   Fri Jan 6 20:21:39 2023 +0000
+
+    Merge branch 'develop' into multiplayer
+
+[33mcommit d359f76c9c671cafe418cc814a86d21990ccabd0[m
+Author: Jonathan Kila <temidee11@yahoo.co.uk>
+Date:   Fri Jan 6 20:20:59 2023 +0000
+
+    opponent card info in elements dev tools removed
+
+[33mcommit de52f16201e642bc1058aaebc096e8cae3f2711f[m
+Author: Jonathan Kila <temidee11@yahoo.co.uk>
+Date:   Fri Jan 6 20:11:20 2023 +0000
+
+    start game implemented, rest of logic in development
+
+[33mcommit 2e2a5264ed7f0e8fae71c5fd7e980a1f983d908e[m
+Author: Jonathan Kila <temidee11@yahoo.co.uk>
+Date:   Sun Jan 1 20:21:18 2023 +0000
+
+    updated README
+
+[33mcommit 2ec989e1efbcca5be906926eb21b8a7789ba1c0e[m
+Author: Jonathan Kila <temidee11@yahoo.co.uk>
+Date:   Sun Jan 1 19:41:27 2023 +0000
+
+    updates
+
+[33mcommit 3b5575dcfe33d0a8eaaa43547877b52c200935da[m
+Author: Jonathan Kila <temidee11@yahoo.co.uk>
+Date:   Sun Jan 1 19:20:41 2023 +0000
+
+    updates
+
+[33mcommit 2db765cae2bef000fb4dbbe5c20b718ed4817616[m
+Author: Jonathan Kila <temidee11@yahoo.co.uk>
+Date:   Sun Jan 1 19:14:56 2023 +0000
+
+    updates
+
+[33mcommit 27277570cb3d472a22bc9c0f1e1e0da1458dfaea[m
+Author: Jonathan Kila <temidee11@yahoo.co.uk>
+Date:   Sun Jan 1 19:13:11 2023 +0000
+
+    updates
+
+[33mcommit 9890114430780b974743f13fcbd428b866eed2c8[m
+Author: Jonathan Kila <temidee11@yahoo.co.uk>
+Date:   Sun Jan 1 19:08:25 2023 +0000
+
+    updates
+
+[33mcommit 9a6045d2bcd41c979c67dbfacc93eeb8bc2c05fd[m
+Author: Jonathan Kila <temidee11@yahoo.co.uk>
+Date:   Sun Jan 1 19:02:10 2023 +0000
+
+    updates, ready for release
+
+[33mcommit 7fae418265d4e0fc2b9e487e65ca15812c148fd0[m
+Author: Jonathan Kila <temidee11@yahoo.co.uk>
+Date:   Thu Dec 29 21:02:46 2022 +0000
+
+    card images bug fix
+
+[33mcommit 20285d1d30759bd5cf9d73c278b36fbd4f8beb83[m
+Merge: ee937b1 6909059
+Author: Jonathan Kila <temidee11@yahoo.co.uk>
+Date:   Thu Dec 29 20:51:04 2022 +0000
+
+    imported card images using ES6 imports
+
+[33mcommit 69090590cbbf483e10cd44c545f4b72a6b8bf557[m
+Author: Jonathan Kila <temidee11@yahoo.co.uk>
+Date:   Thu Dec 29 20:39:49 2022 +0000
+
+    imported card images using ES6 imports
+
+[33mcommit ee937b1a6c6c22435c9bf0f03701ea9af23d5457[m
+Author: Jonathan Kila <temidee11@yahoo.co.uk>
+Date:   Thu Dec 29 20:15:58 2022 +0000
+
+    test
+
+[33mcommit a279b41b5130ffb3803e7e7146f0f034e033fe5c[m
+Author: Jonathan Kila <temidee11@yahoo.co.uk>
+Date:   Thu Dec 29 19:16:14 2022 +0000
+
+    updates
+
+[33mcommit be2febf30da60db18492fb0df526fb8f1de3e57b[m
+Author: Jonathan Kila <temidee11@yahoo.co.uk>
+Date:   Thu Dec 29 19:15:00 2022 +0000
+
+    remove .gitignore
+
+[33mcommit 1bb5a2fdfce4d930b144cb130c2bcd03ab52f6b5[m
+Author: Jonathan Kila <temidee11@yahoo.co.uk>
+Date:   Thu Dec 29 16:59:07 2022 +0000
+
+    ready to deploy single player
+
+[33mcommit aea3a29eb596c8b6193e8991418153e7a92643d6[m
+Author: Jonathan Kila <temidee11@yahoo.co.uk>
+Date:   Tue Dec 27 22:43:54 2022 +0000
+
+    game functions refactored
+
+[33mcommit 01eb011da2ea0b7a8cce02599fd4933354044000[m
+Author: Jonathan Kila <temidee11@yahoo.co.uk>
+Date:   Tue Dec 27 11:56:13 2022 +0000
+
+    refactoring game functions, pre playerTurnHandler
+
+[33mcommit 6ddfa1a48ccc425a0026856074a2bbaa2acde17d[m
+Author: Jonathan Kila <temidee11@yahoo.co.uk>
+Date:   Sun Dec 25 20:25:24 2022 +0000
+
+    implenting types typescript, updates
+
+[33mcommit f2c4f0765a1875ae924129d35beabcb8d78a7323[m
+Author: Jonathan Kila <temidee11@yahoo.co.uk>
+Date:   Sat Dec 24 16:15:09 2022 +0000
+
+    updates, styles implemented, logic implemented
+
+[33mcommit a2962c982732450eee3829c649150463ec40cc4c[m
+Author: Jonathan Kila <temidee11@yahoo.co.uk>
+Date:   Thu Dec 22 11:45:45 2022 +0000
+
+    preliminary game logic implemented. dealing of cards, initial pairs. modal.
+
+[33mcommit 789d735a0634277ce8f1738215e73ea9f8f857cd[m
+Author: Jonathan Kila <temidee11@yahoo.co.uk>
+Date:   Wed Dec 21 08:07:10 2022 +0000
+
+    initialize project
