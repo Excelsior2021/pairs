@@ -13,10 +13,8 @@ export type card = {
   img: string
 }
 
-export type playerHandEventType = JSX.EventHandlerUnion<
-  HTMLImageElement,
-  MouseEvent
-> & {
+export type playerHandEventType = MouseEvent & {
+  currentTarget: HTMLImageElement
   target: Element
 }
 
@@ -43,7 +41,7 @@ export type gameStateType = {
   opponentHandUI: JSX.Element
   opponentPairsUI: JSX.Element
   playerHandUnclickable: boolean | null
-  playerTurnHandler: playerTurnHandlerType | null
+  playerTurnEventHandler: playerTurnHandlerType | null
   playerAnswerHandler: playerAnswerHandlerType | null
   playerOutput: number | boolean | null
   question: JSX.Element | null
@@ -89,8 +87,8 @@ export type gameAction = {
   opponentHand?: card[]
   opponentPairs?: card[]
   playerHandUnclickable?: boolean
-  playerTurnHandler?: JSX.EventHandlerUnion<HTMLImageElement, MouseEvent>
-  playerAnswerHandler?: JSX.EventHandlerUnion<HTMLImageElement, MouseEvent>
+  playerTurnEventHandler?: (playerHandEvent: playerHandEventType) => void
+  playerAnswerHandler?: (playerHandEvent: playerHandEventType) => void
   playerOutput?: number | boolean
   question?: JSX.Element
   yesButton?: JSX.Element
@@ -125,7 +123,7 @@ export type gameActionMultiplayer = {
   player2Log?: string
   playerRequest?: cardRequestMultiplayer
   opponentRequest?: cardRequestMultiplayer
-  playerCard?: card
+  playerCard?: { player: string; card: card }
   requestPlayer?: string
   dealtCard?: card
 }
@@ -143,7 +141,7 @@ export type serverStateMultiplayer = {
   shuffledDeck: card[]
 }
 
-export type clickEventHandlerType = MouseEvent & {
+export type responseEventHandlerType = MouseEvent & {
   currentTarget: HTMLButtonElement
   target: Element
 }

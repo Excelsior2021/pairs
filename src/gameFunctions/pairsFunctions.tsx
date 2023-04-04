@@ -1,9 +1,8 @@
 import { For } from "solid-js"
-import { JSX } from "solid-js/jsx-runtime"
 import player from "./playerFunctions"
 import deck from "./deckFunctions"
 import { dispatchGameAction } from "../components/Session/Session"
-import { card } from "../types/general"
+import { card, playerHandEventType } from "../types/general"
 import { gameOverType, updateUIType } from "../types/function-types"
 
 export const initialPairs = (hand: card[]) => {
@@ -44,11 +43,7 @@ const updateUI: updateUIType = (
   shuffledDeck,
   playerHandUnclickable = false
 ) => {
-  const playerTurnHandler = (
-    playerHandEvent: JSX.EventHandlerUnion<HTMLImageElement, MouseEvent> & {
-      target: Element
-    }
-  ) =>
+  const playerTurnEventHandler = (playerHandEvent: playerHandEventType) =>
     player.playerTurnHandler(
       playerHandEvent,
       shuffledDeck,
@@ -64,7 +59,7 @@ const updateUI: updateUIType = (
     opponentHand,
     playerPairs,
     opponentPairs,
-    playerTurnHandler,
+    playerTurnEventHandler,
     playerHandUnclickable,
   })
 }

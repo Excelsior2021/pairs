@@ -56,7 +56,7 @@ const JoinGame: Component = () => {
         type="text"
         maxlength="4"
         value={sessionID()}
-        onchange={event => setSessionID(event.target.value)}
+        onchange={event => setSessionID(event.currentTarget.value)}
       />
       {sessionIDNotValid() && (
         <p class="join-game__text join-game__text--error">

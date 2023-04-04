@@ -28,7 +28,7 @@ export const playerResponseHandler: playerResponseHandlerMultiplayerType = (
 ) => {
   const { card: opponentRequestCard } = opponentRequest
   let log
-  let playerCard
+  let playerCard: { player: string; card: card }
 
   if (response.currentTarget.value === "yes") {
     for (const card of playerHand) {
