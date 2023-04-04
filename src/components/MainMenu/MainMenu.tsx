@@ -20,8 +20,7 @@ const MainMenu: Component = () => (
       </button>
       <button
         class="main-menu__button"
-        onclick={() => setMultiplayerMenu(true)}
-        disabled>
+        onclick={() => setMultiplayerMenu(true)}>
         multiplayer
       </button>
       <button
@@ -30,9 +29,9 @@ const MainMenu: Component = () => (
         instructions
       </button>
     </div>
-    <p class="main-menu__text">
+    {/* <p class="main-menu__text">
       Multiplayer is disabled as the server is currently down.
-    </p>
+    </p> */}
   </div>
 )
 
