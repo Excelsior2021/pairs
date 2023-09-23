@@ -26,6 +26,11 @@ export type gameStateMultiplayerProp = {
   gameState: Accessor<gameStateMultiplayerType>
 }
 
+export type handProp = {
+  heading: string
+  hand: JSX.Element
+}
+
 export type multiplayerSessionProps = {
   socket: Socket
 }
@@ -139,9 +144,4 @@ export type serverStateMultiplayer = {
   player2Hand: card[]
   player2Pairs: card[]
   shuffledDeck: card[]
-}
-
-export type responseEventHandlerType = MouseEvent & {
-  currentTarget: HTMLButtonElement
-  target: Element
 }

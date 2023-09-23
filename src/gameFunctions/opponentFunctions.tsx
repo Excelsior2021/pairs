@@ -3,11 +3,7 @@ import pairs from "./pairsFunctions"
 import player from "./playerFunctions"
 
 import { dispatchGameAction } from "../components/Session/Session"
-import {
-  card,
-  playerHandEventType,
-  responseEventHandlerType,
-} from "../types/general"
+import { card, playerHandEventType } from "../types/general"
 import {
   opponentDealtType,
   opponentMatchType,
@@ -134,25 +130,19 @@ export const opponentTurn: opponentTurnType = (
       <p class="game__log">Do you have a {chosenCard.value}?</p>
     ) as JSX.Element
     const yesButton = (
-      <button
-        class="game__button"
-        value="yes"
-        onClick={response => playerResponseHandler(response)}>
+      <button class="game__button" onClick={() => playerResponseHandler(true)}>
         Yes
       </button>
     ) as JSX.Element
     const noButton = (
-      <button
-        class="game__button"
-        value="no"
-        onClick={response => playerResponseHandler(response)}>
+      <button class="game__button" onClick={() => playerResponseHandler(false)}>
         No
       </button>
     ) as JSX.Element
 
-    const playerResponseHandler = (response: responseEventHandlerType) =>
+    const playerResponseHandler = (hasCard: boolean) =>
       player.playerResponseHandler(
-        response,
+        hasCard,
         shuffledDeck,
         playerHand,
         opponentHand,

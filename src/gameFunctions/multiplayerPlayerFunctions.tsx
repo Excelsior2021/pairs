@@ -21,7 +21,7 @@ export const playerTurnHandler: playerTurnHandlerMultiplayerType = (
 }
 
 export const playerResponseHandler: playerResponseHandlerMultiplayerType = (
-  response,
+  hasCard,
   opponentRequest,
   playerHand,
   player
@@ -30,7 +30,7 @@ export const playerResponseHandler: playerResponseHandlerMultiplayerType = (
   let log
   let playerCard: { player: string; card: card }
 
-  if (response.currentTarget.value === "yes") {
+  if (hasCard) {
     for (const card of playerHand) {
       if (card.value === opponentRequestCard.value) {
         log = `It's your opponent's turn again.`
@@ -52,7 +52,7 @@ export const playerResponseHandler: playerResponseHandlerMultiplayerType = (
     return
   }
 
-  if (response.currentTarget.value === "no") {
+  if (!hasCard) {
     for (const card of playerHand) {
       if (card.value === opponentRequestCard.value) {
         const log = `Are you sure? Do you have a ${opponentRequestCard.value}?`

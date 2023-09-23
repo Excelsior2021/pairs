@@ -1,0 +1,10 @@
+.hand {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+
+  &__heading {
+    margin: 0.8rem;
+    font-weight: bold;
+  }
+}

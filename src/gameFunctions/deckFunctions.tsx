@@ -81,7 +81,6 @@ export const dealCard = (deck: card[]) => deck.pop()
 export const dealHand = (deck: card[], handSize: number) => {
   const hand: card[] = []
   while (hand.length < handSize) hand.push(dealCard(deck)!)
-
   return hand
 }
 

@@ -177,7 +177,7 @@ export const playerTurnHandler: playerTurnHandlerType = (
 }
 
 export const playerResponseHandler: playerResponseHandlerType = (
-  response,
+  hasCard,
   shuffledDeck,
   playerHand,
   opponentHand,
@@ -199,7 +199,7 @@ export const playerResponseHandler: playerResponseHandlerType = (
 
   let log
 
-  if (response.currentTarget.value === "yes") {
+  if (hasCard) {
     for (const card of playerHand) {
       if (card.value === opponentAsked.value) {
         log = `Please select the card with the value of ${opponentAsked.value}. Then it will be your opponent's turn again.`
@@ -225,7 +225,7 @@ export const playerResponseHandler: playerResponseHandlerType = (
     return
   }
 
-  if (response.currentTarget.value === "no") {
+  if (!hasCard) {
     for (const card of playerHand) {
       if (card.value === opponentAsked.value) {
         log = `Are you sure? Do you have a ${opponentAsked.value}?`

@@ -14,7 +14,6 @@ import { setShowPlayerModal, setMatch } from "../PlayerModal/PlayerModal"
 import { setGameDeck } from "../Sidebar/Sidebar"
 import {
   card,
-  responseEventHandlerType,
   gameActionMultiplayer,
   gameStateMultiplayerType,
   multiplayerSessionProps,
@@ -199,9 +198,9 @@ const multiplayerReducer = (
         playerHand = state.playerHand
       }
 
-      const playerResponseHandler = (responseEvent: responseEventHandlerType) =>
+      const playerResponseHandler = (hasCard: boolean) =>
         player.playerResponseHandler(
-          responseEvent,
+          hasCard,
           action.playerRequest!,
           playerHand,
           state.clientPlayer
@@ -211,14 +210,15 @@ const multiplayerReducer = (
       const yesButton = (
         <button
           class="game__button"
-          value="yes"
-          onClick={playerResponseHandler}>
+          onClick={() => playerResponseHandler(true)}>
           Yes
         </button>
       )
 
       const noButton = (
-        <button class="game__button" value="no" onClick={playerResponseHandler}>
+        <button
+          class="game__button"
+          onClick={() => playerResponseHandler(false)}>
           No
         </button>
       )
