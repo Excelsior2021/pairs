@@ -40,7 +40,7 @@ const initialGameState = {
   noButton: null,
   log: null,
   socket: null,
-  clientPlayer: "",
+  clientPlayer: null,
   sessionID: "",
   gameState: null,
 }
@@ -89,11 +89,11 @@ const multiplayerReducer = (
       let log
       let gameState = action.serverState!
 
-      if (action.clientPlayer === "player1") {
+      if (action.clientPlayer === 1) {
         playerHand = player1Hand
         opponentHand = player2Hand
 
-        if (action.playerTurn === "player1") {
+        if (action.playerTurn === 1) {
           const playerTurnHandler = (playerHandEvent: playerHandEventType) =>
             player.playerTurnHandler(
               playerHandEvent,
@@ -122,11 +122,11 @@ const multiplayerReducer = (
         log = action.player1Log || state.log
       }
 
-      if (action.clientPlayer === "player2") {
+      if (action.clientPlayer === 2) {
         playerHand = player2Hand
         opponentHand = player1Hand
 
-        if (action.playerTurn === "player2") {
+        if (action.playerTurn === 2) {
           const playerTurnHandler = (playerHandEvent: playerHandEventType) =>
             player.playerTurnHandler(
               playerHandEvent,
@@ -191,10 +191,10 @@ const multiplayerReducer = (
       const { card } = action.playerRequest!
       let playerHand: card[]
 
-      if (state.clientPlayer === "player1") {
+      if (state.clientPlayer === 1) {
         playerHand = state.playerHand
       }
-      if (state.clientPlayer === "player2") {
+      if (state.clientPlayer === 2) {
         playerHand = state.playerHand
       }
 
@@ -294,12 +294,12 @@ const multiplayerReducer = (
         let playerHand: card[] = []
         let playerPairs: card[] = []
 
-        if (action.requestPlayer === "player1" && action.serverState) {
+        if (action.requestPlayer === 1 && action.serverState) {
           const { player1Hand, player1Pairs } = action.serverState
           playerHand = player1Hand
           playerPairs = player1Pairs
         }
-        if (action.requestPlayer === "player2" && action.serverState) {
+        if (action.requestPlayer === 2 && action.serverState) {
           const { player2Hand, player2Pairs } = action.serverState
           playerHand = player2Hand
           playerPairs = player2Pairs
@@ -503,18 +503,12 @@ export const [gameState, dispatchGameAction] = createReducer(
 )
 
 const MultiplayerSession: Component<multiplayerSessionProps> = props => {
-  const [player, setPlayer] = createSignal("")
+  const [player, setPlayer] = createSignal(0)
   const [startGame, setStartGame] = createSignal(false)
 
   dispatchGameAction({ type: "START_SESSION", socket: props.socket })
 
-  props.socket.on("setPlayer", player => {
-    if (player === 1) {
-      setPlayer("player1")
-    } else {
-      setPlayer("player2")
-    }
-  })
+  props.socket.on("setPlayer", player => setPlayer(player))
 
   props.socket.on("start", (serverState, playerTurn, sessionID) => {
     const player1Log =
@@ -522,6 +516,8 @@ const MultiplayerSession: Component<multiplayerSessionProps> = props => {
       You get to go first! Please select a card from your hand to request a match with your opponent."
 
     const player2Log = "Waiting for your opponent to request a value..."
+
+    console.log("test")
 
     dispatchGameAction({
       type: "UPDATE",

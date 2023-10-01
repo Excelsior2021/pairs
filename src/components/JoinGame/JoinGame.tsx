@@ -9,42 +9,42 @@ import { dispatchGameAction } from "../MultiplayerSession/MultiplayerSession"
 import { io, Socket } from "socket.io-client"
 import "./JoinGame.scss"
 
-const [sessionIDNotValid, setSessionIDNotValid] = createSignal(false)
-const [noSessionExists, setNoSessionExists] = createSignal(false)
-const [serverConnected, setServerConnected] = createSignal(true)
-
-const joinGameHandler = (socket: Socket, sessionID: string) => {
-  if (!socket.connected) {
-    setServerConnected(false)
-    return
-  }
-  setSessionIDNotValid(false)
-  setNoSessionExists(false)
-  setServerConnected(true)
-  if (!sessionID) {
-    setSessionIDNotValid(true)
-    return
-  }
-
-  socket.emit("join_session", sessionID)
-
-  socket.on("no-sessionID", () => {
-    setNoSessionExists(true)
-    return
-  })
-
-  socket.on("sessionID-exists", () => {
-    dispatchGameAction({ type: "JOIN_SESSION", sessionID })
-
-    setJoinGame(false)
-    setMultiplayerSessionStarted(true)
-  })
-}
-
 const JoinGame: Component = () => {
   const socket = io(import.meta.env.VITE_SERVER_URL)
-  setSocket(socket)
   const [sessionID, setSessionID] = createSignal("")
+  const [sessionIDNotValid, setSessionIDNotValid] = createSignal(false)
+  const [noSessionExists, setNoSessionExists] = createSignal(false)
+  const [serverConnected, setServerConnected] = createSignal(true)
+  setSocket(socket)
+
+  const joinGameHandler = (socket: Socket, sessionID: string) => {
+    if (!socket.connected) {
+      setServerConnected(false)
+      return
+    }
+    setSessionIDNotValid(false)
+    setNoSessionExists(false)
+    setServerConnected(true)
+    if (!sessionID) {
+      setSessionIDNotValid(true)
+      return
+    }
+
+    socket.emit("join_session", sessionID)
+
+    socket.on("no-sessionID", () => {
+      setNoSessionExists(true)
+      return
+    })
+
+    socket.on("sessionID-exists", () => {
+      dispatchGameAction({ type: "JOIN_SESSION", sessionID })
+
+      setJoinGame(false)
+      setMultiplayerSessionStarted(true)
+    })
+  }
+
   return (
     <div class="join-game">
       <h2 class="join-game__heading">Join a Game Session</h2>

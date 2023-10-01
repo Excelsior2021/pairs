@@ -77,7 +77,7 @@ export type gameStateMultiplayerType = {
   noButton: JSX.Element
   log: JSX.Element | null
   socket: Socket
-  clientPlayer: string
+  clientPlayer: number
   sessionID: string | undefined
   gameState: serverStateMultiplayer | null
   playerHandLast: JSX.Element
@@ -120,22 +120,22 @@ export type gameActionMultiplayer = {
   chosenCard?: card
   opponentAsked?: card
   socket?: Socket
-  clientPlayer?: string
+  clientPlayer?: number
   sessionID?: string
   serverState?: serverStateMultiplayer
-  playerTurn?: string
+  playerTurn?: number
   player1Log?: string
   player2Log?: string
   playerRequest?: cardRequestMultiplayer
   opponentRequest?: cardRequestMultiplayer
-  playerCard?: { player: string; card: card }
+  playerCard?: cardRequestMultiplayer
   requestPlayer?: string
   dealtCard?: card
 }
 
 export type cardRequestMultiplayer = {
   card: card
-  player: string
+  player: number
 }
 
 export type serverStateMultiplayer = {

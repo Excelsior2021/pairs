@@ -48,7 +48,7 @@ export type playerTurnHandlerType = (
 export type playerTurnHandlerMultiplayerType = (
   playerHandEvent: playerHandEventType,
   playerHand: card[],
-  player: string
+  player: number
 ) => void
 
 export type playerResponseHandlerType = (
@@ -68,7 +68,7 @@ export type playerResponseHandlerMultiplayerType = (
   hasCard: boolean,
   oppenentRequest: cardRequestMultiplayer,
   playerHand: card[],
-  player: string
+  player: number
 ) => void
 
 export type playerAnswerHandlerType = (

@@ -3,7 +3,7 @@ import {
   playerResponseHandlerMultiplayerType,
   playerTurnHandlerMultiplayerType,
 } from "../types/function-types"
-import { card } from "../types/general"
+import { card, cardRequestMultiplayer } from "../types/general"
 
 export const playerTurnHandler: playerTurnHandlerMultiplayerType = (
   playerHandEvent,
@@ -28,7 +28,7 @@ export const playerResponseHandler: playerResponseHandlerMultiplayerType = (
 ) => {
   const { card: opponentRequestCard } = opponentRequest
   let log
-  let playerCard: { player: string; card: card }
+  let playerCard: cardRequestMultiplayer
 
   if (hasCard) {
     for (const card of playerHand) {
