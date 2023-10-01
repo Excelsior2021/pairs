@@ -20,7 +20,8 @@ const MainMenu: Component = () => (
       </button>
       <button
         class="main-menu__button"
-        onclick={() => setMultiplayerMenu(true)}>
+        onclick={() => setMultiplayerMenu(true)}
+        disabled>
         multiplayer
       </button>
       <button

@@ -129,7 +129,7 @@ export type gameActionMultiplayer = {
   playerRequest?: cardRequestMultiplayer
   opponentRequest?: cardRequestMultiplayer
   playerCard?: cardRequestMultiplayer
-  requestPlayer?: string
+  requestPlayer?: number
   dealtCard?: card
 }
 
