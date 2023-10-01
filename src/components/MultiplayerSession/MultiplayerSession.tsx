@@ -89,6 +89,8 @@ const multiplayerReducer = (
       let log
       let gameState = action.serverState!
 
+      console.log("client: ", action.clientPlayer, "turn: ", action.playerTurn)
+
       if (action.clientPlayer === 1) {
         playerHand = player1Hand
         opponentHand = player2Hand
@@ -511,13 +513,15 @@ const MultiplayerSession: Component<multiplayerSessionProps> = props => {
   props.socket.on("setPlayer", player => setPlayer(player))
 
   props.socket.on("start", (serverState, playerTurn, sessionID) => {
-    const player1Log =
+    const startPlayerLog =
       "The cards have been dealt. Any initial pairs of cards have been added to your Pairs.\
-      You get to go first! Please select a card from your hand to request a match with your opponent."
+You get to go first! Please select a card from your hand to request a match with your opponent."
 
-    const player2Log = "Waiting for your opponent to request a value..."
+    const nonStartPlayerLog = "Waiting for your opponent to request a value..."
 
-    console.log("test")
+    const player1Log = playerTurn === 1 ? startPlayerLog : nonStartPlayerLog
+
+    const player2Log = playerTurn === 2 ? startPlayerLog : nonStartPlayerLog
 
     dispatchGameAction({
       type: "UPDATE",
@@ -567,6 +571,7 @@ const MultiplayerSession: Component<multiplayerSessionProps> = props => {
   props.socket.on(
     "player_dealt",
     (serverState, playerOutput, requestPlayer) => {
+      console.log(serverState)
       dispatchGameAction({
         type: "UPDATE",
         serverState,
