@@ -54,9 +54,11 @@ const JoinGame: Component = () => {
       <input
         class="join-game__input"
         type="text"
+        placeholder="session ID"
         maxlength="4"
         value={sessionID()}
         onchange={event => setSessionID(event.currentTarget.value)}
+        aria-label="session id"
       />
       {sessionIDNotValid() && (
         <p class="join-game__text join-game__text--error">
