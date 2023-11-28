@@ -11,14 +11,12 @@ const App: Component = () => (
       rel="noreferrer">
       <h1 class="app__title">Pairs</h1>
     </a>
-
     <a class="counter" href="https://www.free-website-hit-counter.com">
       <img
         src="https://www.free-website-hit-counter.com/c.php?d=9&id=143227&s=5"
         alt="Free Website Hit Counter"
       />
     </a>
-
     <GameScreen />
   </div>
 )

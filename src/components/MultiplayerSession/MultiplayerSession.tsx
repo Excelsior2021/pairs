@@ -4,13 +4,16 @@ import { createReducer } from "@solid-primitives/memo"
 import Game from "../Game/Game"
 import Sidebar from "../Sidebar/Sidebar"
 import CreateGame from "../CreateGame/CreateGame"
-import PlayerModal from "../PlayerModal/PlayerModal"
+import PlayerModal, {
+  setShowPlayerModal,
+  setMatchStatusHeading,
+  setMatchStatusSubHeading,
+} from "../PlayerModal/PlayerModal"
 import PairsModal from "../PairsModal/PairsModal"
 import QuitGameModal from "../QuitGameModal/QuitGameModal"
 import { gameDeckUI } from "../../gameFunctions/deckFunctions"
 import UI from "../../gameFunctions/multiplayerUIFunctions"
 import player from "../../gameFunctions/multiplayerPlayerFunctions"
-import { setShowPlayerModal, setMatch } from "../PlayerModal/PlayerModal"
 import { setGameDeck } from "../Sidebar/Sidebar"
 import {
   card,
@@ -326,7 +329,8 @@ const multiplayerReducer = (
         }
 
         if (action.playerOutput === 0) {
-          setMatch("Match (Opponent's Hand)")
+          setMatchStatusHeading("match")
+          setMatchStatusSubHeading("opponent hand")
           const log = "It's your turn again."
           return {
             ...state,
@@ -337,7 +341,8 @@ const multiplayerReducer = (
           }
         }
         if (action.playerOutput === 1) {
-          setMatch("Match (Dealt Card)")
+          setMatchStatusHeading("match")
+          setMatchStatusSubHeading("dealt card")
           const log = "It's your turn again."
           state.socket.emit(
             "player_response_message",
@@ -364,7 +369,8 @@ const multiplayerReducer = (
           }
         }
         if (action.playerOutput === 2) {
-          setMatch("Match (Your Hand)")
+          setMatchStatusHeading("match")
+          setMatchStatusSubHeading("your hand")
           const log = "It's your opponent's turn."
           const playerHandUI = UI.createHandUI(state.playerHand)
           state.socket.emit(
@@ -383,7 +389,7 @@ const multiplayerReducer = (
           }
         }
         if (action.playerOutput === 3) {
-          setMatch("No Match")
+          setMatchStatusHeading("no match")
           const log = "It's your opponent's turn."
           const playerHandUI = UI.createHandUI(state.playerHand)
           state.socket.emit(

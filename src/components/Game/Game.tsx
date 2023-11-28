@@ -5,7 +5,7 @@ import "./Game.scss"
 
 const Game: Component<gameStateProp | gameStateMultiplayerProp> = props => (
   <div class="game">
-    <Hand heading="Opponent's Hand" hand={props.gameState().opponentHandUI} />
+    <Hand heading="Opponent Hand" hand={props.gameState().opponentHandUI} />
     <div class="game__console">
       {props.gameState().question}
       {props.gameState().log}

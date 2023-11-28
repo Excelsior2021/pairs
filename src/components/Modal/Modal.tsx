@@ -3,14 +3,16 @@ import "./Modal.scss"
 
 type contentProps = {
   heading: string | null
-  playerOutput?: number | boolean
+  subHeading?: string | null
+  playerOutput?: number
 }
 
 type modalProps = {
   heading: string | null
+  subHeading?: string | null
   showModal: Accessor<boolean>
   setShowModal: Setter<boolean>
-  playerOutput?: number | boolean
+  playerOutput?: number
 }
 
 const Backdrop: ParentComponent = props => (
@@ -29,6 +31,14 @@ const Content: ParentComponent<contentProps> = props => (
       }>
       {props.heading}
     </h2>
+    <h3
+      class={
+        props.playerOutput! < 3
+          ? "modal__sub-heading modal__sub-heading--match"
+          : "modal__sub-heading modal__sub-heading--no-match"
+      }>
+      {props.subHeading}
+    </h3>
     <div class="modal__content">{props.children}</div>
   </div>
 )
@@ -39,6 +49,7 @@ const Modal: ParentComponent<modalProps> = props => (
       <Content
         children={props.children}
         heading={props.heading}
+        subHeading={props.subHeading}
         playerOutput={props.playerOutput}
       />
       <button class="modal__button" onclick={() => props.setShowModal(false)}>

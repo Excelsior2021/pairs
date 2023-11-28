@@ -91,8 +91,8 @@ export const createPlayerHandUI = (
   <For each={hand}>
     {card => (
       <img
-        id={card.id}
         class="card card--player"
+        id={card.id}
         src={card.img}
         alt={card.id}
         onclick={e => cardHandler(e)}

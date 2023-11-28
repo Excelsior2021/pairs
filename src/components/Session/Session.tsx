@@ -2,12 +2,15 @@ import { Component, JSX } from "solid-js"
 import { createReducer } from "@solid-primitives/memo"
 import Game from "../Game/Game"
 import Sidebar from "../Sidebar/Sidebar"
-import PlayerModal from "../PlayerModal/PlayerModal"
+import PlayerModal, {
+  setShowPlayerModal,
+  setMatchStatusHeading,
+  setMatchStatusSubHeading,
+} from "../PlayerModal/PlayerModal"
 import PairsModal from "../PairsModal/PairsModal"
 import QuitGameModal from "../QuitGameModal/QuitGameModal"
 import deck from "../../gameFunctions/deckFunctions"
 import pairs from "../../gameFunctions/pairsFunctions"
-import { setShowPlayerModal, setMatch } from "../PlayerModal/PlayerModal"
 import { gameStateType, gameAction } from "../../types/general"
 import "./Session.scss"
 
@@ -89,7 +92,8 @@ const gameReducer = (
 
       switch (action.playerOutput) {
         case 0: {
-          setMatch("Match (Opponent's Hand)")
+          setMatchStatusHeading("match")
+          setMatchStatusSubHeading("opponent hand")
           return {
             ...state,
             playerOutput: action.playerOutput,
@@ -98,7 +102,8 @@ const gameReducer = (
           }
         }
         case 1: {
-          setMatch("Match (Dealt Card)")
+          setMatchStatusHeading("match")
+          setMatchStatusSubHeading("dealt card")
           return {
             ...state,
             playerOutput: action.playerOutput,
@@ -107,7 +112,8 @@ const gameReducer = (
           }
         }
         case 2: {
-          setMatch("Match (Your Hand)")
+          setMatchStatusHeading("match")
+          setMatchStatusSubHeading("your hand")
           return {
             ...state,
             playerOutput: action.playerOutput,
@@ -116,7 +122,8 @@ const gameReducer = (
           }
         }
         case 3: {
-          setMatch("No Match")
+          setMatchStatusHeading("no match")
+          setMatchStatusSubHeading("")
           return { ...state, playerOutput: action.playerOutput, playerHandLast }
         }
         default:

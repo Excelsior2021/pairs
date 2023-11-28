@@ -23,11 +23,13 @@
     height: 80%;
   }
 
-  &__heading {
+  &__heading,
+  &__sub-heading {
     text-align: center;
     text-transform: capitalize;
     font-size: 3.5rem;
-    margin: 1.6rem;
+    margin-top: 1.6rem;
+    margin-bottom: 0;
 
     &--match {
       color: green;
@@ -37,6 +39,11 @@
     &--quit-game {
       color: red;
     }
+  }
+
+  &__sub-heading {
+    font-size: 2.4rem;
+    margin: 0;
   }
 
   &__content {
