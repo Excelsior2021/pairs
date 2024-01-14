@@ -10,5 +10,27 @@
 
   &__item {
     margin: 1.6rem;
+    @for $i from 1 through 9 {
+      @if $i == 1 or $i == 5 or $i == 9 {
+        &:nth-child(#{$i}) {
+          list-style-type: "\2663   ";
+        }
+      }
+      @if $i == 2 or $i == 6 {
+        &:nth-child(#{$i}) {
+          list-style-type: "\2666   ";
+        }
+      }
+      @if $i == 3 or $i == 7 {
+        &:nth-child(#{$i}) {
+          list-style-type: "\2665   ";
+        }
+      }
+      @if $i == 4 or $i == 8 {
+        &:nth-child(#{$i}) {
+          list-style-type: "\2660   ";
+        }
+      }
+    }
   }
 }

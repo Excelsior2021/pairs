@@ -1,10 +1,7 @@
 import { Accessor } from "solid-js"
 import { JSX } from "solid-js/jsx-runtime"
 import { Socket } from "socket.io-client"
-import {
-  playerTurnHandlerType,
-  playerAnswerHandlerType,
-} from "./function-types"
+import { playerTurnHandlerType } from "./function-types"
 
 export type card = {
   id: string
@@ -29,6 +26,7 @@ export type gameStateMultiplayerProp = {
 export type handProp = {
   heading: string
   hand: JSX.Element
+  player: string
 }
 
 export type multiplayerSessionProps = {
@@ -47,7 +45,6 @@ export type gameStateType = {
   opponentPairsUI: JSX.Element
   playerHandUnclickable: boolean | null
   playerTurnEventHandler: playerTurnHandlerType | null
-  playerAnswerHandler: playerAnswerHandlerType | null
   playerOutput: number | boolean | null
   question: JSX.Element | null
   yesButton: JSX.Element | null
@@ -70,7 +67,6 @@ export type gameStateMultiplayerType = {
   opponentPairs: card[]
   playerHandUnclickable: boolean | null
   playerTurnHandler: playerTurnHandlerType | null
-  playerAnswerHandler: playerAnswerHandlerType | null
   playerOutput: number | boolean | null
   question: JSX.Element | null
   yesButton: JSX.Element
@@ -93,7 +89,6 @@ export type gameAction = {
   opponentPairs?: card[]
   playerHandUnclickable?: boolean
   playerTurnEventHandler?: (playerHandEvent: playerHandEventType) => void
-  playerAnswerHandler?: (playerHandEvent: playerHandEventType) => void
   playerOutput?: number | boolean
   question?: JSX.Element
   yesButton?: JSX.Element

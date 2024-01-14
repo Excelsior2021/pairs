@@ -3,47 +3,12 @@ import pairs from "./pairsFunctions"
 import player from "./playerFunctions"
 
 import { dispatchGameAction } from "../components/Session/Session"
-import { card, playerHandEventType } from "../types/general"
-import {
-  opponentDealtType,
-  opponentMatchType,
-  opponentTurnType,
-} from "../types/function-types"
+import { card } from "../types/general"
+import { opponentDealtType, opponentTurnType } from "../types/function-types"
 import { JSX } from "solid-js/jsx-runtime"
 
 export const opponentAsk = (opponentHand: card[]) =>
   opponentHand[Math.floor(Math.random() * opponentHand.length)]
-
-export const opponentMatch: opponentMatchType = (
-  playerHand,
-  opponentHand,
-  playerPairs,
-  opponentPairs,
-  opponentAsk,
-  playerHandEvent,
-  shuffledDeck
-) => {
-  opponentPairs.push(opponentAsk)
-  opponentHand.splice(opponentHand.indexOf(opponentAsk), 1)
-
-  for (const card of playerHand) {
-    if (playerHandEvent.target!.id === card.id) {
-      opponentPairs.push(card)
-      playerHand.splice(playerHand.indexOf(card), 1)
-    }
-  }
-
-  const playerHandUnclickable = true
-  pairs.updateUI(
-    playerHand,
-    opponentHand,
-    playerPairs,
-    opponentPairs,
-    shuffledDeck,
-    playerHandUnclickable
-  )
-  return
-}
 
 export const opponentDealt: opponentDealtType = (
   shuffledDeck,
@@ -149,7 +114,6 @@ export const opponentTurn: opponentTurnType = (
         playerPairs,
         opponentPairs,
         chosenCard,
-        playerAnswerEventHandler,
         yesButton,
         noButton
       )
@@ -161,23 +125,11 @@ export const opponentTurn: opponentTurnType = (
       yesButton,
       noButton,
     })
-
-    const playerAnswerEventHandler = (playerHandEvent: playerHandEventType) =>
-      player.playerAnswerHandler(
-        playerHandEvent,
-        shuffledDeck,
-        playerHand,
-        opponentHand,
-        playerPairs,
-        opponentPairs,
-        chosenCard
-      )
   }
 }
 
 export default {
   opponentAsk,
-  opponentMatch,
   opponentDealt,
   opponentTurn,
 }

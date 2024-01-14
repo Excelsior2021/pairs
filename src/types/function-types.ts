@@ -59,7 +59,6 @@ export type playerResponseHandlerType = (
   playerPairs: card[],
   opponentPairs: card[],
   opponentAsked: card,
-  playerAnswerHandler: playerAnswerHandlerType,
   yesButton: JSX.Element,
   noButton: JSX.Element
 ) => void
@@ -71,27 +70,7 @@ export type playerResponseHandlerMultiplayerType = (
   player: number
 ) => void
 
-export type playerAnswerHandlerType = (
-  playerHandEvent: playerHandEventType,
-  shuffledDeck: card[],
-  playerHand: card[],
-  opponentHand: card[],
-  playerPairs: card[],
-  opponentPairs: card[],
-  opponentAsked: card
-) => void
-
 //OPPONENT FUNCTIONS
-export type opponentMatchType = (
-  playerHand: card[],
-  opponentHand: card[],
-  playerPairs: card[],
-  opponentPairs: card[],
-  opponentAsk: card,
-  playerHandEvent: playerHandEventType,
-  shuffledDeck: card[]
-) => void
-
 export type opponentDealtType = (
   shuffledDeck: card[],
   playerHand: card[],

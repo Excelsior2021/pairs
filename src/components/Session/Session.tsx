@@ -130,18 +130,6 @@ const gameReducer = (
           return state
       }
     }
-    case "PLAYER_ANSWER": {
-      if (action.playerHand && action.playerAnswerHandler) {
-        const playerHandUI = deck.createPlayerHandUI(
-          action.playerHand,
-          action.playerAnswerHandler
-        )
-        return {
-          ...state,
-          playerHandUI,
-        }
-      }
-    }
     case "GAME_LOG": {
       const question = action.question
       const yesButton = action.yesButton
