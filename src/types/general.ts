@@ -3,13 +3,6 @@ import { JSX } from "solid-js/jsx-runtime"
 import { Socket } from "socket.io-client"
 import { playerTurnHandlerType } from "./function-types"
 
-export type card = {
-  id: string
-  value: string | number
-  suit: string
-  img: string
-}
-
 export type playerHandEventType = MouseEvent & {
   currentTarget: HTMLImageElement
   target: Element
@@ -26,7 +19,6 @@ export type gameStateMultiplayerProp = {
 export type handProp = {
   heading: string
   hand: JSX.Element
-  player: string
 }
 
 export type multiplayerSessionProps = {
@@ -45,7 +37,7 @@ export type gameStateType = {
   opponentPairsUI: JSX.Element
   playerHandUnclickable: boolean | null
   playerTurnEventHandler: playerTurnHandlerType | null
-  playerOutput: number | boolean | null
+  playerOutput: number | null
   question: JSX.Element | null
   yesButton: JSX.Element | null
   noButton: JSX.Element | null
@@ -67,7 +59,7 @@ export type gameStateMultiplayerType = {
   opponentPairs: card[]
   playerHandUnclickable: boolean | null
   playerTurnHandler: playerTurnHandlerType | null
-  playerOutput: number | boolean | null
+  playerOutput: number | null
   question: JSX.Element | null
   yesButton: JSX.Element
   noButton: JSX.Element
@@ -139,4 +131,11 @@ export type serverStateMultiplayer = {
   player2Hand: card[]
   player2Pairs: card[]
   shuffledDeck: card[]
+}
+
+export enum PlayerOutput {
+  OpponentMatch,
+  DeckMatch,
+  HandMatch,
+  NoMatch,
 }

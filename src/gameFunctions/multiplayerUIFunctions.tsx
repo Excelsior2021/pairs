@@ -3,11 +3,11 @@ import { JSX } from "solid-js/jsx-runtime"
 import { dispatchGameAction } from "../components/MultiplayerSession/MultiplayerSession"
 import { setGameDeck } from "../components/Sidebar/Sidebar"
 import { gameDeckHandlerMultiplayerType } from "../types/function-types"
-import { card } from "../types/general"
 import { gameDeckUI, dealCard } from "./deckFunctions"
+import { Card } from "../store/classes"
 
 export const createPlayerHandUI = (
-  hand: card[],
+  hand: Card[],
   cardHandler: JSX.EventHandlerUnion<HTMLImageElement, MouseEvent>
 ) => (
   <For each={hand}>
@@ -23,9 +23,9 @@ export const createPlayerHandUI = (
   </For>
 )
 
-export const createHandUI = (hand: card[]) => (
+export const createHandUI = (hand: Card[]) => (
   <For each={hand}>
-    {(card: card) => (
+    {(card: Card) => (
       <img
         class="card"
         id={card.id}
@@ -36,13 +36,13 @@ export const createHandUI = (hand: card[]) => (
   </For>
 )
 
-export const createHandUIback = (hand: card[]) => (
+export const createHandUIback = (hand: Card[]) => (
   <For each={hand}>
     {() => <img class="card" src={`./cards/back.png`} alt="opponent card" />}
   </For>
 )
 
-export const createPairsUI = (pairs: card[]) => (
+export const createPairsUI = (pairs: Card[]) => (
   <For each={pairs}>
     {card => (
       <img

@@ -1,13 +1,12 @@
 import deck from "./deckFunctions"
 import pairs from "./pairsFunctions"
 import player from "./playerFunctions"
-
 import { dispatchGameAction } from "../components/Session/Session"
-import { card } from "../types/general"
 import { opponentDealtType, opponentTurnType } from "../types/function-types"
 import { JSX } from "solid-js/jsx-runtime"
+import { Card } from "../store/classes"
 
-export const opponentAsk = (opponentHand: card[]) =>
+export const opponentAsk = (opponentHand: Card[]) =>
   opponentHand[Math.floor(Math.random() * opponentHand.length)]
 
 export const opponentDealt: opponentDealtType = (

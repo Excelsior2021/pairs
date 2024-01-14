@@ -9,6 +9,7 @@ import {
   playerResponseHandlerType,
   playerTurnHandlerType,
 } from "../types/function-types"
+import { PlayerOutput } from "../types/general"
 
 export const playerMatch: playerMatchType = (
   playerHandEvent,
@@ -41,7 +42,7 @@ export const playerMatch: playerMatchType = (
               opponentPairs,
               shuffledDeck
             )
-            return 0
+            return PlayerOutput.OpponentMatch
           }
         }
       }
@@ -79,7 +80,7 @@ export const playerDealt: playerDealtType = (
             opponentPairs,
             shuffledDeck
           )
-          return 1
+          return PlayerOutput.DeckMatch
         }
       }
     }
@@ -96,7 +97,7 @@ export const playerDealt: playerDealtType = (
           opponentPairs,
           shuffledDeck
         )
-        return 2
+        return PlayerOutput.HandMatch
       }
     }
 
@@ -108,7 +109,7 @@ export const playerDealt: playerDealtType = (
       opponentPairs,
       shuffledDeck
     )
-    return 3
+    return PlayerOutput.NoMatch
   }
 }
 

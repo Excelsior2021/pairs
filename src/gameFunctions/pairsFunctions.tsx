@@ -2,11 +2,12 @@ import { For } from "solid-js"
 import player from "./playerFunctions"
 import deck from "./deckFunctions"
 import { dispatchGameAction } from "../components/Session/Session"
-import { card, playerHandEventType } from "../types/general"
+import { playerHandEventType } from "../types/general"
 import { gameOverType, updateUIType } from "../types/function-types"
+import { Card } from "../store/classes"
 
-export const initialPairs = (hand: card[]) => {
-  const pairs: card[] = []
+export const initialPairs = (hand: Card[]) => {
+  const pairs: Card[] = []
   hand.forEach(cardX =>
     hand.forEach(cardY => {
       if (
@@ -29,7 +30,7 @@ export const initialPairs = (hand: card[]) => {
   return pairs
 }
 
-export const createPairsUI = (pairs: card[]) => (
+export const createPairsUI = (pairs: Card[]) => (
   <For each={pairs}>
     {card => <img id={card.id} class="card" src={card.img} alt={card.id} />}
   </For>
@@ -65,8 +66,8 @@ const updateUI: updateUIType = (
 }
 
 export const startGame = () => {
-  const newDeck: card[] = deck.createDeck()
-  const shuffledDeck: card[] = deck.shuffleDeck(newDeck)
+  const newDeck: Card[] = deck.createDeck()
+  const shuffledDeck: Card[] = deck.shuffleDeck(newDeck)
 
   const playerHand = deck.dealHand(shuffledDeck, 7)
   const opponentHand = deck.dealHand(shuffledDeck, 7)

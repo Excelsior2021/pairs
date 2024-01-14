@@ -5,50 +5,28 @@ import opponent from "./opponentFunctions"
 import pairs from "./pairsFunctions"
 import { dispatchGameAction } from "../components/Session/Session"
 import { setGameDeck } from "../components/Sidebar/Sidebar"
-import { card, playerHandEventType } from "../types/general"
+import { PlayerOutput, playerHandEventType } from "../types/general"
 import { gameDeckHandlerType } from "../types/function-types"
+import { Card } from "../store/classes"
 
 export const createDeck = () => {
-  const deck: card[] = []
+  const deck: Card[] = []
   const non_num_cards = ["ace", "jack", "queen", "king"]
   const suits = ["clubs", "diamonds", "hearts", "spades"]
 
-  for (const suit of suits) {
-    const id = `ace_of_${suit}`
-    const img = `./cards/${id}.png`
-    deck.push({
-      id,
-      value: "ace",
-      suit,
-      img,
-    })
+  for (const value of non_num_cards) {
+    for (const suit of suits) {
+      const id = `${value}_of_${suit}`
+      const img = `./cards/${id}.png`
+      deck.push(new Card(id, value, suit, img))
+    }
   }
 
   for (let value = 2; value < 11; value++) {
     for (const suit of suits) {
       const id = `${value}_of_${suit}`
       const img = `./cards/${id}.png`
-      deck.push({
-        id,
-        value,
-        suit,
-        img,
-      })
-    }
-  }
-
-  for (const value of non_num_cards) {
-    if (value !== "ace") {
-      for (const suit of suits) {
-        const id = `${value}_of_${suit}`
-        const img = `./cards/${id}.png`
-        deck.push({
-          id,
-          value,
-          suit,
-          img,
-        })
-      }
+      deck.push(new Card(id, value, suit, img))
     }
   }
 
@@ -66,7 +44,7 @@ export const gameDeckUI = (
   />
 )
 
-export const shuffleDeck = (deck: card[]) => {
+export const shuffleDeck = (deck: Card[]) => {
   for (const x in deck) {
     const y = Math.floor(Math.random() * parseInt(x))
     const temp = deck[x]
@@ -76,16 +54,16 @@ export const shuffleDeck = (deck: card[]) => {
   return deck
 }
 
-export const dealCard = (deck: card[]) => deck.pop()
+export const dealCard = (deck: Card[]) => deck.pop()
 
-export const dealHand = (deck: card[], handSize: number) => {
-  const hand: card[] = []
+export const dealHand = (deck: Card[], handSize: number) => {
+  const hand: Card[] = []
   while (hand.length < handSize) hand.push(dealCard(deck)!)
   return hand
 }
 
 export const createPlayerHandUI = (
-  hand: card[],
+  hand: Card[],
   cardHandler: (playerHandEvent: playerHandEventType) => void
 ) => (
   <For each={hand}>
@@ -101,15 +79,15 @@ export const createPlayerHandUI = (
   </For>
 )
 
-export const createHandUI = (hand: card[]) => (
+export const createHandUI = (hand: Card[]) => (
   <For each={hand}>
-    {(card: card) => (
+    {(card: Card) => (
       <img class="card" id={card.id} src={card.img} alt={card.id} />
     )}
   </For>
 )
 
-export const createHandUIback = (hand: card[]) => (
+export const createHandUIback = (hand: Card[]) => (
   <For each={hand}>
     {() => <img class="card" src={`./cards/back.png`} alt="opponent card" />}
   </For>
@@ -143,7 +121,10 @@ export const gameDeckHandler: gameDeckHandlerType = (
 
   setGameDeck(gameDeckUI())
 
-  if (playerOutput === 2 || playerOutput === 3) {
+  if (
+    playerOutput === PlayerOutput.HandMatch ||
+    playerOutput === PlayerOutput.NoMatch
+  ) {
     opponent.opponentTurn(
       shuffledDeck,
       playerHand,

@@ -11,7 +11,7 @@ import PairsModal from "../PairsModal/PairsModal"
 import QuitGameModal from "../QuitGameModal/QuitGameModal"
 import deck from "../../gameFunctions/deckFunctions"
 import pairs from "../../gameFunctions/pairsFunctions"
-import { gameStateType, gameAction } from "../../types/general"
+import { gameStateType, gameAction, PlayerOutput } from "../../types/general"
 import "./Session.scss"
 
 const initialGameState = {
@@ -91,7 +91,7 @@ const gameReducer = (
       }
 
       switch (action.playerOutput) {
-        case 0: {
+        case PlayerOutput.OpponentMatch: {
           setMatchStatusHeading("match")
           setMatchStatusSubHeading("opponent hand")
           return {
@@ -101,7 +101,7 @@ const gameReducer = (
             playerPairsSecondLast,
           }
         }
-        case 1: {
+        case PlayerOutput.DeckMatch: {
           setMatchStatusHeading("match")
           setMatchStatusSubHeading("dealt card")
           return {
@@ -111,7 +111,7 @@ const gameReducer = (
             playerPairsSecondLast,
           }
         }
-        case 2: {
+        case PlayerOutput.HandMatch: {
           setMatchStatusHeading("match")
           setMatchStatusSubHeading("your hand")
           return {
@@ -121,7 +121,7 @@ const gameReducer = (
             playerPairsSecondLast,
           }
         }
-        case 3: {
+        case PlayerOutput.NoMatch: {
           setMatchStatusHeading("no match")
           setMatchStatusSubHeading("")
           return { ...state, playerOutput: action.playerOutput, playerHandLast }
