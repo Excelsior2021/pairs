@@ -5,6 +5,7 @@ import { dispatchGameAction } from "../components/Session/Session"
 import { opponentDealtType, opponentTurnType } from "../types/function-types"
 import { JSX } from "solid-js/jsx-runtime"
 import { Card } from "../store/classes"
+import { OpponentOutput } from "../types/enums"
 
 export const opponentAsk = (opponentHand: Card[]) =>
   opponentHand[Math.floor(Math.random() * opponentHand.length)]
@@ -31,7 +32,7 @@ export const opponentDealt: opponentDealtType = (
         opponentPairs,
         shuffledDeck
       )
-      return 0
+      return OpponentOutput.DeckMatch
     }
 
     for (const card of opponentHand) {
@@ -46,7 +47,7 @@ export const opponentDealt: opponentDealtType = (
           opponentPairs,
           shuffledDeck
         )
-        return 1
+        return OpponentOutput.HandMatch
       }
     }
 
@@ -58,7 +59,7 @@ export const opponentDealt: opponentDealtType = (
       opponentPairs,
       shuffledDeck
     )
-    return 2
+    return OpponentOutput.NoMatch
   }
 }
 

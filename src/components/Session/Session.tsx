@@ -11,8 +11,9 @@ import PairsModal from "../PairsModal/PairsModal"
 import QuitGameModal from "../QuitGameModal/QuitGameModal"
 import deck from "../../gameFunctions/deckFunctions"
 import pairs from "../../gameFunctions/pairsFunctions"
-import { gameStateType, gameAction, PlayerOutput } from "../../types/general"
+import { gameStateType, gameAction } from "../../types/general"
 import "./Session.scss"
+import { PlayerOutput } from "../../types/enums"
 
 const initialGameState = {
   playerHandUI: () => [],
@@ -68,7 +69,8 @@ const gameReducer = (
       }
     }
     case "PLAYER_ACTION": {
-      if (action.playerOutput !== false) setShowPlayerModal(true)
+      if (action.playerOutput !== PlayerOutput.NoOpponentMatch)
+        setShowPlayerModal(true)
 
       let playerPairsLast: JSX.Element
       let playerPairsSecondLast: JSX.Element

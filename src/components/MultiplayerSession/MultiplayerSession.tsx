@@ -16,12 +16,12 @@ import UI from "../../gameFunctions/multiplayerUIFunctions"
 import player from "../../gameFunctions/multiplayerPlayerFunctions"
 import { setGameDeck } from "../Sidebar/Sidebar"
 import {
-  card,
   gameActionMultiplayer,
   gameStateMultiplayerType,
   multiplayerSessionProps,
   playerHandEventType,
 } from "../../types/general"
+import { Card } from "../../store/classes"
 import "../Session/Session.scss"
 
 const initialGameState = {
@@ -81,13 +81,13 @@ const multiplayerReducer = (
         shuffledDeck,
       } = action.serverState!
 
-      let playerHand: card[] = []
+      let playerHand: Card[] = []
       let playerHandUI: JSX.Element
-      let opponentHand: card[] = []
+      let opponentHand: Card[] = []
       let opponentHandUI: JSX.Element
-      let playerPairs: card[] = []
+      let playerPairs: Card[] = []
       let playerPairsUI: JSX.Element
-      let opponentPairs: card[] = []
+      let opponentPairs: Card[] = []
       let opponentPairsUI: JSX.Element
       let log
       let gameState = action.serverState!
@@ -194,7 +194,7 @@ const multiplayerReducer = (
     }
     case "PLAYER_RESPONSE": {
       const { card } = action.playerRequest!
-      let playerHand: card[]
+      let playerHand: Card[]
 
       if (state.clientPlayer === 1) {
         playerHand = state.playerHand
@@ -296,8 +296,8 @@ const multiplayerReducer = (
       if (action.requestPlayer === state.clientPlayer) {
         setShowPlayerModal(true)
 
-        let playerHand: card[] = []
-        let playerPairs: card[] = []
+        let playerHand: Card[] = []
+        let playerPairs: Card[] = []
 
         if (action.requestPlayer === 1 && action.serverState) {
           const { player1Hand, player1Pairs } = action.serverState
@@ -482,7 +482,7 @@ const multiplayerReducer = (
             <div class="game__stats">
               <h2 class="game__game-over-heading">STATS</h2>
               <p class="game__game-over-text">
-                Player Pairs: {state.playerPairs.length}
+                Your Pairs: {state.playerPairs.length}
               </p>
               <p class="game__game-over-text">
                 Opponent Pairs: {state.opponentPairs.length}

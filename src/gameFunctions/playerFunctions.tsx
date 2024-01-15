@@ -9,7 +9,7 @@ import {
   playerResponseHandlerType,
   playerTurnHandlerType,
 } from "../types/function-types"
-import { PlayerOutput } from "../types/general"
+import { OpponentOutput, PlayerOutput } from "../types/enums"
 
 export const playerMatch: playerMatchType = (
   playerHandEvent,
@@ -47,7 +47,7 @@ export const playerMatch: playerMatchType = (
         }
       }
     }
-    return false
+    return PlayerOutput.NoOpponentMatch
   }
 }
 
@@ -157,7 +157,7 @@ export const playerTurnHandler: playerTurnHandlerType = (
   )
 
   if (!gameOverCheck) {
-    if (playerOutput === false) {
+    if (playerOutput === PlayerOutput.NoOpponentMatch) {
       const log =
         "You didn't match with any card in your opponent's hand. Please deal a card from the deck."
 
@@ -261,7 +261,7 @@ export const playerResponseHandler: playerResponseHandlerType = (
       opponentAsked
     )
 
-    if (opponentOutput === 0) {
+    if (opponentOutput === OpponentOutput.DeckMatch) {
       const playerHandUnclickable = true
       pairs.updateUI(
         playerHand,
@@ -277,11 +277,11 @@ export const playerResponseHandler: playerResponseHandlerType = (
       dispatchGameAction({ type: "GAME_LOG", log })
       setTimeout(opponentTurn, 4000)
     }
-    if (opponentOutput === 1) {
+    if (opponentOutput === OpponentOutput.HandMatch) {
       log =
         "Your opponent has dealt a card from the deck. They didn't match with the dealt card but they matched with another card in their hand. It's your turn."
     }
-    if (opponentOutput === 2) {
+    if (opponentOutput === OpponentOutput.NoMatch) {
       log =
         "Your opponent has dealt a card from the deck and added it to their hand. There were no matches. It's your turn."
     }

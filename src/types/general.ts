@@ -2,6 +2,7 @@ import { Accessor } from "solid-js"
 import { JSX } from "solid-js/jsx-runtime"
 import { Socket } from "socket.io-client"
 import { playerTurnHandlerType } from "./function-types"
+import { Card } from "../store/classes"
 
 export type playerHandEventType = MouseEvent & {
   currentTarget: HTMLImageElement
@@ -52,11 +53,11 @@ export type gameStateMultiplayerType = {
   playerPairsUI: JSX.Element
   opponentHandUI: JSX.Element
   opponentPairsUI: JSX.Element
-  shuffledDeck: card[]
-  playerHand: card[]
-  opponentHand: card[]
-  playerPairs: card[]
-  opponentPairs: card[]
+  shuffledDeck: Card[]
+  playerHand: Card[]
+  opponentHand: Card[]
+  playerPairs: Card[]
+  opponentPairs: Card[]
   playerHandUnclickable: boolean | null
   playerTurnHandler: playerTurnHandlerType | null
   playerOutput: number | null
@@ -75,10 +76,10 @@ export type gameStateMultiplayerType = {
 
 export type gameAction = {
   type: string
-  playerHand?: card[]
-  playerPairs?: card[]
-  opponentHand?: card[]
-  opponentPairs?: card[]
+  playerHand?: Card[]
+  playerPairs?: Card[]
+  opponentHand?: Card[]
+  opponentPairs?: Card[]
   playerHandUnclickable?: boolean
   playerTurnEventHandler?: (playerHandEvent: playerHandEventType) => void
   playerOutput?: number | boolean
@@ -86,16 +87,16 @@ export type gameAction = {
   yesButton?: JSX.Element
   noButton?: JSX.Element
   log?: JSX.Element
-  chosenCard?: card
-  opponentAsked?: card
+  chosenCard?: Card
+  opponentAsked?: Card
 }
 
 export type gameActionMultiplayer = {
   type: string
-  playerHand?: card[]
-  playerPairs?: card[]
-  opponentHand?: card[]
-  opponentPairs?: card[]
+  playerHand?: Card[]
+  playerPairs?: Card[]
+  opponentHand?: Card[]
+  opponentPairs?: Card[]
   playerHandUnclickable?: boolean
   playerTurnHandler?: JSX.EventHandlerUnion<HTMLImageElement, MouseEvent>
   playerAnswerHandler?: JSX.EventHandlerUnion<HTMLImageElement, MouseEvent>
@@ -104,8 +105,8 @@ export type gameActionMultiplayer = {
   yesButton?: JSX.Element
   noButton?: JSX.Element
   log?: JSX.Element
-  chosenCard?: card
-  opponentAsked?: card
+  chosenCard?: Card
+  opponentAsked?: Card
   socket?: Socket
   clientPlayer?: number
   sessionID?: string
@@ -117,25 +118,18 @@ export type gameActionMultiplayer = {
   opponentRequest?: cardRequestMultiplayer
   playerCard?: cardRequestMultiplayer
   requestPlayer?: number
-  dealtCard?: card
+  dealtCard?: Card
 }
 
 export type cardRequestMultiplayer = {
-  card: card
+  card: Card
   player: number
 }
 
 export type serverStateMultiplayer = {
-  player1Hand: card[]
-  player1Pairs: card[]
-  player2Hand: card[]
-  player2Pairs: card[]
-  shuffledDeck: card[]
-}
-
-export enum PlayerOutput {
-  OpponentMatch,
-  DeckMatch,
-  HandMatch,
-  NoMatch,
+  player1Hand: Card[]
+  player1Pairs: Card[]
+  player2Hand: Card[]
+  player2Pairs: Card[]
+  shuffledDeck: Card[]
 }

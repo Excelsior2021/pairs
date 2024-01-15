@@ -1,11 +1,8 @@
 import { Component, createSignal, Switch, Match } from "solid-js"
 import Modal from "../Modal/Modal"
-import {
-  PlayerOutput,
-  gameStateMultiplayerProp,
-  gameStateProp,
-} from "../../types/general"
+import { gameStateMultiplayerProp, gameStateProp } from "../../types/general"
 import "./PlayerModal.scss"
+import { PlayerOutput } from "../../types/enums"
 
 export const [showPlayerModal, setShowPlayerModal] = createSignal(false)
 export const [matchStatusHeading, setMatchStatusHeading] = createSignal("")
@@ -40,7 +37,8 @@ const PlayerModal: Component<
           <Match
             when={props.gameState().playerOutput === PlayerOutput.HandMatch}>
             The value of the card you chose didn't match with the value of the
-            dealt card but you had another match in your hand, both
+            dealt card but you had another match in your hand, both cards will
+            be added to your pairs. It's your opponent's turn.
           </Match>
           <Match when={props.gameState().playerOutput === PlayerOutput.NoMatch}>
             No matches, the dealt card has been added to your hand. It's your

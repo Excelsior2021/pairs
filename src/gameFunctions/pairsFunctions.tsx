@@ -110,7 +110,7 @@ export const gameOver: gameOverType = (
         </div>
         <div class="game__stats">
           <h2 class="game__game-over-heading">STATS</h2>
-          <p class="game__game-over-text">Player Pairs: {playerPairs.length}</p>
+          <p class="game__game-over-text">Your Pairs: {playerPairs.length}</p>
           <p class="game__game-over-text">
             Opponent Pairs: {opponentPairs.length}
           </p>

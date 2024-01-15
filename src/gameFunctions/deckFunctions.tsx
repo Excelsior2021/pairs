@@ -5,9 +5,10 @@ import opponent from "./opponentFunctions"
 import pairs from "./pairsFunctions"
 import { dispatchGameAction } from "../components/Session/Session"
 import { setGameDeck } from "../components/Sidebar/Sidebar"
-import { PlayerOutput, playerHandEventType } from "../types/general"
+import { playerHandEventType } from "../types/general"
 import { gameDeckHandlerType } from "../types/function-types"
 import { Card } from "../store/classes"
+import { PlayerOutput } from "../types/enums"
 
 export const createDeck = () => {
   const deck: Card[] = []
