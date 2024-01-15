@@ -29,9 +29,9 @@ const MainMenu: Component = () => (
         instructions
       </button>
     </div>
-    <p class="main-menu__text">
+    {/* <p class="main-menu__text">
       Multiplayer is disabled as the server is currently down.
-    </p>
+    </p> */}
   </div>
 )
 
