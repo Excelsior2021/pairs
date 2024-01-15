@@ -30,7 +30,6 @@ const Instructions: Component = () => {
             {instruction => <li class="instructions__item">{instruction}</li>}
           </For>
         </ul>
-        <p class="instructions__text instructions__text--em">Enjoy!</p>
       </div>
     </Modal>
   )
