@@ -59,7 +59,8 @@ export const gameDeckHandler: gameDeckHandlerMultiplayerType = (
   shuffledDeck,
   playerRequest
 ) => {
-  const dealtCard = dealCard(shuffledDeck)
+  // const dealtCard = dealCard(shuffledDeck)
+  const dealCard = {}
 
   dispatchGameAction({
     type: "PLAYER_DEALT",

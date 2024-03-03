@@ -1,4 +1,4 @@
-import deck from "./deckFunctions"
+import deckFunctions from "./deckFunctions"
 import pairs from "./pairsFunctions"
 import opponent from "./opponentFunctions"
 import { dispatchGameAction } from "../components/Session/Session"
@@ -17,7 +17,7 @@ export const playerMatch: playerMatchType = (
   opponentHand,
   playerPairs,
   opponentPairs,
-  shuffledDeck
+  deck
 ) => {
   let chosenCard
 
@@ -40,7 +40,7 @@ export const playerMatch: playerMatchType = (
               opponentHand,
               playerPairs,
               opponentPairs,
-              shuffledDeck
+              deck
             )
             return PlayerOutput.OpponentMatch
           }
@@ -53,13 +53,13 @@ export const playerMatch: playerMatchType = (
 
 export const playerDealt: playerDealtType = (
   playerHandEvent,
-  shuffledDeck,
+  deck,
   playerHand,
   opponentHand,
   playerPairs,
   opponentPairs
 ) => {
-  const dealtCard = deck.dealCard(shuffledDeck)
+  const dealtCard = deck.dealCard()
   let chosenCard
 
   for (const card of playerHand) {
@@ -78,7 +78,7 @@ export const playerDealt: playerDealtType = (
             opponentHand,
             playerPairs,
             opponentPairs,
-            shuffledDeck
+            deck
           )
           return PlayerOutput.DeckMatch
         }
@@ -95,36 +95,30 @@ export const playerDealt: playerDealtType = (
           opponentHand,
           playerPairs,
           opponentPairs,
-          shuffledDeck
+          deck
         )
         return PlayerOutput.HandMatch
       }
     }
 
     playerHand.push(dealtCard)
-    pairs.updateUI(
-      playerHand,
-      opponentHand,
-      playerPairs,
-      opponentPairs,
-      shuffledDeck
-    )
+    pairs.updateUI(playerHand, opponentHand, playerPairs, opponentPairs, deck)
     return PlayerOutput.NoMatch
   }
 }
 
 export const playerTurnHandler: playerTurnHandlerType = (
   playerHandEvent,
-  shuffledDeck,
+  deck,
   playerHand,
   opponentHand,
   playerPairs,
   opponentPairs
 ) => {
   const gameDeckHandler = () =>
-    deck.gameDeckHandler(
+    deckFunctions.gameDeckHandler(
       playerHandEvent,
-      shuffledDeck,
+      deck,
       playerHand,
       opponentHand,
       playerPairs,
@@ -137,7 +131,7 @@ export const playerTurnHandler: playerTurnHandlerType = (
     opponentHand,
     playerPairs,
     opponentPairs,
-    shuffledDeck
+    deck
   )
 
   dispatchGameAction({
@@ -149,7 +143,7 @@ export const playerTurnHandler: playerTurnHandlerType = (
   dispatchGameAction({ type: "GAME_LOG" })
 
   const gameOverCheck = pairs.gameOver(
-    shuffledDeck,
+    deck,
     playerHand,
     opponentHand,
     playerPairs,
@@ -167,10 +161,10 @@ export const playerTurnHandler: playerTurnHandlerType = (
         opponentHand,
         playerPairs,
         opponentPairs,
-        shuffledDeck,
+        deck,
         playerHandUnclickable
       )
-      setGameDeck(deck.gameDeckUI(gameDeckHandler))
+      setGameDeck(deckFunctions.gameDeckUI(gameDeckHandler))
       dispatchGameAction({ type: "GAME_LOG", log })
     }
   }
@@ -178,7 +172,7 @@ export const playerTurnHandler: playerTurnHandlerType = (
 
 export const playerResponseHandler: playerResponseHandlerType = (
   hasCard,
-  shuffledDeck,
+  deck,
   playerHand,
   opponentHand,
   playerPairs,
@@ -189,7 +183,7 @@ export const playerResponseHandler: playerResponseHandlerType = (
 ) => {
   const opponentTurn = () =>
     opponent.opponentTurn(
-      shuffledDeck,
+      deck,
       playerHand,
       opponentHand,
       playerPairs,
@@ -213,11 +207,11 @@ export const playerResponseHandler: playerResponseHandlerType = (
           opponentHand,
           playerPairs,
           opponentPairs,
-          shuffledDeck,
+          deck,
           playerHandUnclickable
         )
         opponent.opponentTurn(
-          shuffledDeck,
+          deck,
           playerHand,
           opponentHand,
           playerPairs,
@@ -253,7 +247,7 @@ export const playerResponseHandler: playerResponseHandlerType = (
     }
 
     const opponentOutput = opponent.opponentDealt(
-      shuffledDeck,
+      deck,
       playerHand,
       opponentHand,
       playerPairs,
@@ -268,7 +262,7 @@ export const playerResponseHandler: playerResponseHandlerType = (
         opponentHand,
         playerPairs,
         opponentPairs,
-        shuffledDeck,
+        deck,
         playerHandUnclickable
       )
       log =

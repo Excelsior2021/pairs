@@ -1,10 +1,9 @@
 import { For } from "solid-js"
 import player from "./playerFunctions"
-import deck from "./deckFunctions"
 import { dispatchGameAction } from "../components/Session/Session"
 import { playerHandEventType } from "../types/general"
 import { gameOverType, updateUIType } from "../types/function-types"
-import { Card } from "../store/classes"
+import { Card, Deck } from "../store/classes"
 
 export const initialPairs = (hand: Card[]) => {
   const pairs: Card[] = []
@@ -41,13 +40,13 @@ const updateUI: updateUIType = (
   opponentHand,
   playerPairs,
   opponentPairs,
-  shuffledDeck,
+  deck,
   playerHandUnclickable = false
 ) => {
   const playerTurnEventHandler = (playerHandEvent: playerHandEventType) =>
     player.playerTurnHandler(
       playerHandEvent,
-      shuffledDeck,
+      deck,
       playerHand,
       opponentHand,
       playerPairs,
@@ -66,11 +65,11 @@ const updateUI: updateUIType = (
 }
 
 export const startGame = () => {
-  const newDeck: Card[] = deck.createDeck()
-  const shuffledDeck: Card[] = deck.shuffleDeck(newDeck)
+  const deck = new Deck()
+  deck.shuffle()
 
-  const playerHand = deck.dealHand(shuffledDeck, 7)
-  const opponentHand = deck.dealHand(shuffledDeck, 7)
+  const playerHand = deck.dealHand(7)
+  const opponentHand = deck.dealHand(7)
 
   const playerPairs = initialPairs(playerHand)
   const opponentPairs = initialPairs(opponentHand)
@@ -78,12 +77,12 @@ export const startGame = () => {
   const log =
     "The cards have been dealt. Any initial pairs of cards have been added to your Pairs. Please select a card from your hand to request a matchwith your opponent."
 
-  updateUI(playerHand, opponentHand, playerPairs, opponentPairs, shuffledDeck)
+  updateUI(playerHand, opponentHand, playerPairs, opponentPairs, deck)
   dispatchGameAction({ type: "GAME_LOG", log })
 }
 
 export const gameOver: gameOverType = (
-  shuffledDeck,
+  deck,
   playerHand,
   opponentHand,
   playerPairs,
@@ -92,7 +91,7 @@ export const gameOver: gameOverType = (
   if (
     playerHand.length === 0 ||
     opponentHand.length === 0 ||
-    shuffledDeck.length === 0
+    deck.length === 0
   ) {
     let outcome
     if (playerPairs.length > opponentPairs.length) {
@@ -115,7 +114,7 @@ export const gameOver: gameOverType = (
             Opponent Pairs: {opponentPairs.length}
           </p>
           <p class="game__game-over-text">
-            Remaining cards in deck: {shuffledDeck.length}
+            Remaining cards in deck: {deck.length}
           </p>
         </div>
       </div>
@@ -127,7 +126,7 @@ export const gameOver: gameOverType = (
       opponentHand,
       playerPairs,
       opponentPairs,
-      shuffledDeck,
+      deck,
       playerHandUnclickable
     )
     dispatchGameAction({ type: "GAME_OVER" })

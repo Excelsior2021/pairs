@@ -5,7 +5,7 @@ import { playerHandEventType } from "./general"
 //DECK FUNCTIONS
 export type gameDeckHandlerType = (
   playerHandEvent: playerHandEventType,
-  shuffledDeck: card[],
+  deck: card[],
   playerHand: card[],
   opponentHand: card[],
   playerPairs: card[],
@@ -13,7 +13,7 @@ export type gameDeckHandlerType = (
 ) => void
 
 export type gameDeckHandlerMultiplayerType = (
-  shuffledDeck: card[],
+  deck: card[],
   playerRequest: cardRequestMultiplayer
 ) => void
 
@@ -24,12 +24,12 @@ export type playerMatchType = (
   opponentHand: card[],
   playerPairs: card[],
   opponentPairs: card[],
-  shuffledDeck: card[]
+  deck: card[]
 ) => number | boolean | undefined
 
 export type playerDealtType = (
   playerHandEvent: playerHandEventType,
-  shuffledDeck: card[],
+  deck: card[],
   playerHand: card[],
   opponentHand: card[],
   playerPairs: card[],
@@ -38,7 +38,7 @@ export type playerDealtType = (
 
 export type playerTurnHandlerType = (
   playerHandEvent: playerHandEventType,
-  shuffledDeck: card[],
+  deck: card[],
   playerHand: card[],
   opponentHand: card[],
   playerPairs: card[],
@@ -53,7 +53,7 @@ export type playerTurnHandlerMultiplayerType = (
 
 export type playerResponseHandlerType = (
   hasCard: boolean,
-  shuffledDeck: card[],
+  deck: card[],
   playerHand: card[],
   opponentHand: card[],
   playerPairs: card[],
@@ -72,7 +72,7 @@ export type playerResponseHandlerMultiplayerType = (
 
 //OPPONENT FUNCTIONS
 export type opponentDealtType = (
-  shuffledDeck: card[],
+  deck: card[],
   playerHand: card[],
   opponentHand: card[],
   playerPairs: card[],
@@ -81,7 +81,7 @@ export type opponentDealtType = (
 ) => number | undefined
 
 export type opponentTurnType = (
-  shuffledDeck: card[],
+  deck: card[],
   playerHand: card[],
   opponentHand: card[],
   playerPairs: card[],
@@ -94,12 +94,12 @@ export type updateUIType = (
   opponentHand: card[],
   playerPairs: card[],
   opponentPairs: card[],
-  shuffledDeck: card[],
+  deck: card[],
   playerHandUnclickable?: boolean
 ) => void
 
 export type gameOverType = (
-  shuffledDeck: card[],
+  deck: card[],
   playerHand: card[],
   opponentHand: card[],
   playerPairs: card[],

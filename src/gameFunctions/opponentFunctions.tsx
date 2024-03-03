@@ -1,4 +1,3 @@
-import deck from "./deckFunctions"
 import pairs from "./pairsFunctions"
 import player from "./playerFunctions"
 import { dispatchGameAction } from "../components/Session/Session"
@@ -11,27 +10,21 @@ export const opponentAsk = (opponentHand: Card[]) =>
   opponentHand[Math.floor(Math.random() * opponentHand.length)]
 
 export const opponentDealt: opponentDealtType = (
-  shuffledDeck,
+  deck,
   playerHand,
   opponentHand,
   playerPairs,
   opponentPairs,
   opponentAsk
 ) => {
-  const dealtCard = deck.dealCard(shuffledDeck)
+  const dealtCard = deck.dealCard()
 
   if (dealtCard) {
     if (dealtCard.value === opponentAsk.value) {
       opponentPairs.push(dealtCard)
       opponentPairs.push(opponentAsk)
       opponentHand.splice(opponentHand.indexOf(opponentAsk), 1)
-      pairs.updateUI(
-        playerHand,
-        opponentHand,
-        playerPairs,
-        opponentPairs,
-        shuffledDeck
-      )
+      pairs.updateUI(playerHand, opponentHand, playerPairs, opponentPairs, deck)
       return OpponentOutput.DeckMatch
     }
 
@@ -45,33 +38,27 @@ export const opponentDealt: opponentDealtType = (
           opponentHand,
           playerPairs,
           opponentPairs,
-          shuffledDeck
+          deck
         )
         return OpponentOutput.HandMatch
       }
     }
 
     opponentHand.push(dealtCard)
-    pairs.updateUI(
-      playerHand,
-      opponentHand,
-      playerPairs,
-      opponentPairs,
-      shuffledDeck
-    )
+    pairs.updateUI(playerHand, opponentHand, playerPairs, opponentPairs, deck)
     return OpponentOutput.NoMatch
   }
 }
 
 export const opponentTurn: opponentTurnType = (
-  shuffledDeck,
+  deck,
   playerHand,
   opponentHand,
   playerPairs,
   opponentPairs
 ) => {
   const gameOverCheck = pairs.gameOver(
-    shuffledDeck,
+    deck,
     playerHand,
     opponentHand,
     playerPairs,
@@ -85,7 +72,7 @@ export const opponentTurn: opponentTurnType = (
     opponentHand,
     playerPairs,
     opponentPairs,
-    shuffledDeck,
+    deck,
     playerHandUnclickable
   )
 
@@ -108,7 +95,7 @@ export const opponentTurn: opponentTurnType = (
     const playerResponseHandler = (hasCard: boolean) =>
       player.playerResponseHandler(
         hasCard,
-        shuffledDeck,
+        deck,
         playerHand,
         opponentHand,
         playerPairs,

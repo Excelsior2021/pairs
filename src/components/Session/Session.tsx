@@ -14,6 +14,7 @@ import pairs from "../../gameFunctions/pairsFunctions"
 import { gameStateType, gameAction } from "../../types/general"
 import "./Session.scss"
 import { PlayerOutput } from "../../types/enums"
+import { Deck } from "../../store/classes"
 
 const initialGameState = {
   playerHandUI: () => [],
@@ -154,6 +155,7 @@ export const [gameState, dispatchGameAction] = createReducer(
 
 const Session: Component = () => {
   pairs.startGame()
+
   return (
     <div class="session">
       <Game gameState={gameState} />
