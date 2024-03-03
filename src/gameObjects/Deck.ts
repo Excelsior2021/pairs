@@ -1,18 +1,6 @@
-export class Card {
-  id: string
-  value: string | number
-  suit: string
-  img: string
+import Card from "./Card"
 
-  constructor(id: string, value: string | number, suit: string, img: string) {
-    this.id = id
-    this.value = value
-    this.suit = suit
-    this.img = img
-  }
-}
-
-export class Deck {
+export default class Deck {
   deck: Card[]
 
   constructor() {
@@ -21,6 +9,7 @@ export class Deck {
     this.dealCard = this.dealCard
     this.dealHand = this.dealHand
   }
+
   create() {
     const deck: Card[] = new Array(52)
     const non_num_cards = ["ace", "jack", "queen", "king"]

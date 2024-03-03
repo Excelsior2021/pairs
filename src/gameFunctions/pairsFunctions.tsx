@@ -1,9 +1,12 @@
 import { For } from "solid-js"
-import player from "./playerFunctions"
+import playerFunctions from "./playerFunctions"
 import { dispatchGameAction } from "../components/Session/Session"
 import { playerHandEventType } from "../types/general"
 import { gameOverType, updateUIType } from "../types/function-types"
-import { Card, Deck } from "../store/classes"
+import Card from "../gameObjects/Card"
+import Deck from "../gameObjects/Deck"
+import Player from "../gameObjects/Player"
+import Opponent from "../gameObjects/Opponent"
 
 export const initialPairs = (hand: Card[]) => {
   const pairs: Card[] = []
@@ -36,29 +39,18 @@ export const createPairsUI = (pairs: Card[]) => (
 )
 
 const updateUI: updateUIType = (
-  playerHand,
-  opponentHand,
-  playerPairs,
-  opponentPairs,
   deck,
+  player,
+  opponent,
   playerHandUnclickable = false
 ) => {
   const playerTurnEventHandler = (playerHandEvent: playerHandEventType) =>
-    player.playerTurnHandler(
-      playerHandEvent,
-      deck,
-      playerHand,
-      opponentHand,
-      playerPairs,
-      opponentPairs
-    )
+    playerFunctions.playerTurnHandler(playerHandEvent, deck, player, opponent)
 
   dispatchGameAction({
     type: "UPDATE",
-    playerHand,
-    opponentHand,
-    playerPairs,
-    opponentPairs,
+    player,
+    opponent,
     playerTurnEventHandler,
     playerHandUnclickable,
   })
@@ -66,37 +58,36 @@ const updateUI: updateUIType = (
 
 export const startGame = () => {
   const deck = new Deck()
+  const player = new Player()
+  const opponent = new Opponent()
+
   deck.shuffle()
 
-  const playerHand = deck.dealHand(7)
-  const opponentHand = deck.dealHand(7)
+  player.hand = deck.dealHand(7)
+  opponent.hand = deck.dealHand(7)
 
-  const playerPairs = initialPairs(playerHand)
-  const opponentPairs = initialPairs(opponentHand)
+  player.pairs = initialPairs(player.hand)
+  opponent.pairs = initialPairs(opponent.hand)
+
+  console.log(player, opponent)
 
   const log =
     "The cards have been dealt. Any initial pairs of cards have been added to your Pairs. Please select a card from your hand to request a matchwith your opponent."
 
-  updateUI(playerHand, opponentHand, playerPairs, opponentPairs, deck)
+  updateUI(deck, player, opponent)
   dispatchGameAction({ type: "GAME_LOG", log })
 }
 
-export const gameOver: gameOverType = (
-  deck,
-  playerHand,
-  opponentHand,
-  playerPairs,
-  opponentPairs
-) => {
+export const gameOver: gameOverType = (deck, player, opponent) => {
   if (
-    playerHand.length === 0 ||
-    opponentHand.length === 0 ||
-    deck.length === 0
+    player.hand.length === 0 ||
+    opponent.hand.length === 0 ||
+    deck.deck.length === 0
   ) {
     let outcome
-    if (playerPairs.length > opponentPairs.length) {
+    if (player.pairs.length > opponent.pairs.length) {
       outcome = "You won! Well done!"
-    } else if (playerPairs.length === opponentPairs.length) {
+    } else if (player.pairs.length === opponent.pairs.length) {
       outcome = "It's a draw!"
     } else {
       outcome = "Your opponent won! Better luck next time!"
@@ -109,26 +100,19 @@ export const gameOver: gameOverType = (
         </div>
         <div class="game__stats">
           <h2 class="game__game-over-heading">STATS</h2>
-          <p class="game__game-over-text">Your Pairs: {playerPairs.length}</p>
+          <p class="game__game-over-text">Your Pairs: {player.pairs.length}</p>
           <p class="game__game-over-text">
-            Opponent Pairs: {opponentPairs.length}
+            Opponent Pairs: {opponent.pairs.length}
           </p>
           <p class="game__game-over-text">
-            Remaining cards in deck: {deck.length}
+            Remaining cards in deck: {deck.deck.length}
           </p>
         </div>
       </div>
     )
     dispatchGameAction({ type: "GAME_LOG", log })
     const playerHandUnclickable = true
-    updateUI(
-      playerHand,
-      opponentHand,
-      playerPairs,
-      opponentPairs,
-      deck,
-      playerHandUnclickable
-    )
+    updateUI(deck, player, opponent, playerHandUnclickable)
     dispatchGameAction({ type: "GAME_OVER" })
     return true
   }

@@ -21,7 +21,7 @@ import {
   multiplayerSessionProps,
   playerHandEventType,
 } from "../../types/general"
-import { Card } from "../../store/classes"
+import { Card } from "../../gameObjects/classes"
 import "../Session/Session.scss"
 
 const initialGameState = {

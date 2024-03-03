@@ -1,5 +1,5 @@
 import { dispatchGameAction } from "../components/MultiplayerSession/MultiplayerSession"
-import { Card } from "../store/classes"
+import Card from "../gameObjects/Card"
 import {
   playerResponseHandlerMultiplayerType,
   playerTurnHandlerMultiplayerType,

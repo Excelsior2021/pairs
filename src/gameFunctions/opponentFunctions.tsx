@@ -1,83 +1,56 @@
 import pairs from "./pairsFunctions"
-import player from "./playerFunctions"
+import playerFunctions from "./playerFunctions"
 import { dispatchGameAction } from "../components/Session/Session"
 import { opponentDealtType, opponentTurnType } from "../types/function-types"
 import { JSX } from "solid-js/jsx-runtime"
-import { Card } from "../store/classes"
 import { OpponentOutput } from "../types/enums"
+import Opponent from "../gameObjects/Opponent"
 
-export const opponentAsk = (opponentHand: Card[]) =>
-  opponentHand[Math.floor(Math.random() * opponentHand.length)]
+export const opponentAsk = (opponent: Opponent) =>
+  opponent.hand[Math.floor(Math.random() * opponent.hand.length)]
 
 export const opponentDealt: opponentDealtType = (
   deck,
-  playerHand,
-  opponentHand,
-  playerPairs,
-  opponentPairs,
+  player,
+  opponent,
   opponentAsk
 ) => {
   const dealtCard = deck.dealCard()
 
   if (dealtCard) {
     if (dealtCard.value === opponentAsk.value) {
-      opponentPairs.push(dealtCard)
-      opponentPairs.push(opponentAsk)
-      opponentHand.splice(opponentHand.indexOf(opponentAsk), 1)
-      pairs.updateUI(playerHand, opponentHand, playerPairs, opponentPairs, deck)
+      opponent.pairs.push(dealtCard)
+      opponent.pairs.push(opponentAsk)
+      opponent.hand.splice(opponent.hand.indexOf(opponentAsk), 1)
+      pairs.updateUI(deck, player, opponent)
       return OpponentOutput.DeckMatch
     }
 
-    for (const card of opponentHand) {
+    for (const card of opponent.hand) {
       if (dealtCard.value === card.value) {
-        opponentPairs.push(dealtCard)
-        opponentPairs.push(card)
-        opponentHand.splice(opponentHand.indexOf(card), 1)
-        pairs.updateUI(
-          playerHand,
-          opponentHand,
-          playerPairs,
-          opponentPairs,
-          deck
-        )
+        opponent.pairs.push(dealtCard)
+        opponent.pairs.push(card)
+        opponent.hand.splice(opponent.hand.indexOf(card), 1)
+        pairs.updateUI(deck, player, opponent)
         return OpponentOutput.HandMatch
       }
     }
 
-    opponentHand.push(dealtCard)
-    pairs.updateUI(playerHand, opponentHand, playerPairs, opponentPairs, deck)
+    opponent.hand.push(dealtCard)
+    pairs.updateUI(deck, player, opponent)
     return OpponentOutput.NoMatch
   }
 }
 
-export const opponentTurn: opponentTurnType = (
-  deck,
-  playerHand,
-  opponentHand,
-  playerPairs,
-  opponentPairs
-) => {
-  const gameOverCheck = pairs.gameOver(
-    deck,
-    playerHand,
-    opponentHand,
-    playerPairs,
-    opponentPairs
-  )
+export const opponentTurn: opponentTurnType = (deck, player, opponent) => {
+  const gameOverCheck = pairs.gameOver(deck, player, opponent)
 
   const playerHandUnclickable = true
 
-  pairs.updateUI(
-    playerHand,
-    opponentHand,
-    playerPairs,
-    opponentPairs,
-    deck,
-    playerHandUnclickable
-  )
+  pairs.updateUI(deck, player, opponent, playerHandUnclickable)
 
   if (!gameOverCheck) {
-    const chosenCard = opponentAsk(opponentHand)
+    const chosenCard = opponentAsk(opponent)
     const question = (
       <p class="game__log">Do you have a {chosenCard.value}?</p>
     ) as JSX.Element
@@ -93,13 +66,11 @@ export const opponentTurn: opponentTurnType = (
     ) as JSX.Element
 
     const playerResponseHandler = (hasCard: boolean) =>
-      player.playerResponseHandler(
+      playerFunctions.playerResponseHandler(
         hasCard,
         deck,
-        playerHand,
-        opponentHand,
-        playerPairs,
-        opponentPairs,
+        player,
+        opponent,
         chosenCard,
         yesButton,
         noButton

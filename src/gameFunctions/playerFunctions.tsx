@@ -1,6 +1,6 @@
 import deckFunctions from "./deckFunctions"
 import pairs from "./pairsFunctions"
-import opponent from "./opponentFunctions"
+import opponentFunctions from "./opponentFunctions"
 import { dispatchGameAction } from "../components/Session/Session"
 import { setGameDeck } from "../components/Sidebar/Sidebar"
 import {
@@ -13,35 +13,27 @@ import { OpponentOutput, PlayerOutput } from "../types/enums"
 
 export const playerMatch: playerMatchType = (
   playerHandEvent,
-  playerHand,
-  opponentHand,
-  playerPairs,
-  opponentPairs,
-  deck
+  deck,
+  player,
+  opponent
 ) => {
   let chosenCard
 
-  for (const card of playerHand) {
+  for (const card of player.hand) {
     if (card.id === playerHandEvent.target!.id) chosenCard = card
   }
 
   if (chosenCard) {
-    for (const card of opponentHand) {
+    for (const card of opponent.hand) {
       if (card.value === chosenCard.value) {
-        playerPairs.push(card)
-        opponentHand.splice(opponentHand.indexOf(card), 1)
+        player.pairs.push(card)
+        opponent.hand.splice(opponent.hand.indexOf(card), 1)
 
-        for (const card of playerHand) {
+        for (const card of player.hand) {
           if (playerHandEvent.target!.id === card.id) {
-            playerPairs.push(card)
-            playerHand.splice(playerHand.indexOf(card), 1)
-            pairs.updateUI(
-              playerHand,
-              opponentHand,
-              playerPairs,
-              opponentPairs,
-              deck
-            )
+            player.pairs.push(card)
+            player.hand.splice(player.hand.indexOf(card), 1)
+            pairs.updateUI(deck, player, opponent)
             return PlayerOutput.OpponentMatch
           }
         }
@@ -54,55 +46,41 @@ export const playerMatch: playerMatchType = (
 export const playerDealt: playerDealtType = (
   playerHandEvent,
   deck,
-  playerHand,
-  opponentHand,
-  playerPairs,
-  opponentPairs
+  player,
+  opponent
 ) => {
   const dealtCard = deck.dealCard()
   let chosenCard
 
-  for (const card of playerHand) {
+  for (const card of player.hand) {
     if (card.id === playerHandEvent.target!.id) chosenCard = card
   }
 
   if (chosenCard && dealtCard) {
     if (chosenCard.value === dealtCard.value) {
-      playerPairs.push(dealtCard)
-      for (let card of playerHand) {
+      player.pairs.push(dealtCard)
+      for (let card of player.hand) {
         if (chosenCard.id === card.id) {
-          playerPairs.push(card)
-          playerHand.splice(playerHand.indexOf(card), 1)
-          pairs.updateUI(
-            playerHand,
-            opponentHand,
-            playerPairs,
-            opponentPairs,
-            deck
-          )
+          player.pairs.push(card)
+          player.hand.splice(player.hand.indexOf(card), 1)
+          pairs.updateUI(deck, player, opponent)
           return PlayerOutput.DeckMatch
         }
       }
     }
 
-    for (let card of playerHand) {
+    for (const card of player.hand) {
       if (dealtCard.value === card.value) {
-        playerPairs.push(dealtCard)
-        playerPairs.push(card)
-        playerHand.splice(playerHand.indexOf(card), 1)
-        pairs.updateUI(
-          playerHand,
-          opponentHand,
-          playerPairs,
-          opponentPairs,
-          deck
-        )
+        player.pairs.push(dealtCard)
+        player.pairs.push(card)
+        player.hand.splice(player.hand.indexOf(card), 1)
+        pairs.updateUI(deck, player, opponent)
         return PlayerOutput.HandMatch
       }
     }
 
-    playerHand.push(dealtCard)
-    pairs.updateUI(playerHand, opponentHand, playerPairs, opponentPairs, deck)
+    player.hand.push(dealtCard)
+    pairs.updateUI(deck, player, opponent)
     return PlayerOutput.NoMatch
   }
 }
@@ -110,45 +88,22 @@ export const playerDealt: playerDealtType = (
 export const playerTurnHandler: playerTurnHandlerType = (
   playerHandEvent,
   deck,
-  playerHand,
-  opponentHand,
-  playerPairs,
-  opponentPairs
+  player,
+  opponent
 ) => {
   const gameDeckHandler = () =>
-    deckFunctions.gameDeckHandler(
-      playerHandEvent,
-      deck,
-      playerHand,
-      opponentHand,
-      playerPairs,
-      opponentPairs
-    )
+    deckFunctions.gameDeckHandler(playerHandEvent, deck, player, opponent)
 
-  const playerOutput = playerMatch(
-    playerHandEvent,
-    playerHand,
-    opponentHand,
-    playerPairs,
-    opponentPairs,
-    deck
-  )
+  const playerOutput = playerMatch(playerHandEvent, deck, player, opponent)
 
   dispatchGameAction({
     type: "PLAYER_ACTION",
     playerOutput,
-    playerHand,
-    playerPairs,
+    player,
   })
   dispatchGameAction({ type: "GAME_LOG" })
 
-  const gameOverCheck = pairs.gameOver(
-    deck,
-    playerHand,
-    opponentHand,
-    playerPairs,
-    opponentPairs
-  )
+  const gameOverCheck = pairs.gameOver(deck, player, opponent)
 
   if (!gameOverCheck) {
     if (playerOutput === PlayerOutput.NoOpponentMatch) {
@@ -156,14 +111,7 @@ export const playerTurnHandler: playerTurnHandlerType = (
         "You didn't match with any card in your opponent's hand. Please deal a card from the deck."
 
       const playerHandUnclickable = true
-      pairs.updateUI(
-        playerHand,
-        opponentHand,
-        playerPairs,
-        opponentPairs,
-        deck,
-        playerHandUnclickable
-      )
+      pairs.updateUI(deck, player, opponent, playerHandUnclickable)
       setGameDeck(deckFunctions.gameDeckUI(gameDeckHandler))
       dispatchGameAction({ type: "GAME_LOG", log })
     }
@@ -173,50 +121,29 @@ export const playerTurnHandler: playerTurnHandlerType = (
 export const playerResponseHandler: playerResponseHandlerType = (
   hasCard,
   deck,
-  playerHand,
-  opponentHand,
-  playerPairs,
-  opponentPairs,
+  player,
+  opponent,
   opponentAsked,
   yesButton,
   noButton
 ) => {
   const opponentTurn = () =>
-    opponent.opponentTurn(
-      deck,
-      playerHand,
-      opponentHand,
-      playerPairs,
-      opponentPairs
-    )
+    opponentFunctions.opponentTurn(deck, player, opponent)
 
   let log
 
   if (hasCard) {
-    for (const card of playerHand) {
+    for (const card of player.hand) {
       if (card.value === opponentAsked.value) {
-        opponentPairs.push(opponentAsked)
-        opponentHand.splice(opponentHand.indexOf(opponentAsked), 1)
+        opponent.pairs.push(opponentAsked)
+        opponent.hand.splice(opponent.hand.indexOf(opponentAsked), 1)
 
-        opponentPairs.push(card)
-        playerHand.splice(playerHand.indexOf(card), 1)
+        opponent.pairs.push(card)
+        player.hand.splice(player.hand.indexOf(card), 1)
 
         const playerHandUnclickable = true
-        pairs.updateUI(
-          playerHand,
-          opponentHand,
-          playerPairs,
-          opponentPairs,
-          deck,
-          playerHandUnclickable
-        )
-        opponent.opponentTurn(
-          deck,
-          playerHand,
-          opponentHand,
-          playerPairs,
-          opponentPairs
-        )
+        pairs.updateUI(deck, player, opponent, playerHandUnclickable)
+        opponentFunctions.opponentTurn(deck, player, opponent)
         return
       }
     }
@@ -232,7 +159,7 @@ export const playerResponseHandler: playerResponseHandlerType = (
   }
 
   if (!hasCard) {
-    for (const card of playerHand) {
+    for (const card of player.hand) {
       if (card.value === opponentAsked.value) {
         log = `Are you sure? Do you have a ${opponentAsked.value}?`
 
@@ -246,25 +173,16 @@ export const playerResponseHandler: playerResponseHandlerType = (
       }
     }
 
-    const opponentOutput = opponent.opponentDealt(
+    const opponentOutput = opponentFunctions.opponentDealt(
       deck,
-      playerHand,
-      opponentHand,
-      playerPairs,
-      opponentPairs,
+      player,
+      opponent,
       opponentAsked
     )
 
     if (opponentOutput === OpponentOutput.DeckMatch) {
       const playerHandUnclickable = true
-      pairs.updateUI(
-        playerHand,
-        opponentHand,
-        playerPairs,
-        opponentPairs,
-        deck,
-        playerHandUnclickable
-      )
+      pairs.updateUI(deck, player, opponent, playerHandUnclickable)
       log =
         "Your opponent has dealt a card from the deck and matched with the dealt card. It's your opponent's turn again."
 

@@ -9,12 +9,11 @@ import PlayerModal, {
 } from "../PlayerModal/PlayerModal"
 import PairsModal from "../PairsModal/PairsModal"
 import QuitGameModal from "../QuitGameModal/QuitGameModal"
-import deck from "../../gameFunctions/deckFunctions"
+import deckFunctions from "../../gameFunctions/deckFunctions"
 import pairs from "../../gameFunctions/pairsFunctions"
 import { gameStateType, gameAction } from "../../types/general"
-import "./Session.scss"
 import { PlayerOutput } from "../../types/enums"
-import { Deck } from "../../store/classes"
+import "./Session.scss"
 
 const initialGameState = {
   playerHandUI: () => [],
@@ -40,24 +39,20 @@ const gameReducer = (
 ): gameStateType => {
   switch (action.type) {
     case "UPDATE": {
-      if (
-        action.playerHand &&
-        action.playerPairs &&
-        action.opponentHand &&
-        action.opponentPairs &&
-        action.playerTurnEventHandler
-      ) {
-        let playerHandUI = deck.createPlayerHandUI(
-          action.playerHand,
+      if (action.player && action.opponent && action.playerTurnEventHandler) {
+        let playerHandUI = deckFunctions.createPlayerHandUI(
+          action.player.hand,
           action.playerTurnEventHandler
         )
-        const playerPairsUI = pairs.createPairsUI(action.playerPairs)
+        const playerPairsUI = pairs.createPairsUI(action.player.pairs)
 
-        const opponentHandUI = deck.createHandUIback(action.opponentHand)
-        const opponentPairsUI = pairs.createPairsUI(action.opponentPairs)
+        const opponentHandUI = deckFunctions.createHandUIback(
+          action.opponent.hand
+        )
+        const opponentPairsUI = pairs.createPairsUI(action.opponent.pairs)
 
         if (action.playerHandUnclickable) {
-          playerHandUI = deck.createHandUI(action.playerHand)
+          playerHandUI = deckFunctions.createHandUI(action.player.hand)
         }
 
         return {
@@ -77,19 +72,19 @@ const gameReducer = (
       let playerPairsSecondLast: JSX.Element
       let playerHandLast: JSX.Element
 
-      if (action.playerPairs!.length > 0) {
+      if (action.player!.pairs.length > 0) {
         playerPairsLast = pairs.createPairsUI([
-          action.playerPairs![action.playerPairs!.length - 1],
+          action.player!.pairs[action.player!.pairs.length - 1],
         ])
 
         playerPairsSecondLast = pairs.createPairsUI([
-          action.playerPairs![action.playerPairs!.length - 2],
+          action.player!.pairs[action.player!.pairs.length - 2],
         ])
       }
 
-      if (action.playerHand!.length > 0) {
-        playerHandLast = deck.createHandUI([
-          action.playerHand![action.playerHand!.length - 1],
+      if (action.player!.hand.length > 0) {
+        playerHandLast = deckFunctions.createHandUI([
+          action.player!.hand[action.player!.hand.length - 1],
         ])
       }
 
@@ -155,7 +150,6 @@ export const [gameState, dispatchGameAction] = createReducer(
 
 const Session: Component = () => {
   pairs.startGame()
-
   return (
     <div class="session">
       <Game gameState={gameState} />

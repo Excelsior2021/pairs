@@ -1,64 +1,58 @@
 import { JSX } from "solid-js/jsx-runtime"
-import { card, cardRequestMultiplayer } from "./general"
+import { cardRequestMultiplayer } from "./general"
 import { playerHandEventType } from "./general"
+import Card from "../gameObjects/Card"
+import Deck from "../gameObjects/Deck"
+import Player from "../gameObjects/Player"
+import Opponent from "../gameObjects/Opponent"
 
 //DECK FUNCTIONS
 export type gameDeckHandlerType = (
   playerHandEvent: playerHandEventType,
-  deck: card[],
-  playerHand: card[],
-  opponentHand: card[],
-  playerPairs: card[],
-  opponentPairs: card[]
+  deck: Deck,
+  player: Player,
+  opponent: Opponent
 ) => void
 
 export type gameDeckHandlerMultiplayerType = (
-  deck: card[],
+  deck: Deck,
   playerRequest: cardRequestMultiplayer
 ) => void
 
 //PLAYER FUNCTIONS
 export type playerMatchType = (
   playerHandEvent: playerHandEventType,
-  playerHand: card[],
-  opponentHand: card[],
-  playerPairs: card[],
-  opponentPairs: card[],
-  deck: card[]
+  deck: Deck,
+  player: Player,
+  opponent: Opponent
 ) => number | boolean | undefined
 
 export type playerDealtType = (
   playerHandEvent: playerHandEventType,
-  deck: card[],
-  playerHand: card[],
-  opponentHand: card[],
-  playerPairs: card[],
-  opponentPairs: card[]
+  deck: Deck,
+  player: Player,
+  opponent: Opponent
 ) => number | undefined
 
 export type playerTurnHandlerType = (
   playerHandEvent: playerHandEventType,
-  deck: card[],
-  playerHand: card[],
-  opponentHand: card[],
-  playerPairs: card[],
-  opponentPairs: card[]
+  deck: Deck,
+  player: Player,
+  opponent: Opponent
 ) => void
 
 export type playerTurnHandlerMultiplayerType = (
   playerHandEvent: playerHandEventType,
-  playerHand: card[],
+  playerHand: Card[],
   player: number
 ) => void
 
 export type playerResponseHandlerType = (
   hasCard: boolean,
-  deck: card[],
-  playerHand: card[],
-  opponentHand: card[],
-  playerPairs: card[],
-  opponentPairs: card[],
-  opponentAsked: card,
+  deck: Deck,
+  player: Player,
+  opponent: Opponent,
+  opponentAsked: Card,
   yesButton: JSX.Element,
   noButton: JSX.Element
 ) => void
@@ -66,52 +60,42 @@ export type playerResponseHandlerType = (
 export type playerResponseHandlerMultiplayerType = (
   hasCard: boolean,
   oppenentRequest: cardRequestMultiplayer,
-  playerHand: card[],
+  playerHand: Card[],
   player: number
 ) => void
 
 //OPPONENT FUNCTIONS
 export type opponentDealtType = (
-  deck: card[],
-  playerHand: card[],
-  opponentHand: card[],
-  playerPairs: card[],
-  opponentPairs: card[],
-  opponentAsk: card
+  deck: Deck,
+  player: Player,
+  opponent: Opponent,
+  opponentAsk: Card
 ) => number | undefined
 
 export type opponentTurnType = (
-  deck: card[],
-  playerHand: card[],
-  opponentHand: card[],
-  playerPairs: card[],
-  opponentPairs: card[]
+  deck: Deck,
+  player: Player,
+  opponent: Opponent
 ) => void
 
 //PAIRS FUNCTIONS
 export type updateUIType = (
-  playerHand: card[],
-  opponentHand: card[],
-  playerPairs: card[],
-  opponentPairs: card[],
-  deck: card[],
+  deck: Deck,
+  player: Player,
+  opponent: Opponent,
   playerHandUnclickable?: boolean
 ) => void
 
 export type gameOverType = (
-  deck: card[],
-  playerHand: card[],
-  opponentHand: card[],
-  playerPairs: card[],
-  opponentPairs: card[]
+  deck: Deck,
+  player: Player,
+  opponent: Opponent
 ) => boolean | void
 
 //GAME REPORT
 
 export type gameReportType = (
-  deck: card[],
-  playerHand: card[],
-  opponentHand: card[],
-  playerPairs: card[],
-  opponentPairs: card[]
+  deck: Deck,
+  player: Player,
+  opponent: Opponent
 ) => void

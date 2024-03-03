@@ -3,8 +3,8 @@ import { JSX } from "solid-js/jsx-runtime"
 import { dispatchGameAction } from "../components/MultiplayerSession/MultiplayerSession"
 import { setGameDeck } from "../components/Sidebar/Sidebar"
 import { gameDeckHandlerMultiplayerType } from "../types/function-types"
-import { gameDeckUI, dealCard } from "./deckFunctions"
-import { Card } from "../store/classes"
+import { gameDeckUI } from "./deckFunctions"
+import Card from "../gameObjects/Card"
 
 export const createPlayerHandUI = (
   hand: Card[],
@@ -56,11 +56,10 @@ export const createPairsUI = (pairs: Card[]) => (
 )
 
 export const gameDeckHandler: gameDeckHandlerMultiplayerType = (
-  shuffledDeck,
+  deck,
   playerRequest
 ) => {
-  // const dealtCard = dealCard(shuffledDeck)
-  const dealCard = {}
+  const dealtCard = deck.dealCard()
 
   dispatchGameAction({
     type: "PLAYER_DEALT",

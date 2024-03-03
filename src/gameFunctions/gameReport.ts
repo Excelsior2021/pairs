@@ -1,17 +1,11 @@
 import { gameReportType } from "../types/function-types"
 
-const gameReport: gameReportType = (
-  deck,
-  playerHand,
-  opponentHand,
-  playerPairs,
-  opponentPairs
-) => {
+const gameReport: gameReportType = (deck, player, opponent) => {
   console.log("deck: ", deck)
-  console.log("playerHand: ", playerHand)
-  console.log("opponentHand: ", opponentHand)
-  console.log("playerPairs: ", playerPairs)
-  console.log("opponentPairs: ", opponentPairs)
+  console.log("playerHand: ", player.hand)
+  console.log("opponentHand: ", opponent.hand)
+  console.log("playerPairs: ", player.pairs)
+  console.log("opponentPairs: ", opponent.pairs)
   console.log("\n")
 }
 

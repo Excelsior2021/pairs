@@ -1,13 +1,13 @@
 import { For } from "solid-js"
 import { JSX } from "solid-js/jsx-runtime"
-import player from "./playerFunctions"
-import opponent from "./opponentFunctions"
+import playerFunctions from "./playerFunctions"
+import opponentFunctions from "./opponentFunctions"
 import pairs from "./pairsFunctions"
 import { dispatchGameAction } from "../components/Session/Session"
 import { setGameDeck } from "../components/Sidebar/Sidebar"
 import { playerHandEventType } from "../types/general"
 import { gameDeckHandlerType } from "../types/function-types"
-import { Card } from "../store/classes"
+import Card from "../gameObjects/Card"
 import { PlayerOutput } from "../types/enums"
 
 export const gameDeckUI = (
@@ -55,25 +55,20 @@ export const createHandUIback = (hand: Card[]) => (
 export const gameDeckHandler: gameDeckHandlerType = (
   playerHandEvent,
   deck,
-  playerHand,
-  opponentHand,
-  playerPairs,
-  opponentPairs
+  player,
+  opponent
 ) => {
-  const playerOutput = player.playerDealt(
+  const playerOutput = playerFunctions.playerDealt(
     playerHandEvent,
     deck,
-    playerHand,
-    opponentHand,
-    playerPairs,
-    opponentPairs
+    player,
+    opponent
   )
 
   dispatchGameAction({
     type: "PLAYER_ACTION",
     playerOutput,
-    playerHand,
-    playerPairs,
+    player,
   })
 
   dispatchGameAction({ type: "GAME_LOG" })
@@ -84,16 +79,10 @@ export const gameDeckHandler: gameDeckHandlerType = (
     playerOutput === PlayerOutput.HandMatch ||
     playerOutput === PlayerOutput.NoMatch
   ) {
-    opponent.opponentTurn(
-      deck,
-      playerHand,
-      opponentHand,
-      playerPairs,
-      opponentPairs
-    )
+    opponentFunctions.opponentTurn(deck, player, opponent)
   }
 
-  pairs.gameOver(deck, playerHand, opponentHand, playerPairs, opponentPairs)
+  pairs.gameOver(deck, player, opponent)
 }
 
 export default {

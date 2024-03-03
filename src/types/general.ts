@@ -2,7 +2,9 @@ import { Accessor } from "solid-js"
 import { JSX } from "solid-js/jsx-runtime"
 import { Socket } from "socket.io-client"
 import { playerTurnHandlerType } from "./function-types"
-import { Card } from "../store/classes"
+import Card from "../gameObjects/Card"
+import Player from "../gameObjects/Player"
+import Opponent from "../gameObjects/Opponent"
 
 export type playerHandEventType = MouseEvent & {
   currentTarget: HTMLImageElement
@@ -76,10 +78,8 @@ export type gameStateMultiplayerType = {
 
 export type gameAction = {
   type: string
-  playerHand?: Card[]
-  playerPairs?: Card[]
-  opponentHand?: Card[]
-  opponentPairs?: Card[]
+  player?: Player
+  opponent?: Opponent
   playerHandUnclickable?: boolean
   playerTurnEventHandler?: (playerHandEvent: playerHandEventType) => void
   playerOutput?: number | boolean
