@@ -11,15 +11,17 @@ import { Card } from "../store/classes"
 import { PlayerOutput } from "../types/enums"
 
 export const createDeck = () => {
-  const deck: Card[] = []
+  const deck: Card[] = new Array(52)
   const non_num_cards = ["ace", "jack", "queen", "king"]
   const suits = ["clubs", "diamonds", "hearts", "spades"]
+  let deckIndex = 0
 
   for (const value of non_num_cards) {
     for (const suit of suits) {
       const id = `${value}_of_${suit}`
       const img = `./cards/${id}.png`
-      deck.push(new Card(id, value, suit, img))
+      deck[deckIndex] = new Card(id, value, suit, img)
+      deckIndex++
     }
   }
 
@@ -27,7 +29,8 @@ export const createDeck = () => {
     for (const suit of suits) {
       const id = `${value}_of_${suit}`
       const img = `./cards/${id}.png`
-      deck.push(new Card(id, value, suit, img))
+      deck[deckIndex] = new Card(id, value, suit, img)
+      deckIndex++
     }
   }
 
@@ -58,8 +61,8 @@ export const shuffleDeck = (deck: Card[]) => {
 export const dealCard = (deck: Card[]) => deck.pop()
 
 export const dealHand = (deck: Card[], handSize: number) => {
-  const hand: Card[] = []
-  while (hand.length < handSize) hand.push(dealCard(deck)!)
+  const hand: Card[] = new Array(handSize)
+  for (let i = 0; i < handSize; i++) hand[i] = dealCard(deck)!
   return hand
 }
 

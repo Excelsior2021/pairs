@@ -1,19 +1,20 @@
 import { dispatchGameAction } from "../components/MultiplayerSession/MultiplayerSession"
+import { Card } from "../store/classes"
 import {
   playerResponseHandlerMultiplayerType,
   playerTurnHandlerMultiplayerType,
 } from "../types/function-types"
-import { card, cardRequestMultiplayer } from "../types/general"
+import { cardRequestMultiplayer } from "../types/general"
 
 export const playerTurnHandler: playerTurnHandlerMultiplayerType = (
   playerHandEvent,
   playerHand,
   player
 ) => {
-  let chosenCard: card
-  for (const card of playerHand) {
+  let chosenCard: Card
+  for (const card of playerHand)
     if (card.id === playerHandEvent.target.id) chosenCard = card
-  }
+
   dispatchGameAction({
     type: "PLAYER_REQUEST",
     playerRequest: { card: chosenCard!, player },
