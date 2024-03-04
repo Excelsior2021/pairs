@@ -13,11 +13,15 @@ const PairsModal: Component<
     setShowModal={setShowPairsModal}
     heading={null}>
     <div class="pairs-modal">
-      <p class="pairs-modal__heading">Your Pairs</p>
+      <p class="pairs-modal__heading">
+        Your Pairs ({props.gameState().playerPairsUI().length})
+      </p>
       <div class="pairs-modal__pairs" data-testid="player pairs">
         {props.gameState().playerPairsUI}
       </div>
-      <p class="pairs-modal__heading">Opponent's Pairs</p>
+      <p class="pairs-modal__heading">
+        Opponent's Pairs ({props.gameState().opponentPairsUI().length})
+      </p>
       <div class="pairs-modal__pairs" data-testid="comp pairs">
         {props.gameState().opponentPairsUI}
       </div>

@@ -45,9 +45,9 @@ export const opponentDealt: opponentDealtType = (
 export const opponentTurn: opponentTurnType = (deck, player, opponent) => {
   const gameOverCheck = pairs.gameOver(deck, player, opponent)
 
-  const playerHandUnclickable = true
+  const playerHandClickable = false
 
-  pairs.updateUI(deck, player, opponent, playerHandUnclickable)
+  pairs.updateUI(deck, player, opponent, playerHandClickable)
 
   if (!gameOverCheck) {
     const chosenCard = opponentAsk(opponent)

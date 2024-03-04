@@ -3,11 +3,13 @@ import { setShowPairsModal } from "../PairsModal/PairsModal"
 import { setShowInstructions } from "../Instructions/Instructions"
 import { setShowQuitGameModal } from "../QuitGameModal/QuitGameModal"
 import { gameDeckUI } from "../../gameFunctions/deckFunctions"
+import { gameStateType } from "../../types/general"
 import "./Sidebar.scss"
 
 export const [gameDeck, setGameDeck] = createSignal(gameDeckUI())
 
 type sidebarProps = {
+  gameState: gameStateType
   gameMode: string
 }
 
@@ -15,7 +17,7 @@ const Sidebar: Component<sidebarProps> = props => (
   <div class="sidebar">
     <div class="sidebar__deck">
       <p class="sidebar__heading">deck</p>
-      {gameDeck()}
+      {props.gameState().deckUI}
     </div>
     <div class="sidebar__actions">
       <p class="sidebar__heading">{props.gameMode}</p>

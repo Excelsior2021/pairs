@@ -83,7 +83,7 @@ export type updateUIType = (
   deck: Deck,
   player: Player,
   opponent: Opponent,
-  playerHandUnclickable?: boolean
+  playerHandClickable?: boolean
 ) => void
 
 export type gameOverType = (

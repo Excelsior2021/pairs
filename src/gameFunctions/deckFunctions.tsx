@@ -73,7 +73,7 @@ export const gameDeckHandler: gameDeckHandlerType = (
 
   dispatchGameAction({ type: "GAME_LOG" })
 
-  setGameDeck(gameDeckUI())
+  deck.deckUI()
 
   if (
     playerOutput === PlayerOutput.HandMatch ||

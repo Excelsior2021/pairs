@@ -1,3 +1,4 @@
+import { JSX } from "solid-js/jsx-runtime"
 import Card from "./Card"
 
 export default class Deck {
@@ -5,9 +6,6 @@ export default class Deck {
 
   constructor() {
     this.deck = this.create()
-    this.shuffle = this.shuffle
-    this.dealCard = this.dealCard
-    this.dealHand = this.dealHand
   }
 
   create() {
@@ -55,5 +53,19 @@ export default class Deck {
     const hand: Card[] = new Array(handSize)
     for (let i = 0; i < handSize; i++) hand[i] = this.dealCard()!
     return hand
+  }
+
+  deckUI(
+    gameDeckHandler?: JSX.EventHandlerUnion<HTMLImageElement, MouseEvent>
+  ) {
+    console.log("hello", gameDeckHandler)
+    return (
+      <img
+        class="card card--deck"
+        src={`./cards/back.png`}
+        alt="game deck"
+        onclick={gameDeckHandler}
+      />
+    )
   }
 }

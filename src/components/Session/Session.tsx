@@ -20,7 +20,7 @@ const initialGameState = {
   playerPairsUI: () => [],
   opponentHandUI: () => [],
   opponentPairsUI: () => [],
-  playerHandUnclickable: null,
+  playerHandClickable: null,
   playerTurnEventHandler: null,
   playerAnswerHandler: null,
   playerOutput: null,
@@ -39,26 +39,29 @@ const gameReducer = (
 ): gameStateType => {
   switch (action.type) {
     case "UPDATE": {
+      console.log(action.playerHandClickable)
       if (action.player && action.opponent && action.playerTurnEventHandler) {
-        let playerHandUI = deckFunctions.createPlayerHandUI(
-          action.player.hand,
-          action.playerTurnEventHandler
+        let playerHandUI = action.player.createHandUI(
+          action.playerTurnEventHandler,
+          action.playerHandClickable!
         )
-        const playerPairsUI = pairs.createPairsUI(action.player.pairs)
 
         const opponentHandUI = deckFunctions.createHandUIback(
           action.opponent.hand
         )
         const opponentPairsUI = pairs.createPairsUI(action.opponent.pairs)
 
-        if (action.playerHandUnclickable) {
-          playerHandUI = deckFunctions.createHandUI(action.player.hand)
-        }
+        if (!action.playerHandClickable)
+          playerHandUI = action.player.createHandUI(
+            null,
+            action.playerHandClickable
+          )
 
         return {
           ...state,
+          deckUI: action.deck?.deckUI,
           playerHandUI,
-          playerPairsUI,
+          playerPairsUI: action.player.createPairsUI(),
           opponentHandUI,
           opponentPairsUI,
         }
@@ -153,7 +156,7 @@ const Session: Component = () => {
   return (
     <div class="session">
       <Game gameState={gameState} />
-      <Sidebar gameMode="single player" />
+      <Sidebar gameState={gameState} gameMode="single player" />
       <PlayerModal gameState={gameState} />
       <PairsModal gameState={gameState} />
       <QuitGameModal multiplayer={false} socket={null} />

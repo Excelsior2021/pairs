@@ -110,9 +110,9 @@ export const playerTurnHandler: playerTurnHandlerType = (
       const log =
         "You didn't match with any card in your opponent's hand. Please deal a card from the deck."
 
-      const playerHandUnclickable = true
-      pairs.updateUI(deck, player, opponent, playerHandUnclickable)
-      setGameDeck(deckFunctions.gameDeckUI(gameDeckHandler))
+      const playerHandClickable = false
+      pairs.updateUI(deck, player, opponent, playerHandClickable)
+      deck.deckUI(gameDeckHandler)
       dispatchGameAction({ type: "GAME_LOG", log })
     }
   }
@@ -141,8 +141,8 @@ export const playerResponseHandler: playerResponseHandlerType = (
         opponent.pairs.push(card)
         player.hand.splice(player.hand.indexOf(card), 1)
 
-        const playerHandUnclickable = true
-        pairs.updateUI(deck, player, opponent, playerHandUnclickable)
+        const playerHandClickable = false
+        pairs.updateUI(deck, player, opponent, playerHandClickable)
         opponentFunctions.opponentTurn(deck, player, opponent)
         return
       }
@@ -181,8 +181,8 @@ export const playerResponseHandler: playerResponseHandlerType = (
     )
 
     if (opponentOutput === OpponentOutput.DeckMatch) {
-      const playerHandUnclickable = true
-      pairs.updateUI(deck, player, opponent, playerHandUnclickable)
+      const playerHandClickable = false
+      pairs.updateUI(deck, player, opponent, playerHandClickable)
       log =
         "Your opponent has dealt a card from the deck and matched with the dealt card. It's your opponent's turn again."
 

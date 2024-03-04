@@ -42,17 +42,19 @@ const updateUI: updateUIType = (
   deck,
   player,
   opponent,
-  playerHandUnclickable = false
+  playerHandClickable = true
 ) => {
   const playerTurnEventHandler = (playerHandEvent: playerHandEventType) =>
     playerFunctions.playerTurnHandler(playerHandEvent, deck, player, opponent)
 
+  console.log(deck)
   dispatchGameAction({
     type: "UPDATE",
+    deck,
     player,
     opponent,
     playerTurnEventHandler,
-    playerHandUnclickable,
+    playerHandClickable,
   })
 }
 
@@ -69,10 +71,8 @@ export const startGame = () => {
   player.pairs = initialPairs(player.hand)
   opponent.pairs = initialPairs(opponent.hand)
 
-  console.log(player, opponent)
-
   const log =
-    "The cards have been dealt. Any initial pairs of cards have been added to your Pairs. Please select a card from your hand to request a matchwith your opponent."
+    "The cards have been dealt. Any initial pairs of cards have been added to your Pairs. Please select a card from your hand to request a match with your opponent."
 
   updateUI(deck, player, opponent)
   dispatchGameAction({ type: "GAME_LOG", log })
@@ -111,8 +111,8 @@ export const gameOver: gameOverType = (deck, player, opponent) => {
       </div>
     )
     dispatchGameAction({ type: "GAME_LOG", log })
-    const playerHandUnclickable = true
-    updateUI(deck, player, opponent, playerHandUnclickable)
+    const playerHandClickable = true
+    updateUI(deck, player, opponent, playerHandClickable)
     dispatchGameAction({ type: "GAME_OVER" })
     return true
   }

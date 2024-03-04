@@ -5,6 +5,7 @@ import { playerTurnHandlerType } from "./function-types"
 import Card from "../gameObjects/Card"
 import Player from "../gameObjects/Player"
 import Opponent from "../gameObjects/Opponent"
+import Deck from "../gameObjects/Deck"
 
 export type playerHandEventType = MouseEvent & {
   currentTarget: HTMLImageElement
@@ -34,11 +35,12 @@ export type quitGameModalProps = {
 }
 
 export type gameStateType = {
+  deckUI: JSX.Element
   playerHandUI: JSX.Element
   playerPairsUI: JSX.Element
   opponentHandUI: JSX.Element
   opponentPairsUI: JSX.Element
-  playerHandUnclickable: boolean | null
+  playerHandClickable: boolean | null
   playerTurnEventHandler: playerTurnHandlerType | null
   playerOutput: number | null
   question: JSX.Element | null
@@ -60,7 +62,7 @@ export type gameStateMultiplayerType = {
   opponentHand: Card[]
   playerPairs: Card[]
   opponentPairs: Card[]
-  playerHandUnclickable: boolean | null
+  playerHandClickable: boolean | null
   playerTurnHandler: playerTurnHandlerType | null
   playerOutput: number | null
   question: JSX.Element | null
@@ -78,9 +80,10 @@ export type gameStateMultiplayerType = {
 
 export type gameAction = {
   type: string
+  deck?: Deck
   player?: Player
   opponent?: Opponent
-  playerHandUnclickable?: boolean
+  playerHandClickable?: boolean
   playerTurnEventHandler?: (playerHandEvent: playerHandEventType) => void
   playerOutput?: number | boolean
   question?: JSX.Element
@@ -97,7 +100,7 @@ export type gameActionMultiplayer = {
   playerPairs?: Card[]
   opponentHand?: Card[]
   opponentPairs?: Card[]
-  playerHandUnclickable?: boolean
+  playerHandClickable?: boolean
   playerTurnHandler?: JSX.EventHandlerUnion<HTMLImageElement, MouseEvent>
   playerAnswerHandler?: JSX.EventHandlerUnion<HTMLImageElement, MouseEvent>
   playerOutput?: number | boolean
