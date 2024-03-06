@@ -5,10 +5,12 @@ import Card from "../gameObjects/Card"
 import Deck from "../gameObjects/Deck"
 import Player from "../gameObjects/Player"
 import Opponent from "../gameObjects/Opponent"
+import Game from "../gameObjects/Game"
 
 //DECK FUNCTIONS
 export type gameDeckHandlerType = (
   playerHandEvent: playerHandEventType,
+  game: Game,
   deck: Deck,
   player: Player,
   opponent: Opponent
@@ -22,6 +24,7 @@ export type gameDeckHandlerMultiplayerType = (
 //PLAYER FUNCTIONS
 export type playerMatchType = (
   playerHandEvent: playerHandEventType,
+  game: Game,
   deck: Deck,
   player: Player,
   opponent: Opponent
@@ -29,6 +32,7 @@ export type playerMatchType = (
 
 export type playerDealtType = (
   playerHandEvent: playerHandEventType,
+  game: Game,
   deck: Deck,
   player: Player,
   opponent: Opponent
@@ -36,6 +40,7 @@ export type playerDealtType = (
 
 export type playerTurnHandlerType = (
   playerHandEvent: playerHandEventType,
+  game: Game,
   deck: Deck,
   player: Player,
   opponent: Opponent
@@ -49,6 +54,7 @@ export type playerTurnHandlerMultiplayerType = (
 
 export type playerResponseHandlerType = (
   hasCard: boolean,
+  game: Game,
   deck: Deck,
   player: Player,
   opponent: Opponent,
@@ -73,6 +79,7 @@ export type opponentDealtType = (
 ) => number | undefined
 
 export type opponentTurnType = (
+  game: Game,
   deck: Deck,
   player: Player,
   opponent: Opponent
@@ -80,6 +87,7 @@ export type opponentTurnType = (
 
 //PAIRS FUNCTIONS
 export type updateUIType = (
+  game: Game,
   deck: Deck,
   player: Player,
   opponent: Opponent,

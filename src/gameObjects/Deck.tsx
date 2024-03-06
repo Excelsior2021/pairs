@@ -42,12 +42,9 @@ export default class Deck {
       this.deck[x] = this.deck[y]
       this.deck[y] = temp
     }
-    return this.deck
   }
 
-  dealCard() {
-    return this.deck.pop()
-  }
+  dealCard = () => this.deck.pop()
 
   dealHand(handSize: number) {
     const hand: Card[] = new Array(handSize)
@@ -55,17 +52,14 @@ export default class Deck {
     return hand
   }
 
-  deckUI(
+  deckUI = (
     gameDeckHandler?: JSX.EventHandlerUnion<HTMLImageElement, MouseEvent>
-  ) {
-    console.log("hello", gameDeckHandler)
-    return (
-      <img
-        class="card card--deck"
-        src={`./cards/back.png`}
-        alt="game deck"
-        onclick={gameDeckHandler}
-      />
-    )
-  }
+  ) => (
+    <img
+      class="card card--deck"
+      src={`./cards/back.png`}
+      alt="game deck"
+      onclick={() => gameDeckHandler}
+    />
+  )
 }

@@ -21,7 +21,7 @@ import {
   multiplayerSessionProps,
   playerHandEventType,
 } from "../../types/general"
-import { Card } from "../../gameObjects/classes"
+import Card from "../../gameObjects/Card"
 import "../Session/Session.scss"
 
 const initialGameState = {
@@ -577,7 +577,6 @@ You get to go first! Please select a card from your hand to request a match with
   props.socket.on(
     "player_dealt",
     (serverState, playerOutput, requestPlayer) => {
-      console.log(serverState)
       dispatchGameAction({
         type: "UPDATE",
         serverState,

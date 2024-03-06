@@ -35,7 +35,6 @@ export type quitGameModalProps = {
 }
 
 export type gameStateType = {
-  deckUI: JSX.Element
   playerHandUI: JSX.Element
   playerPairsUI: JSX.Element
   opponentHandUI: JSX.Element
@@ -48,8 +47,7 @@ export type gameStateType = {
   noButton: JSX.Element | null
   log: JSX.Element | null
   playerHandLast: JSX.Element
-  playerPairsLast: JSX.Element
-  playerPairsSecondLast: JSX.Element
+  playerPairsLastTwo: JSX.Element
 }
 
 export type gameStateMultiplayerType = {
@@ -74,8 +72,7 @@ export type gameStateMultiplayerType = {
   sessionID: string | undefined
   gameState: serverStateMultiplayer | null
   playerHandLast: JSX.Element
-  playerPairsLast: JSX.Element
-  playerPairsSecondLast: JSX.Element
+  playerPairsLastTwo: JSX.Element
 }
 
 export type gameAction = {

@@ -59,6 +59,7 @@ export const gameDeckHandler: gameDeckHandlerMultiplayerType = (
   deck,
   playerRequest
 ) => {
+  console.log(deck)
   const dealtCard = deck.dealCard()
 
   dispatchGameAction({

@@ -1,4 +1,4 @@
-import { Component, JSX } from "solid-js"
+import { Component } from "solid-js"
 import { createReducer } from "@solid-primitives/memo"
 import Game from "../Game/Game"
 import Sidebar from "../Sidebar/Sidebar"
@@ -9,10 +9,13 @@ import PlayerModal, {
 } from "../PlayerModal/PlayerModal"
 import PairsModal from "../PairsModal/PairsModal"
 import QuitGameModal from "../QuitGameModal/QuitGameModal"
-import deckFunctions from "../../gameFunctions/deckFunctions"
-import pairs from "../../gameFunctions/pairsFunctions"
+import GameObject from "../../gameObjects/Game"
 import { gameStateType, gameAction } from "../../types/general"
-import { PlayerOutput } from "../../types/enums"
+import {
+  PlayerMatchHeading,
+  PlayerMatchSubHeading,
+  PlayerOutput,
+} from "../../types/enums"
 import "./Session.scss"
 
 const initialGameState = {
@@ -29,7 +32,7 @@ const initialGameState = {
   noButton: null,
   log: null,
   playerHandLast: () => [],
-  playerPairsLast: () => [],
+  playerPairsLastTwo: () => [],
   playerPairsSecondLast: () => [],
 }
 
@@ -39,31 +42,26 @@ const gameReducer = (
 ): gameStateType => {
   switch (action.type) {
     case "UPDATE": {
-      console.log(action.playerHandClickable)
-      if (action.player && action.opponent && action.playerTurnEventHandler) {
-        let playerHandUI = action.player.createHandUI(
-          action.playerTurnEventHandler,
-          action.playerHandClickable!
-        )
-
-        const opponentHandUI = deckFunctions.createHandUIback(
-          action.opponent.hand
-        )
-        const opponentPairsUI = pairs.createPairsUI(action.opponent.pairs)
-
-        if (!action.playerHandClickable)
+      if (action.player && action.opponent) {
+        let playerHandUI
+        if (action.playerHandClickable)
           playerHandUI = action.player.createHandUI(
-            null,
+            action.playerTurnEventHandler,
             action.playerHandClickable
           )
+        else {
+          playerHandUI = action.player.createHandUI(
+            undefined,
+            action.playerHandClickable
+          )
+        }
 
         return {
           ...state,
-          deckUI: action.deck?.deckUI,
           playerHandUI,
           playerPairsUI: action.player.createPairsUI(),
-          opponentHandUI,
-          opponentPairsUI,
+          opponentHandUI: action.opponent.createHandUI(),
+          opponentPairsUI: action.opponent.createPairsUI(),
         }
       }
     }
@@ -71,61 +69,42 @@ const gameReducer = (
       if (action.playerOutput !== PlayerOutput.NoOpponentMatch)
         setShowPlayerModal(true)
 
-      let playerPairsLast: JSX.Element
-      let playerPairsSecondLast: JSX.Element
-      let playerHandLast: JSX.Element
-
-      if (action.player!.pairs.length > 0) {
-        playerPairsLast = pairs.createPairsUI([
-          action.player!.pairs[action.player!.pairs.length - 1],
-        ])
-
-        playerPairsSecondLast = pairs.createPairsUI([
-          action.player!.pairs[action.player!.pairs.length - 2],
-        ])
-      }
-
-      if (action.player!.hand.length > 0) {
-        playerHandLast = deckFunctions.createHandUI([
-          action.player!.hand[action.player!.hand.length - 1],
-        ])
-      }
-
       switch (action.playerOutput) {
         case PlayerOutput.OpponentMatch: {
-          setMatchStatusHeading("match")
-          setMatchStatusSubHeading("opponent hand")
+          setMatchStatusHeading(PlayerMatchHeading.Match)
+          setMatchStatusSubHeading(PlayerMatchSubHeading.Opponent)
           return {
             ...state,
             playerOutput: action.playerOutput,
-            playerPairsLast,
-            playerPairsSecondLast,
+            playerPairsLastTwo: action.player!.lastTwoCardsPairs,
           }
         }
         case PlayerOutput.DeckMatch: {
-          setMatchStatusHeading("match")
-          setMatchStatusSubHeading("dealt card")
+          setMatchStatusHeading(PlayerMatchHeading.Match)
+          setMatchStatusSubHeading(PlayerMatchSubHeading.Deck)
           return {
             ...state,
             playerOutput: action.playerOutput,
-            playerPairsLast,
-            playerPairsSecondLast,
+            playerPairsLastTwo: action.player!.lastTwoCardsPairs,
           }
         }
         case PlayerOutput.HandMatch: {
-          setMatchStatusHeading("match")
-          setMatchStatusSubHeading("your hand")
+          setMatchStatusHeading(PlayerMatchHeading.Match)
+          setMatchStatusSubHeading(PlayerMatchSubHeading.Player)
           return {
             ...state,
             playerOutput: action.playerOutput,
-            playerPairsLast,
-            playerPairsSecondLast,
+            playerPairsLastTwo: action.player!.lastTwoCardsPairs,
           }
         }
         case PlayerOutput.NoMatch: {
-          setMatchStatusHeading("no match")
-          setMatchStatusSubHeading("")
-          return { ...state, playerOutput: action.playerOutput, playerHandLast }
+          setMatchStatusHeading(PlayerMatchHeading.NoMatch)
+          setMatchStatusSubHeading(PlayerMatchSubHeading.None)
+          return {
+            ...state,
+            playerOutput: action.playerOutput,
+            playerHandLast: action.player!.lastCardHand,
+          }
         }
         default:
           return state
@@ -152,7 +131,7 @@ export const [gameState, dispatchGameAction] = createReducer(
 )
 
 const Session: Component = () => {
-  pairs.startGame()
+  new GameObject().start(dispatchGameAction)
   return (
     <div class="session">
       <Game gameState={gameState} />

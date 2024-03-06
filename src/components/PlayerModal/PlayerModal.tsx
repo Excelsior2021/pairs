@@ -49,8 +49,7 @@ const PlayerModal: Component<
       <div class="player-modal__cards">
         <Switch>
           <Match when={props.gameState().playerOutput !== PlayerOutput.NoMatch}>
-            {props.gameState().playerPairsLast}
-            {props.gameState().playerPairsSecondLast}
+            {props.gameState().playerPairsLastTwo}
           </Match>
           <Match when={props.gameState().playerOutput === PlayerOutput.NoMatch}>
             {props.gameState().playerHandLast}
