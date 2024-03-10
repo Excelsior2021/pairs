@@ -56,11 +56,10 @@ export const createPairsUI = (pairs: Card[]) => (
 )
 
 export const gameDeckHandler: gameDeckHandlerMultiplayerType = (
-  deck,
+  shuffledDeck,
   playerRequest
 ) => {
-  console.log(deck)
-  const dealtCard = deck.dealCard()
+  const dealtCard = shuffledDeck.pop()
 
   dispatchGameAction({
     type: "PLAYER_DEALT",

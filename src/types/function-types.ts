@@ -17,7 +17,7 @@ export type gameDeckHandlerType = (
 ) => void
 
 export type gameDeckHandlerMultiplayerType = (
-  deck: Deck,
+  shuffledDeck: Card[],
   playerRequest: cardRequestMultiplayer
 ) => void
 

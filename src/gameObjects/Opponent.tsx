@@ -1,4 +1,4 @@
-import { For, JSX } from "solid-js"
+import { For, JSX, createRoot } from "solid-js"
 import Card from "./Card"
 import Deck from "./Deck"
 import Player from "./Player"
@@ -22,21 +22,21 @@ export default class Opponent {
   }
 
   createHandUI() {
-    return (
+    return createRoot(() => (
       <For each={this.hand}>
         {() => (
           <img class="card" src={`./cards/back.png`} alt="opponent card" />
         )}
       </For>
-    )
+    ))
   }
 
   createPairsUI() {
-    return (
+    return createRoot(() => (
       <For each={this.pairs}>
         {card => <img id={card.id} class="card" src={card.img} alt={card.id} />}
       </For>
-    )
+    ))
   }
 
   ask() {

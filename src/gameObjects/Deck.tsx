@@ -1,4 +1,5 @@
-import { JSX } from "solid-js/jsx-runtime"
+import { createRoot } from "solid-js"
+import { JSX } from "solid-js"
 import Card from "./Card"
 
 export default class Deck {
@@ -54,12 +55,13 @@ export default class Deck {
 
   deckUI = (
     gameDeckHandler?: JSX.EventHandlerUnion<HTMLImageElement, MouseEvent>
-  ) => (
-    <img
-      class="card card--deck"
-      src={`./cards/back.png`}
-      alt="game deck"
-      onclick={() => gameDeckHandler}
-    />
-  )
+  ) =>
+    createRoot(() => (
+      <img
+        class="card card--deck"
+        src={`./cards/back.png`}
+        alt="game deck"
+        onclick={() => gameDeckHandler}
+      />
+    ))
 }

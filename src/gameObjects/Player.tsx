@@ -1,13 +1,12 @@
-import { For, JSX } from "solid-js"
+import { For, JSX, createRoot } from "solid-js"
 import Card from "./Card"
 import { playerHandEventType } from "../types/general"
 
 export default class Player {
   hand: Card[]
   pairs: Card[]
-  lastCardHand: JSX.Element
-  lastTwoCardsPairs: JSX.Element
-  secondLastCardPairs: JSX.Element
+  lastCardHand: () => JSX.Element
+  lastTwoCardsPairs: () => JSX.Element
 
   constructor() {
     this.hand = []
@@ -28,7 +27,7 @@ export default class Player {
     clickable: boolean = false,
     hand: Card[] = this.hand
   ) {
-    return (
+    return createRoot(() => (
       <For each={hand}>
         {card => (
           <img
@@ -40,14 +39,14 @@ export default class Player {
           />
         )}
       </For>
-    )
+    ))
   }
 
   createPairsUI() {
-    return (
+    return createRoot(() => (
       <For each={this.pairs}>
         {card => <img id={card.id} class="card" src={card.img} alt={card.id} />}
       </For>
-    )
+    ))
   }
 }

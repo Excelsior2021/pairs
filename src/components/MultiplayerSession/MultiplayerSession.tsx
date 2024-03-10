@@ -310,16 +310,13 @@ const multiplayerReducer = (
           playerPairs = player2Pairs
         }
 
-        let playerPairsLast: JSX.Element
+        let playerPairsLastTwo: JSX.Element
         let playerPairsSecondLast: JSX.Element
         let playerHandLast: JSX.Element
 
         if (playerPairs.length > 0) {
-          playerPairsLast = UI.createPairsUI([
+          playerPairsLastTwo = UI.createPairsUI([
             playerPairs[playerPairs.length - 1],
-          ])
-
-          playerPairsSecondLast = UI.createPairsUI([
             playerPairs[playerPairs.length - 2],
           ])
         }
@@ -336,8 +333,7 @@ const multiplayerReducer = (
             ...state,
             log,
             playerOutput: action.playerOutput,
-            playerPairsLast,
-            playerPairsSecondLast,
+            playerPairsLastTwo,
           }
         }
         if (action.playerOutput === 1) {
@@ -364,8 +360,7 @@ const multiplayerReducer = (
             log,
             playerHandUI,
             playerOutput: action.playerOutput,
-            playerPairsLast,
-            playerPairsSecondLast,
+            playerPairsLastTwo,
           }
         }
         if (action.playerOutput === 2) {
@@ -384,8 +379,7 @@ const multiplayerReducer = (
             log,
             playerOutput: action.playerOutput,
             playerHandUI,
-            playerPairsLast,
-            playerPairsSecondLast,
+            playerPairsLastTwo,
           }
         }
         if (action.playerOutput === 3) {

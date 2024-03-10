@@ -55,7 +55,7 @@ export type gameStateMultiplayerType = {
   playerPairsUI: JSX.Element
   opponentHandUI: JSX.Element
   opponentPairsUI: JSX.Element
-  deck: Card[]
+  shuffledDeck: Card[]
   playerHand: Card[]
   opponentHand: Card[]
   playerPairs: Card[]
@@ -131,5 +131,5 @@ export type serverStateMultiplayer = {
   player1Pairs: Card[]
   player2Hand: Card[]
   player2Pairs: Card[]
-  deck: Card[]
+  shuffledDeck: Card[]
 }
