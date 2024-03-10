@@ -12,7 +12,7 @@
 
 <br />
 
-<img src="./assets/battleship-demo.png" alt="battleship demo" />
+<img src="./pairs-demo.gif" alt="pairs demo" />
 
 <!-- About the Project -->
 
