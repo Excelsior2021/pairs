@@ -22,7 +22,6 @@
     "@babel/preset-typescript": "^7.23.3",
     "@solidjs/testing-library": "^0.8.6",
     "@testing-library/jest-dom": "^6.2.0",
-    "@types/jest": "^29.5.12",
     "@types/testing-library__jest-dom": "^5.14.9",
     "babel-jest": "^29.7.0",
     "babel-preset-jest": "^29.6.3",

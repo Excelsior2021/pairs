@@ -21,24 +21,6 @@ export default class Opponent {
     this.asked = null
   }
 
-  createHandUI() {
-    return createRoot(() => (
-      <For each={this.hand}>
-        {() => (
-          <img class="card" src={`./cards/back.png`} alt="opponent card" />
-        )}
-      </For>
-    ))
-  }
-
-  createPairsUI() {
-    return createRoot(() => (
-      <For each={this.pairs}>
-        {card => <img id={card.id} class="card" src={card.img} alt={card.id} />}
-      </For>
-    ))
-  }
-
   ask() {
     this.asked = this.hand[Math.floor(Math.random() * this.hand.length)]
     return this.asked
@@ -113,23 +95,23 @@ export default class Opponent {
 
     if (!gameOverCheck) {
       const chosenCard = this.ask()
-      const question = (
+      const opponentRequest = createRoot(() => (
         <p class="game__log">Do you have a {chosenCard.value}?</p>
-      ) as JSX.Element
-      const yesButton = (
+      )) as JSX.Element
+      const yesButton = createRoot(() => (
         <button
           class="game__button"
           onClick={() => playerResponseHandlerWrapper(true)}>
           Yes
         </button>
-      ) as JSX.Element
-      const noButton = (
+      )) as JSX.Element
+      const noButton = createRoot(() => (
         <button
           class="game__button"
           onClick={() => playerResponseHandlerWrapper(false)}>
           No
         </button>
-      ) as JSX.Element
+      )) as JSX.Element
 
       const playerResponseHandlerWrapper = (hasCard: boolean) =>
         playerResponseHandler(
@@ -146,7 +128,7 @@ export default class Opponent {
       dispatchGameAction({
         type: "GAME_LOG",
         chosenCard,
-        question,
+        opponentRequest,
         yesButton,
         noButton,
       })

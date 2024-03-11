@@ -1,4 +1,4 @@
-import { Component, createSignal } from "solid-js"
+import { Component, For, createSignal } from "solid-js"
 import { gameStateMultiplayerProp, gameStateProp } from "../../types/general"
 import Modal from "../Modal/Modal"
 import "./PairsModal.scss"
@@ -14,16 +14,24 @@ const PairsModal: Component<
     heading={null}>
     <div class="pairs-modal">
       <p class="pairs-modal__heading">
-        Your Pairs ({props.gameState().playerPairsUI().length})
+        Your Pairs ({props.gameState().playerPairs.length})
       </p>
       <div class="pairs-modal__pairs" data-testid="player pairs">
-        {props.gameState().playerPairsUI}
+        <For each={props.gameState().playerPairs}>
+          {card => (
+            <img id={card.id} class="card" src={card.img} alt={card.id} />
+          )}
+        </For>
       </div>
       <p class="pairs-modal__heading">
-        Opponent's Pairs ({props.gameState().opponentPairsUI().length})
+        Opponent's Pairs ({props.gameState().opponentPairs.length})
       </p>
       <div class="pairs-modal__pairs" data-testid="comp pairs">
-        {props.gameState().opponentPairsUI}
+        <For each={props.gameState().opponentPairs}>
+          {card => (
+            <img id={card.id} class="card" src={card.img} alt={card.id} />
+          )}
+        </For>
       </div>
     </div>
   </Modal>

@@ -17,23 +17,28 @@ import {
   PlayerOutput,
 } from "../../types/enums"
 import "./Session.scss"
+import Deck from "../../gameObjects/Deck"
+import Player from "../../gameObjects/Player"
+import Opponent from "../../gameObjects/Opponent"
+import Card from "../../gameObjects/Card"
 
 const initialGameState = {
-  playerHandUI: () => [],
-  playerPairsUI: () => [],
-  opponentHandUI: () => [],
-  opponentPairsUI: () => [],
+  game: GameObject,
+  deck: Deck,
+  player: Player,
+  opponent: Opponent,
+  playerHand: null,
+  playerPairs: null,
+  opponentHand: null,
+  opponentPairs: null,
   playerHandClickable: null,
   playerTurnEventHandler: null,
   playerAnswerHandler: null,
   playerOutput: null,
-  question: null,
+  opponentRequest: null,
   yesButton: null,
   noButton: null,
   log: null,
-  playerHandLast: () => [],
-  playerPairsLastTwo: () => [],
-  playerPairsSecondLast: () => [],
 }
 
 const gameReducer = (
@@ -43,25 +48,19 @@ const gameReducer = (
   switch (action.type) {
     case "UPDATE": {
       if (action.player && action.opponent) {
-        let playerHandUI
+        console.log(action.playerHandClickable)
+        let playerTurnHandler
         if (action.playerHandClickable)
-          playerHandUI = action.player.createHandUI(
-            action.playerTurnEventHandler,
-            action.playerHandClickable
-          )
-        else {
-          playerHandUI = action.player.createHandUI(
-            undefined,
-            action.playerHandClickable
-          )
-        }
+          playerTurnHandler = action.playerTurnEventHandler
+        else playerTurnHandler = null
 
         return {
           ...state,
-          playerHandUI,
-          playerPairsUI: action.player.createPairsUI(),
-          opponentHandUI: action.opponent.createHandUI(),
-          opponentPairsUI: action.opponent.createPairsUI(),
+          playerHand: action.player.hand,
+          playerPairs: action.player.pairs,
+          opponentHand: action.opponent.hand,
+          opponentPairs: action.opponent.pairs,
+          playerTurnHandler,
         }
       }
     }
@@ -111,11 +110,11 @@ const gameReducer = (
       }
     }
     case "GAME_LOG": {
-      const question = action.question
+      const opponentRequest = action.opponentRequest
       const yesButton = action.yesButton
       const noButton = action.noButton
       const log = action.log
-      return { ...state, question, yesButton, noButton, log }
+      return { ...state, opponentRequest, yesButton, noButton, log }
     }
     case "GAME_OVER": {
       return state

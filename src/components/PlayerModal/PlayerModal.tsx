@@ -1,4 +1,4 @@
-import { Component, createSignal, Switch, Match } from "solid-js"
+import { Component, createSignal, Switch, Match, For } from "solid-js"
 import Modal from "../Modal/Modal"
 import { gameStateMultiplayerProp, gameStateProp } from "../../types/general"
 import "./PlayerModal.scss"
@@ -49,10 +49,36 @@ const PlayerModal: Component<
       <div class="player-modal__cards">
         <Switch>
           <Match when={props.gameState().playerOutput !== PlayerOutput.NoMatch}>
-            {props.gameState().playerPairsLastTwo}
+            <For each={props.gameState().playerPairs}>
+              {(card, i) => {
+                if (i() >= props.gameState().playerPairs.length - 2) {
+                  return (
+                    <img
+                      class={"card"}
+                      id={card.id}
+                      src={card.img}
+                      alt={card.id}
+                    />
+                  )
+                }
+              }}
+            </For>
           </Match>
           <Match when={props.gameState().playerOutput === PlayerOutput.NoMatch}>
-            {props.gameState().playerHandLast}
+            <For each={props.gameState().playerHand}>
+              {(card, i) => {
+                if (i() === props.gameState().playerHand.length - 1) {
+                  return (
+                    <img
+                      class={"card"}
+                      id={card.id}
+                      src={card.img}
+                      alt={card.id}
+                    />
+                  )
+                }
+              }}
+            </For>
           </Match>
         </Switch>
       </div>

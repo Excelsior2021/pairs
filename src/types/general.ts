@@ -22,7 +22,8 @@ export type gameStateMultiplayerProp = {
 
 export type handProp = {
   heading: string
-  hand: JSX.Element
+  hand: Card[]
+  player: boolean
 }
 
 export type multiplayerSessionProps = {
@@ -35,14 +36,14 @@ export type quitGameModalProps = {
 }
 
 export type gameStateType = {
-  playerHandUI: JSX.Element
-  playerPairsUI: JSX.Element
-  opponentHandUI: JSX.Element
-  opponentPairsUI: JSX.Element
+  playerHand: Card[]
+  playerPairs: Card[]
+  opponentHand: Card[]
+  opponentPairs: Card[]
   playerHandClickable: boolean | null
   playerTurnEventHandler: playerTurnHandlerType | null
   playerOutput: number | null
-  question: JSX.Element | null
+  opponentRequest: JSX.Element | null
   yesButton: JSX.Element | null
   noButton: JSX.Element | null
   log: JSX.Element | null
@@ -63,7 +64,7 @@ export type gameStateMultiplayerType = {
   playerHandClickable: boolean | null
   playerTurnHandler: playerTurnHandlerType | null
   playerOutput: number | null
-  question: JSX.Element | null
+  opponentRequest: JSX.Element | null
   yesButton: JSX.Element
   noButton: JSX.Element
   log: JSX.Element | null
@@ -83,7 +84,7 @@ export type gameAction = {
   playerHandClickable?: boolean
   playerTurnEventHandler?: (playerHandEvent: playerHandEventType) => void
   playerOutput?: number | boolean
-  question?: JSX.Element
+  opponentRequest?: JSX.Element
   yesButton?: JSX.Element
   noButton?: JSX.Element
   log?: JSX.Element
@@ -101,7 +102,7 @@ export type gameActionMultiplayer = {
   playerTurnHandler?: JSX.EventHandlerUnion<HTMLImageElement, MouseEvent>
   playerAnswerHandler?: JSX.EventHandlerUnion<HTMLImageElement, MouseEvent>
   playerOutput?: number | boolean
-  question?: JSX.Element
+  opponentRequest?: JSX.Element
   yesButton?: JSX.Element
   noButton?: JSX.Element
   log?: JSX.Element

@@ -64,7 +64,7 @@ export default class Game {
     opponent: Opponent,
     playerTurnHandler: playerTurnHandlerType,
     dispatchGameAction: (action: gameAction) => void,
-    playerHandClickable = true
+    playerHandClickable = false
   ) {
     const playerTurnEventHandler = (playerHandEvent: playerHandEventType) =>
       playerTurnHandler(playerHandEvent, this, deck, player, opponent)
