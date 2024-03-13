@@ -6,7 +6,7 @@ import { gameState } from "../Session/Session"
 
 const Game: Component<gameStateProp | gameStateMultiplayerProp> = props => (
   <div class="game">
-    <Hand heading="Opponent Hand" hand={props.gameState().opponentHand} />
+    <Hand heading="Opponent Hand" hand={props.gameState().opponent.hand} />
     <div class="game__console">
       {props.gameState().opponentRequest}
       {props.gameState().log}
@@ -33,7 +33,7 @@ const Game: Component<gameStateProp | gameStateMultiplayerProp> = props => (
     </div>
     <Hand
       heading="Your Hand"
-      hand={props.gameState().playerHand}
+      hand={props.gameState().player.hand}
       player={true}
       eventHandler={props.gameState().playerTurnHandler}
     />

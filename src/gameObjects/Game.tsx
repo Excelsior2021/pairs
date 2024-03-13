@@ -1,5 +1,5 @@
 import { playerTurnHandler } from "../gameFunctions/playerFunctions"
-import { playerTurnHandlerType, updateUIType } from "../types/function-types"
+import { playerTurnHandlerType } from "../types/function-types"
 import { gameAction, playerHandEventType } from "../types/general"
 import Card from "./Card"
 import Deck from "./Deck"
@@ -71,6 +71,7 @@ export default class Game {
 
     dispatchGameAction({
       type: "UPDATE",
+      game: this,
       deck,
       player,
       opponent,
@@ -126,8 +127,7 @@ export default class Game {
         player,
         opponent,
         playerTurnHandler,
-        dispatchGameAction,
-        true
+        dispatchGameAction
       )
       dispatchGameAction({ type: "GAME_OVER" })
       return true

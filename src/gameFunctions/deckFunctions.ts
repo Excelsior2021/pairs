@@ -1,19 +1,7 @@
-import { JSX } from "solid-js/jsx-runtime"
 import playerFunctions from "./playerFunctions"
 import { dispatchGameAction } from "../components/Session/Session"
 import { gameDeckHandlerType } from "../types/function-types"
 import { PlayerOutput } from "../types/enums"
-
-export const gameDeckUI = (
-  gameDeckHandler?: JSX.EventHandlerUnion<HTMLImageElement, MouseEvent>
-) => (
-  <img
-    class="card card--deck"
-    src={`./cards/back.png`}
-    alt="game deck"
-    onclick={gameDeckHandler}
-  />
-)
 
 export const gameDeckHandler: gameDeckHandlerType = (
   playerHandEvent,
@@ -22,6 +10,7 @@ export const gameDeckHandler: gameDeckHandlerType = (
   player,
   opponent
 ) => {
+  console.log(playerHandEvent)
   const playerOutput = playerFunctions.playerDealt(
     playerHandEvent,
     game,
@@ -63,6 +52,5 @@ export const gameDeckHandler: gameDeckHandlerType = (
 }
 
 export default {
-  gameDeckUI,
   gameDeckHandler,
 }

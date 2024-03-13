@@ -11,10 +11,10 @@ import PlayerModal, {
 } from "../PlayerModal/PlayerModal"
 import PairsModal from "../PairsModal/PairsModal"
 import QuitGameModal from "../QuitGameModal/QuitGameModal"
-import { gameDeckUI } from "../../gameFunctions/deckFunctions"
+// import { gameDeckUI } from "../../gameFunctions/deckFunctions"
 import UI from "../../gameFunctions/multiplayerUIFunctions"
 import player from "../../gameFunctions/multiplayerPlayerFunctions"
-import { setGameDeck } from "../Sidebar/Sidebar"
+// import { setGameDeck } from "../Sidebar/Sidebar"
 import {
   gameActionMultiplayer,
   gameStateMultiplayerType,

@@ -1,9 +1,9 @@
 import { For } from "solid-js"
 import { JSX } from "solid-js/jsx-runtime"
 import { dispatchGameAction } from "../components/MultiplayerSession/MultiplayerSession"
-import { setGameDeck } from "../components/Sidebar/Sidebar"
+// import { setGameDeck } from "../components/Sidebar/Sidebar"
 import { gameDeckHandlerMultiplayerType } from "../types/function-types"
-import { gameDeckUI } from "./deckFunctions"
+// import { gameDeckUI } from "./deckFunctions"
 import Card from "../gameObjects/Card"
 
 export const createPlayerHandUI = (
@@ -67,11 +67,11 @@ export const gameDeckHandler: gameDeckHandlerMultiplayerType = (
     playerRequest,
   })
 
-  setGameDeck(gameDeckUI())
+  // setGameDeck(gameDeckUI())
 }
 
 export default {
-  gameDeckUI,
+  // gameDeckUI,
   createPlayerHandUI,
   createHandUI,
   createHandUIback,

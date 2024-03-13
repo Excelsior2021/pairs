@@ -49,9 +49,9 @@ const PlayerModal: Component<
       <div class="player-modal__cards">
         <Switch>
           <Match when={props.gameState().playerOutput !== PlayerOutput.NoMatch}>
-            <For each={props.gameState().playerPairs}>
+            <For each={props.gameState().player.pairs}>
               {(card, i) => {
-                if (i() >= props.gameState().playerPairs.length - 2) {
+                if (i() >= props.gameState().player.pairs.length - 2) {
                   return (
                     <img
                       class={"card"}
@@ -65,9 +65,9 @@ const PlayerModal: Component<
             </For>
           </Match>
           <Match when={props.gameState().playerOutput === PlayerOutput.NoMatch}>
-            <For each={props.gameState().playerHand}>
+            <For each={props.gameState().player.hand}>
               {(card, i) => {
-                if (i() === props.gameState().playerHand.length - 1) {
+                if (i() === props.gameState().player.hand.length - 1) {
                   return (
                     <img
                       class={"card"}

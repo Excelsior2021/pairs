@@ -36,6 +36,7 @@ export type quitGameModalProps = {
 }
 
 export type gameStateType = {
+  deck: Deck
   playerHand: Card[]
   playerPairs: Card[]
   opponentHand: Card[]

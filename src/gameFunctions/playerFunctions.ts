@@ -112,9 +112,6 @@ export const playerTurnHandler: playerTurnHandlerType = (
   player,
   opponent
 ) => {
-  const gameDeckHandler = () =>
-    deckFunctions.gameDeckHandler(playerHandEvent, game, deck, player, opponent)
-
   const playerOutput = playerMatch(
     playerHandEvent,
     game,
@@ -149,7 +146,6 @@ export const playerTurnHandler: playerTurnHandlerType = (
         playerTurnHandler,
         dispatchGameAction
       )
-      setGameDeck(deckFunctions.gameDeckUI(gameDeckHandler))
       dispatchGameAction({ type: "GAME_LOG", log })
     }
   }
