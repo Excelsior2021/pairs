@@ -1,12 +1,8 @@
-import { For, JSX, createRoot } from "solid-js"
 import Card from "./Card"
 import Deck from "./Deck"
 import Player from "./Player"
 import Game from "./Game"
-import {
-  playerResponseHandlerType,
-  playerTurnHandlerType,
-} from "../types/function-types"
+import { playerTurnHandlerType } from "../types/function-types"
 import { gameAction } from "../types/general"
 import { OpponentOutput } from "../types/enums"
 
@@ -80,10 +76,9 @@ export default class Opponent {
     deck: Deck,
     player: Player,
     playerTurnHandler: playerTurnHandlerType,
-    playerResponseHandler: playerResponseHandlerType,
     dispatchGameAction: (action: gameAction) => void
   ) {
-    const gameOverCheck = game.end(
+    const gameOver = game.end(
       deck,
       player,
       this,
@@ -91,47 +86,25 @@ export default class Opponent {
       dispatchGameAction
     )
 
-    game.updateUI(deck, player, this, playerTurnHandler, dispatchGameAction)
-
-    if (!gameOverCheck) {
-      const chosenCard = this.ask()
-      const opponentRequest = createRoot(() => (
-        <p class="game__log">Do you have a {chosenCard.value}?</p>
-      )) as JSX.Element
-      const yesButton = createRoot(() => (
-        <button
-          class="game__button"
-          onClick={() => playerResponseHandlerWrapper(true)}>
-          Yes
-        </button>
-      )) as JSX.Element
-      const noButton = createRoot(() => (
-        <button
-          class="game__button"
-          onClick={() => playerResponseHandlerWrapper(false)}>
-          No
-        </button>
-      )) as JSX.Element
-
-      const playerResponseHandlerWrapper = (hasCard: boolean) =>
-        playerResponseHandler(
-          hasCard,
-          game,
-          deck,
-          player,
-          this,
-          chosenCard,
-          yesButton,
-          noButton
-        )
-
+    if (!gameOver) {
+      const opponentRequest = this.ask()
+      const log = `Do you have a ${opponentRequest.value}?`
       dispatchGameAction({
         type: "GAME_LOG",
-        chosenCard,
-        opponentRequest,
-        yesButton,
-        noButton,
+        log,
       })
+
+      game.updateUI(
+        deck,
+        player,
+        this,
+        playerTurnHandler,
+        dispatchGameAction,
+        false,
+        null,
+        true,
+        opponentRequest
+      )
     }
   }
 }

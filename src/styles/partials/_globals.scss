@@ -46,11 +46,13 @@ body {
       0.2em 0.2em rgb(154, 154, 154), 0.1em 0.1em rgb(154, 154, 154),
       0.6em 0.6em 0.3em black;
 
-    &:hover {
-      transform: scale(1.02);
-      box-shadow: 0.4em 0.4em rgb(154, 154, 154), 0.3em 0.3em rgb(154, 154, 154),
-        0.2em 0.2em rgb(154, 154, 154), 0.1em 0.1em rgb(154, 154, 154),
-        0.6em 0.6em 0.5em black;
+    &--active {
+      &:hover {
+        transform: scale(1.02);
+        box-shadow: 0.4em 0.4em rgb(154, 154, 154),
+          0.3em 0.3em rgb(154, 154, 154), 0.2em 0.2em rgb(154, 154, 154),
+          0.1em 0.1em rgb(154, 154, 154), 0.6em 0.6em 0.5em black;
+      }
     }
   }
 }

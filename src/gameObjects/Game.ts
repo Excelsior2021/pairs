@@ -1,4 +1,3 @@
-import { playerTurnHandler } from "../gameFunctions/playerFunctions"
 import { playerTurnHandlerType } from "../types/function-types"
 import { gameAction, playerHandEventType } from "../types/general"
 import Card from "./Card"
@@ -7,21 +6,24 @@ import Opponent from "./Opponent"
 import Player from "./Player"
 
 export default class Game {
-  start(dispatchGameAction: (action: gameAction) => void) {
+  start(
+    playerTurnHandler: playerTurnHandlerType,
+    dispatchGameAction: (action: gameAction) => void
+  ) {
     const deck = new Deck()
     const player = new Player()
     const opponent = new Opponent()
 
     deck.shuffle()
 
-    player.hand = deck.dealHand(7)
-    opponent.hand = deck.dealHand(7)
+    player.hand = deck.dealHand(20)
+    opponent.hand = deck.dealHand(20)
 
     player.pairs = this.initialPairs(player.hand)
     opponent.pairs = this.initialPairs(opponent.hand)
 
     const log =
-      "The cards have been dealt. Any initial pairs of cards have been added to your Pairs. Please select a card from your hand to request a match with your opponent."
+      "The cards have been dealt. Any initial pair of cards have been added to your Pairs. Please select a card from your hand to request a match with your opponent."
 
     this.updateUI(
       deck,
@@ -64,9 +66,13 @@ export default class Game {
     opponent: Opponent,
     playerTurnHandler: playerTurnHandlerType,
     dispatchGameAction: (action: gameAction) => void,
-    playerHandClickable = false
+    playerHandClickable = false,
+    playerChosenCardEvent = null,
+    opponentTurn = false,
+    opponentRequest = null,
+    deckClickable = false
   ) {
-    const playerTurnEventHandler = (playerHandEvent: playerHandEventType) =>
+    const playerTurnHandlerWrapper = (playerHandEvent: playerHandEventType) =>
       playerTurnHandler(playerHandEvent, this, deck, player, opponent)
 
     dispatchGameAction({
@@ -75,8 +81,12 @@ export default class Game {
       deck,
       player,
       opponent,
-      playerTurnEventHandler,
+      playerTurnHandlerWrapper,
       playerHandClickable,
+      playerChosenCardEvent,
+      opponentTurn,
+      opponentRequest,
+      deckClickable,
     })
   }
 
@@ -100,27 +110,6 @@ export default class Game {
       } else {
         outcome = "Your opponent won! Better luck next time!"
       }
-      const log = (
-        <div class="game__game-over">
-          <div class="game__outcome">
-            <h2 class="game__game-over-heading">GAME OVER</h2>
-            <p class="game__game-over-text">{outcome}</p>
-          </div>
-          <div class="game__stats">
-            <h2 class="game__game-over-heading">STATS</h2>
-            <p class="game__game-over-text">
-              Your Pairs: {player.pairs.length}
-            </p>
-            <p class="game__game-over-text">
-              Opponent Pairs: {opponent.pairs.length}
-            </p>
-            <p class="game__game-over-text">
-              Remaining cards in deck: {deck.deck.length}
-            </p>
-          </div>
-        </div>
-      )
-      dispatchGameAction({ type: "GAME_LOG", log })
 
       this.updateUI(
         deck,
@@ -129,8 +118,9 @@ export default class Game {
         playerTurnHandler,
         dispatchGameAction
       )
-      dispatchGameAction({ type: "GAME_OVER" })
+      dispatchGameAction({ type: "GAME_OVER", outcome, gameOver: true })
       return true
     }
+    return false
   }
 }

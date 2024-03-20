@@ -1,4 +1,3 @@
-import { JSX } from "solid-js/jsx-runtime"
 import { cardRequestMultiplayer } from "./general"
 import { playerHandEventType } from "./general"
 import Card from "../gameObjects/Card"
@@ -48,8 +47,8 @@ export type playerTurnHandlerType = (
 
 export type playerTurnHandlerMultiplayerType = (
   playerHandEvent: playerHandEventType,
-  playerHand: Card[],
-  player: number
+  player: Player,
+  clientPlayer: number
 ) => void
 
 export type playerResponseHandlerType = (
@@ -58,9 +57,7 @@ export type playerResponseHandlerType = (
   deck: Deck,
   player: Player,
   opponent: Opponent,
-  opponentAsked: Card,
-  yesButton: JSX.Element,
-  noButton: JSX.Element
+  opponentRequest: Card
 ) => void
 
 export type playerResponseHandlerMultiplayerType = (

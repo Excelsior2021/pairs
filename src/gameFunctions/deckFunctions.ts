@@ -10,7 +10,6 @@ export const gameDeckHandler: gameDeckHandlerType = (
   player,
   opponent
 ) => {
-  console.log(playerHandEvent)
   const playerOutput = playerFunctions.playerDealt(
     playerHandEvent,
     game,
@@ -25,10 +24,6 @@ export const gameDeckHandler: gameDeckHandlerType = (
     player,
   })
 
-  dispatchGameAction({ type: "GAME_LOG" })
-
-  deck.deckUI()
-
   if (
     playerOutput === PlayerOutput.HandMatch ||
     playerOutput === PlayerOutput.NoMatch
@@ -38,7 +33,6 @@ export const gameDeckHandler: gameDeckHandlerType = (
       deck,
       player,
       playerFunctions.playerTurnHandler,
-      playerFunctions.playerResponseHandler,
       dispatchGameAction
     )
 

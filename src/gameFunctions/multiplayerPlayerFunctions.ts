@@ -8,34 +8,37 @@ import { cardRequestMultiplayer } from "../types/general"
 
 export const playerTurnHandler: playerTurnHandlerMultiplayerType = (
   playerHandEvent,
-  playerHand,
-  player
+  player,
+  clientPlayer
 ) => {
   let chosenCard: Card
-  for (const card of playerHand)
-    if (card.id === playerHandEvent.target.id) chosenCard = card
+  for (const card of player.hand)
+    if (card.id === playerHandEvent.target.id) {
+      chosenCard = card
+      break
+    }
 
   dispatchGameAction({
     type: "PLAYER_REQUEST",
-    playerRequest: { card: chosenCard!, player },
+    playerRequest: { card: chosenCard!, clientPlayer },
   })
 }
 
 export const playerResponseHandler: playerResponseHandlerMultiplayerType = (
   hasCard,
   opponentRequest,
-  playerHand,
-  player
+  player,
+  clientPlayer
 ) => {
   const { card: opponentRequestCard } = opponentRequest
   let log
   let playerCard: cardRequestMultiplayer
 
   if (hasCard) {
-    for (const card of playerHand) {
+    for (const card of player.hand) {
       if (card.value === opponentRequestCard.value) {
         log = `It's your opponent's turn again.`
-        playerCard = { player, card }
+        playerCard = { clientPlayer, card }
         dispatchGameAction({
           type: "PLAYER_MATCH",
           playerCard,
@@ -54,7 +57,7 @@ export const playerResponseHandler: playerResponseHandlerMultiplayerType = (
   }
 
   if (!hasCard) {
-    for (const card of playerHand) {
+    for (const card of player.hand) {
       if (card.value === opponentRequestCard.value) {
         const log = `Are you sure? Do you have a ${opponentRequestCard.value}?`
         dispatchGameAction({

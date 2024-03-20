@@ -80,11 +80,6 @@ const JoinGame: Component = () => {
       <div class="join-game__actions">
         <button
           class="join-game__button"
-          onclick={() => joinGameHandler(socket, sessionID())}>
-          join
-        </button>
-        <button
-          class="join-game__button"
           onclick={() => {
             setJoinGame(false)
             setMultiplayerMenu(true)
@@ -94,6 +89,11 @@ const JoinGame: Component = () => {
             socket.disconnect()
           }}>
           ←
+        </button>
+        <button
+          class="join-game__button"
+          onclick={() => joinGameHandler(socket, sessionID())}>
+          join
         </button>
       </div>
     </div>

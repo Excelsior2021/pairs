@@ -16,24 +16,26 @@ import {
   PlayerMatchSubHeading,
   PlayerOutput,
 } from "../../types/enums"
+import { playerTurnHandler } from "../../gameFunctions/playerFunctions"
+import { GameMode } from "../../types/enums"
 import "./Session.scss"
-import Deck from "../../gameObjects/Deck"
-import Player from "../../gameObjects/Player"
-import Opponent from "../../gameObjects/Opponent"
 
 const initialGameState = {
-  game: GameObject,
-  deck: Deck,
-  player: Player,
-  opponent: Opponent,
-  playerHandClickable: null,
-  playerTurnEventHandler: null,
-  playerAnswerHandler: null,
+  gameMode: GameMode.SinglePlayer,
+  game: null,
+  deck: null,
+  player: null,
+  opponent: null,
+  playerHandClickable: false,
+  playerTurnHandler: null,
+  playerChosenCardEvent: null,
   playerOutput: null,
+  opponentTurn: false,
   opponentRequest: null,
-  yesButton: null,
-  noButton: null,
-  log: null,
+  log: "",
+  outcome: "",
+  gameOver: false,
+  deckClickable: false,
 }
 
 const gameReducer = (
@@ -42,21 +44,22 @@ const gameReducer = (
 ): gameStateType => {
   switch (action.type) {
     case "UPDATE": {
-      if (action.player && action.opponent) {
-        console.log(action.playerHandClickable)
-        let playerTurnHandler
-        if (action.playerHandClickable)
-          playerTurnHandler = action.playerTurnEventHandler
-        else playerTurnHandler = null
+      let playerTurnHandler
+      if (action.playerHandClickable)
+        playerTurnHandler = action.playerTurnHandlerWrapper!
+      else playerTurnHandler = null
 
-        return {
-          ...state,
-          game: action.game,
-          deck: action.deck,
-          player: action.player,
-          opponent: action.opponent,
-          playerTurnHandler,
-        }
+      return {
+        ...state,
+        game: action.game!,
+        deck: action.deck!,
+        player: action.player!,
+        opponent: action.opponent!,
+        playerTurnHandler,
+        playerChosenCardEvent: action.playerChosenCardEvent!,
+        opponentTurn: action.opponentTurn!,
+        opponentRequest: action.opponentRequest!,
+        deckClickable: action.deckClickable!,
       }
     }
     case "PLAYER_ACTION": {
@@ -70,7 +73,6 @@ const gameReducer = (
           return {
             ...state,
             playerOutput: action.playerOutput,
-            playerPairsLastTwo: action.player!.lastTwoCardsPairs,
           }
         }
         case PlayerOutput.DeckMatch: {
@@ -79,7 +81,6 @@ const gameReducer = (
           return {
             ...state,
             playerOutput: action.playerOutput,
-            playerPairsLastTwo: action.player!.lastTwoCardsPairs,
           }
         }
         case PlayerOutput.HandMatch: {
@@ -88,7 +89,6 @@ const gameReducer = (
           return {
             ...state,
             playerOutput: action.playerOutput,
-            playerPairsLastTwo: action.player!.lastTwoCardsPairs,
           }
         }
         case PlayerOutput.NoMatch: {
@@ -97,7 +97,6 @@ const gameReducer = (
           return {
             ...state,
             playerOutput: action.playerOutput,
-            playerHandLast: action.player!.lastCardHand,
           }
         }
         default:
@@ -105,14 +104,19 @@ const gameReducer = (
       }
     }
     case "GAME_LOG": {
-      const opponentRequest = action.opponentRequest
-      const yesButton = action.yesButton
-      const noButton = action.noButton
-      const log = action.log
-      return { ...state, opponentRequest, yesButton, noButton, log }
+      return {
+        ...state,
+        log: action.log!,
+      }
     }
     case "GAME_OVER": {
-      return state
+      if (action.gameOver)
+        return {
+          ...state,
+          outcome: action.outcome!,
+          gameOver: action.gameOver!,
+          log: "",
+        }
     }
     default:
       return state
@@ -125,11 +129,11 @@ export const [gameState, dispatchGameAction] = createReducer(
 )
 
 const Session: Component = () => {
-  new GameObject().start(dispatchGameAction)
+  new GameObject().start(playerTurnHandler, dispatchGameAction)
   return (
     <div class="session">
       <Game gameState={gameState} />
-      <Sidebar gameState={gameState} gameMode="single player" />
+      <Sidebar gameState={gameState} />
       <PlayerModal gameState={gameState} />
       <PairsModal gameState={gameState} />
       <QuitGameModal multiplayer={false} socket={null} />

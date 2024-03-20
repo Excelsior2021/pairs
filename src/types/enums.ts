@@ -23,3 +23,8 @@ export enum OpponentOutput {
   HandMatch,
   NoMatch,
 }
+
+export enum GameMode {
+  SinglePlayer = "single player",
+  Multiplayer = "multiplayer",
+}
