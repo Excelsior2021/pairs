@@ -1,17 +1,15 @@
-import { Component, createSignal, Switch, Match } from "solid-js"
+import { Component, createSignal, Switch, Match, For } from "solid-js"
 import Modal from "../Modal/Modal"
-import { gameStateMultiplayerProp, gameStateProp } from "../../types/general"
-import "./PlayerModal.scss"
+import { gameStateProp } from "../../types/general"
 import { PlayerOutput } from "../../types/enums"
+import "./PlayerModal.scss"
 
 export const [showPlayerModal, setShowPlayerModal] = createSignal(false)
 export const [matchStatusHeading, setMatchStatusHeading] = createSignal("")
 export const [matchStatusSubHeading, setMatchStatusSubHeading] =
   createSignal("")
 
-const PlayerModal: Component<
-  gameStateProp | gameStateMultiplayerProp
-> = props => (
+const PlayerModal: Component<gameStateProp> = props => (
   <Modal
     showModal={showPlayerModal}
     setShowModal={setShowPlayerModal}
@@ -49,10 +47,36 @@ const PlayerModal: Component<
       <div class="player-modal__cards">
         <Switch>
           <Match when={props.gameState().playerOutput !== PlayerOutput.NoMatch}>
-            {props.gameState().playerPairsLastTwo}
+            <For each={props.gameState().player!.pairs}>
+              {(card, i) => {
+                if (i() >= props.gameState().player!.pairs.length - 2) {
+                  return (
+                    <img
+                      class={"card"}
+                      id={card.id}
+                      src={card.img}
+                      alt={card.id}
+                    />
+                  )
+                }
+              }}
+            </For>
           </Match>
           <Match when={props.gameState().playerOutput === PlayerOutput.NoMatch}>
-            {props.gameState().playerHandLast}
+            <For each={props.gameState().player!.hand}>
+              {(card, i) => {
+                if (i() === props.gameState().player!.hand.length - 1) {
+                  return (
+                    <img
+                      class={"card"}
+                      id={card.id}
+                      src={card.img}
+                      alt={card.id}
+                    />
+                  )
+                }
+              }}
+            </For>
           </Match>
         </Switch>
       </div>

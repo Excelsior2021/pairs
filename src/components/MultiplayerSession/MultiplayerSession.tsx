@@ -1,5 +1,4 @@
 import { Component, createSignal, Show } from "solid-js"
-import { JSX } from "solid-js"
 import { createReducer } from "@solid-primitives/memo"
 import Game from "../Game/Game"
 import Sidebar from "../Sidebar/Sidebar"
@@ -11,47 +10,41 @@ import PlayerModal, {
 } from "../PlayerModal/PlayerModal"
 import PairsModal from "../PairsModal/PairsModal"
 import QuitGameModal from "../QuitGameModal/QuitGameModal"
-import { gameDeckUI } from "../../gameFunctions/deckFunctions"
-import UI from "../../gameFunctions/multiplayerUIFunctions"
-import player from "../../gameFunctions/multiplayerPlayerFunctions"
-import { setGameDeck } from "../Sidebar/Sidebar"
+import playerMultiplayerFunctions from "../../gameFunctions/multiplayerPlayerFunctions"
 import {
+  clientStateMutiplayer,
   gameActionMultiplayer,
-  gameStateMultiplayerType,
+  gameStateType,
   multiplayerSessionProps,
-  playerHandEventType,
 } from "../../types/general"
-import Card from "../../gameObjects/Card"
+import { PlayerOutput, GameMode, Outcome } from "../../types/enums"
+import Player from "../../gameObjects/Player"
+import { playerTurnHandlerFactory } from "../../types/function-types"
 import "../Session/Session.scss"
 
 const initialGameState = {
-  playerHandUI: () => [],
-  playerHand2UI: () => [],
-  playerPairsUI: () => [],
-  opponentHandUI: () => [],
-  opponentPairsUI: () => [],
-  shuffledDeck: [],
-  playerHand: [],
-  opponentHand: [],
-  playerPairs: [],
-  opponentPairs: [],
-  playerHandUnclickable: null,
-  playerTurnHandler: null,
-  playerAnswerHandler: null,
+  gameMode: GameMode.Multiplayer,
+  player: null,
+  opponent: null,
+  shuffledDeck: null,
+  playerTurnHandlerFactory: null,
   playerOutput: null,
-  yesButton: null,
-  noButton: null,
-  log: null,
+  log: "",
+  outcome: "",
   socket: null,
   clientPlayer: null,
   sessionID: "",
   gameState: null,
+  opponentTurn: false,
+  playerTurn: null,
+  gameOver: false,
+  deckClickable: false,
 }
 
 const multiplayerReducer = (
-  state: gameStateMultiplayerType,
+  state: gameStateType,
   action: gameActionMultiplayer
-): gameStateMultiplayerType => {
+): gameStateType => {
   switch (action.type) {
     case "START_SESSION": {
       return {
@@ -60,7 +53,7 @@ const multiplayerReducer = (
       }
     }
     case "CREATE_SESSION": {
-      state.socket.emit("create_session", action.sessionID)
+      if (state.socket) state.socket.emit("create_session", action.sessionID)
       return {
         ...state,
         sessionID: action.sessionID,
@@ -73,425 +66,300 @@ const multiplayerReducer = (
       }
     }
     case "UPDATE": {
-      const {
-        player1Hand,
-        player2Hand,
-        player1Pairs,
-        player2Pairs,
-        shuffledDeck,
-      } = action.serverState!
+      if (state.opponentTurn) state.opponentTurn = false
+      const { player1, player2, shuffledDeck } = action.serverState!
 
-      let playerHand: Card[] = []
-      let playerHandUI: JSX.Element
-      let opponentHand: Card[] = []
-      let opponentHandUI: JSX.Element
-      let playerPairs: Card[] = []
-      let playerPairsUI: JSX.Element
-      let opponentPairs: Card[] = []
-      let opponentPairsUI: JSX.Element
-      let log
-      let gameState = action.serverState!
+      let player: Player | null = null
+      let opponent: Player | null = null
+      let log: string = ""
+      let gameState: clientStateMutiplayer | null = null
+      let clientPlayer: number
+      let playerTurnHandlerFactory: playerTurnHandlerFactory | null = null
 
-      console.log("client: ", action.clientPlayer, "turn: ", action.playerTurn)
+      switch (action.clientPlayer) {
+        case 1: {
+          player = player1
+          opponent = player2
 
-      if (action.clientPlayer === 1) {
-        playerHand = player1Hand
-        opponentHand = player2Hand
+          gameState = {
+            player,
+            opponent,
+            shuffledDeck,
+          }
 
-        if (action.playerTurn === 1) {
-          const playerTurnHandler = (playerHandEvent: playerHandEventType) =>
-            player.playerTurnHandler(
-              playerHandEvent,
-              playerHand,
-              action.playerTurn!
-            )
-          playerHandUI = UI.createPlayerHandUI(playerHand, playerTurnHandler)
-        } else {
-          playerHandUI = UI.createHandUI(playerHand)
+          log = action.player1Log || state.log
+          clientPlayer = action.clientPlayer
+          break
         }
-        opponentHandUI = UI.createHandUIback(opponentHand)
+        case 2: {
+          player = player2
+          opponent = player1
 
-        playerPairs = player1Pairs
-        opponentPairs = player2Pairs
-        playerPairsUI = UI.createPairsUI(player1Pairs)
-        opponentPairsUI = UI.createPairsUI(player2Pairs)
+          gameState = {
+            player,
+            opponent,
+            shuffledDeck,
+          }
 
-        gameState = {
-          player1Hand: playerHand,
-          player2Hand: opponentHand,
-          player1Pairs: playerPairs,
-          player2Pairs: opponentPairs,
-          shuffledDeck,
+          log = action.player2Log || state.log
+          clientPlayer = action.clientPlayer
+          break
         }
-
-        log = action.player1Log || state.log
       }
 
-      if (action.clientPlayer === 2) {
-        playerHand = player2Hand
-        opponentHand = player1Hand
-
-        if (action.playerTurn === 2) {
-          const playerTurnHandler = (playerHandEvent: playerHandEventType) =>
-            player.playerTurnHandler(
-              playerHandEvent,
-              playerHand,
-              state.clientPlayer
-            )
-          playerHandUI = UI.createPlayerHandUI(playerHand, playerTurnHandler)
-        } else {
-          playerHandUI = UI.createHandUI(playerHand)
-        }
-        opponentHandUI = UI.createHandUIback(opponentHand)
-
-        playerPairs = player2Pairs
-        opponentPairs = player1Pairs
-        playerPairsUI = UI.createPairsUI(player2Pairs)
-        opponentPairsUI = UI.createPairsUI(player1Pairs)
-
-        gameState = {
-          player1Hand: opponentHand,
-          player2Hand: playerHand,
-          player1Pairs: opponentPairs,
-          player2Pairs: playerPairs,
-          shuffledDeck,
-        }
-
-        log = action.player2Log || state.log
-      }
+      if (action.clientPlayer === action.playerTurn)
+        playerTurnHandlerFactory = (playerHandEvent: MouseEvent) =>
+          playerMultiplayerFunctions.playerTurnHandler(
+            playerHandEvent,
+            player,
+            clientPlayer
+          )
 
       return {
         ...state,
-        playerHand,
-        opponentHand,
-        playerHandUI,
-        opponentHandUI,
-        playerPairs,
-        opponentPairs,
-        playerPairsUI,
-        opponentPairsUI,
+        player,
+        opponent,
         shuffledDeck,
         log,
         gameState,
         clientPlayer: action.clientPlayer!,
+        playerTurnHandlerFactory,
       }
     }
     case "PLAYER_REQUEST": {
-      state.socket.emit(
-        "player_request",
-        state.clientPlayer,
-        action.playerRequest!.card,
-        state.sessionID
-      )
+      if (state.socket)
+        state.socket.emit(
+          "player_request",
+          state.clientPlayer,
+          action.playerRequest!.card,
+          state.sessionID
+        )
       const log = "Waiting for you opponent to respond..."
-      const playerHandUI = UI.createHandUI(state.playerHand)
 
       return {
         ...state,
         log,
-        playerHandUI,
+        playerTurnHandlerFactory: null,
       }
     }
     case "PLAYER_RESPONSE": {
-      const { card } = action.playerRequest!
-      let playerHand: Card[]
+      const { card } = action.opponentRequestMultiplayer! //opponentRequest
+      let opponentTurn = false
 
-      if (state.clientPlayer === 1) {
-        playerHand = state.playerHand
-      }
-      if (state.clientPlayer === 2) {
-        playerHand = state.playerHand
-      }
-
-      const playerResponseHandler = (hasCard: boolean) =>
-        player.playerResponseHandler(
-          hasCard,
-          action.playerRequest!,
-          playerHand,
-          state.clientPlayer
-        )
+      if (state.clientPlayer === 1) opponentTurn = true
+      if (state.clientPlayer === 2) opponentTurn = true
 
       const log = `Do you have a ${card.value}?`
-      const yesButton = (
-        <button
-          class="game__button"
-          onClick={() => playerResponseHandler(true)}>
-          Yes
-        </button>
-      )
-
-      const noButton = (
-        <button
-          class="game__button"
-          onClick={() => playerResponseHandler(false)}>
-          No
-        </button>
-      )
 
       return {
         ...state,
         log,
-        yesButton,
-        noButton,
+        opponentRequestMultiplayer: action.opponentRequestMultiplayer,
+        opponentTurn,
       }
     }
     case "PLAYER_MATCH": {
-      if (action.playerCard && action.opponentRequest) {
+      if (action.playerCard && action.opponentRequestMultiplayer) {
         const playerOutput = 0
-        state.socket.emit(
-          "player_match",
-          action.opponentRequest,
-          action.playerCard,
-          state.gameState,
-          playerOutput,
-          state.sessionID
-        )
+        if (state.socket)
+          state.socket.emit(
+            "player_match",
+            action.opponentRequestMultiplayer,
+            action.playerCard,
+            state.gameState,
+            playerOutput,
+            state.sessionID
+          )
         return {
           ...state,
-          log: action.log,
-          yesButton: null,
-          noButton: null,
+          log: action.log!,
         }
       }
       return {
         ...state,
-        log: action.log,
+        log: action.log!,
       }
     }
     case "NO_PLAYER_MATCH": {
-      state.socket.emit(
-        "no_player_match",
-        action.opponentRequest,
-        state.sessionID
-      )
+      if (state.socket)
+        state.socket.emit(
+          "no_player_match",
+          action.opponentRequestMultiplayer,
+          state.sessionID
+        )
       return {
         ...state,
-        log: action.log,
-        yesButton: null,
-        noButton: null,
+        log: action.log!,
+        opponentTurn: false,
       }
     }
     case "PLAYER_DEALS": {
-      setGameDeck(
-        gameDeckUI(() =>
-          UI.gameDeckHandler(state.shuffledDeck, action.playerRequest!)
-        )
-      )
       const log =
         "There were no matches with your opponent. You must now deal a card from the deck."
-      return { ...state, log }
+      return {
+        ...state,
+        log,
+        playerRequest: action.playerRequest,
+        deckClickable: true,
+      }
     }
     case "PLAYER_DEALT": {
-      state.socket.emit(
-        "player_dealt",
-        action.dealtCard,
-        state.shuffledDeck,
-        action.playerRequest,
-        state.gameState,
-        state.sessionID
-      )
-      return state
+      if (state.socket)
+        state.socket.emit(
+          "player_dealt",
+          action.playerRequest,
+          state.gameState,
+          state.sessionID
+        )
+      return { ...state, deckClickable: false }
     }
     case "PLAYER_RESULT": {
       if (action.requestPlayer === state.clientPlayer) {
         setShowPlayerModal(true)
 
-        let playerHand: Card[] = []
-        let playerPairs: Card[] = []
-
-        if (action.requestPlayer === 1 && action.serverState) {
-          const { player1Hand, player1Pairs } = action.serverState
-          playerHand = player1Hand
-          playerPairs = player1Pairs
-        }
-        if (action.requestPlayer === 2 && action.serverState) {
-          const { player2Hand, player2Pairs } = action.serverState
-          playerHand = player2Hand
-          playerPairs = player2Pairs
-        }
-
-        let playerPairsLastTwo: JSX.Element
-        let playerPairsSecondLast: JSX.Element
-        let playerHandLast: JSX.Element
-
-        if (playerPairs.length > 0) {
-          playerPairsLastTwo = UI.createPairsUI([
-            playerPairs[playerPairs.length - 1],
-            playerPairs[playerPairs.length - 2],
-          ])
-        }
-
-        if (playerHand.length > 0) {
-          playerHandLast = UI.createHandUI([playerHand[playerHand.length - 1]])
-        }
-
-        if (action.playerOutput === 0) {
-          setMatchStatusHeading("match")
-          setMatchStatusSubHeading("opponent hand")
-          const log = "It's your turn again."
-          return {
-            ...state,
-            log,
-            playerOutput: action.playerOutput,
-            playerPairsLastTwo,
+        switch (action.playerOutput) {
+          case PlayerOutput.OpponentMatch: {
+            setMatchStatusHeading("match")
+            setMatchStatusSubHeading("opponent hand")
+            const log = "It's your turn again."
+            return {
+              ...state,
+              log,
+              playerOutput: action.playerOutput,
+            }
           }
-        }
-        if (action.playerOutput === 1) {
-          setMatchStatusHeading("match")
-          setMatchStatusSubHeading("dealt card")
-          const log = "It's your turn again."
-          state.socket.emit(
-            "player_response_message",
-            action.playerOutput,
-            state.sessionID
-          )
-          const playerTurnHandler = (playerHandEvent: playerHandEventType) =>
-            player.playerTurnHandler(
-              playerHandEvent,
-              state.playerHand,
-              state.clientPlayer
-            )
-          const playerHandUI = UI.createPlayerHandUI(
-            state.playerHand,
-            playerTurnHandler
-          )
-          return {
-            ...state,
-            log,
-            playerHandUI,
-            playerOutput: action.playerOutput,
-            playerPairsLastTwo,
+          case PlayerOutput.DeckMatch: {
+            if (state.socket) {
+              setMatchStatusHeading("match")
+              setMatchStatusSubHeading("dealt card")
+              const log = "It's your turn again."
+              state.socket.emit(
+                "player_response_message",
+                action.playerOutput,
+                state.sessionID
+              )
+              const playerTurn = state.clientPlayer
+              return {
+                ...state,
+                log,
+                playerOutput: action.playerOutput,
+                playerTurn,
+              }
+            }
           }
-        }
-        if (action.playerOutput === 2) {
-          setMatchStatusHeading("match")
-          setMatchStatusSubHeading("your hand")
-          const log = "It's your opponent's turn."
-          const playerHandUI = UI.createHandUI(state.playerHand)
-          state.socket.emit(
-            "player_response_message",
-            action.playerOutput,
-            state.sessionID
-          )
-          state.socket.emit("player_turn_switch", state.sessionID)
-          return {
-            ...state,
-            log,
-            playerOutput: action.playerOutput,
-            playerHandUI,
-            playerPairsLastTwo,
+          case PlayerOutput.HandMatch: {
+            if (state.socket) {
+              setMatchStatusHeading("match")
+              setMatchStatusSubHeading("your hand")
+              const log = "It's your opponent's turn."
+              state.socket.emit(
+                "player_response_message",
+                action.playerOutput,
+                state.sessionID
+              )
+              state.socket.emit("player_turn_switch", state.sessionID)
+              const playerTurn = state.clientPlayer === 1 ? 2 : 1
+              return {
+                ...state,
+                log,
+                playerOutput: action.playerOutput,
+                playerTurn,
+              }
+            }
           }
-        }
-        if (action.playerOutput === 3) {
-          setMatchStatusHeading("no match")
-          const log = "It's your opponent's turn."
-          const playerHandUI = UI.createHandUI(state.playerHand)
-          state.socket.emit(
-            "player_response_message",
-            action.playerOutput,
-            state.sessionID
-          )
-          state.socket.emit("player_turn_switch", state.sessionID)
-          return {
-            ...state,
-            log,
-            playerOutput: action.playerOutput,
-            playerHandUI,
-            playerHandLast,
+          case PlayerOutput.NoMatch: {
+            if (state.socket) {
+              setMatchStatusHeading("no match")
+              setMatchStatusSubHeading("")
+              const log = "It's your opponent's turn."
+              state.socket.emit(
+                "player_response_message",
+                action.playerOutput,
+                state.sessionID
+              )
+              state.socket.emit("player_turn_switch", state.sessionID)
+              const playerTurn = state.clientPlayer === 1 ? 2 : 1
+              return {
+                ...state,
+                log,
+                playerOutput: action.playerOutput,
+                playerTurn,
+              }
+            }
           }
+          default:
+            return state
         }
       }
-      return {
-        ...state,
-      }
+      return state
     }
     case "PLAYER_RESPONSE_MESSAGE": {
-      let log
-      if (action.playerOutput === 1) {
-        log =
-          "Your opponent matched with the dealt card. It's their turn again."
+      let log: string
+      switch (action.playerOutput) {
+        case 1: {
+          log =
+            "Your opponent matched with the dealt card. It's their turn again."
+          return { ...state, log }
+        }
+        case 2: {
+          log =
+            "Your opponent didn't match with the dealt card. But another card in their hand did. It's your turn."
+          return { ...state, log }
+        }
+        case 3: {
+          log =
+            "Your opponent had no matches. The dealt card has been added to their hand. It's your turn."
+          return { ...state, log }
+        }
+        default:
+          return state
       }
-      if (action.playerOutput === 2) {
-        log =
-          "Your opponent didn't match with the dealt card. But had another card in their hand did. It's your turn. Please choose a card from your hand."
-      }
-      if (action.playerOutput === 3) {
-        log =
-          "Your opponent had no matches. The dealt card has been added to their hand. It's your turn. Please choose a card from your hand."
-      }
-      return { ...state, log }
     }
     case "PLAYER_TURN_SWITCH": {
-      const playerTurnHandler = (playerHandEvent: playerHandEventType) =>
-        player.playerTurnHandler(
+      const playerTurnHandlerFactory = (playerHandEvent: MouseEvent) =>
+        playerMultiplayerFunctions.playerTurnHandler(
           playerHandEvent,
-          state.playerHand,
-          state.clientPlayer
+          state.player!,
+          state.clientPlayer!
         )
-
-      const playerHandUI = UI.createPlayerHandUI(
-        state.playerHand,
-        playerTurnHandler
-      )
-
       return {
         ...state,
-        playerHandUI,
+        playerTurnHandlerFactory,
       }
     }
     case "PLAYER_DISCONNECTED": {
-      const log =
-        "Unfortunately, your opponent has disconnected. The game has ended."
-
-      const playerHandUI = UI.createHandUI(state.playerHand)
-      setGameDeck(gameDeckUI())
+      const log = "Your opponent has disconnected. The game has ended."
 
       return {
         ...state,
         log,
-        playerHandUI,
+        gameOver: false,
       }
     }
     case "GAME_OVER": {
-      if (
-        state.playerHand.length === 0 ||
-        state.opponentHand.length === 0 ||
-        state.shuffledDeck.length === 0
-      ) {
-        let outcome
-        if (state.playerPairs.length > state.opponentPairs.length) {
-          outcome = "You won! Well done!"
-        } else if (state.playerPairs.length === state.opponentPairs.length) {
-          outcome = "It's a draw!"
-        } else {
-          outcome = "Your opponent won! Better luck next time!"
+      if (state.player && state.opponent && state.shuffledDeck)
+        if (
+          state.player.hand.length === 0 ||
+          state.opponent.hand.length === 0 ||
+          state.shuffledDeck.length === 0
+        ) {
+          let outcome
+          if (state.player.pairs.length > state.opponent.pairs.length) {
+            outcome = Outcome.Player
+          } else if (
+            state.player.pairs.length === state.opponent.pairs.length
+          ) {
+            outcome = Outcome.Draw
+          } else {
+            outcome = Outcome.Opponent
+          }
+          return {
+            ...state,
+            log: "",
+            outcome,
+            gameOver: true,
+          }
         }
-
-        const log = (
-          <div class="game__game-over">
-            <div class="game__outcome">
-              <h2 class="game__game-over-heading">GAME OVER</h2>
-              <p class="game__game-over-text">{outcome}</p>
-            </div>
-            <div class="game__stats">
-              <h2 class="game__game-over-heading">STATS</h2>
-              <p class="game__game-over-text">
-                Your Pairs: {state.playerPairs.length}
-              </p>
-              <p class="game__game-over-text">
-                Opponent Pairs: {state.opponentPairs.length}
-              </p>
-              <p class="game__game-over-text">
-                Remaining cards in deck: {state.shuffledDeck.length}
-              </p>
-            </div>
-          </div>
-        )
-        return {
-          ...state,
-          log,
-        }
-      }
       return state
     }
     default:
@@ -536,8 +404,8 @@ You get to go first! Please select a card from your hand to request a match with
     dispatchGameAction({ type: "GAME_OVER" })
   })
 
-  props.socket.on("player_requested", playerRequest => {
-    dispatchGameAction({ type: "PLAYER_RESPONSE", playerRequest })
+  props.socket.on("player_requested", opponentRequestMultiplayer => {
+    dispatchGameAction({ type: "PLAYER_RESPONSE", opponentRequestMultiplayer })
     dispatchGameAction({ type: "GAME_OVER" })
   })
 
@@ -571,10 +439,14 @@ You get to go first! Please select a card from your hand to request a match with
   props.socket.on(
     "player_dealt",
     (serverState, playerOutput, requestPlayer) => {
+      let playerTurn: number
+      if (playerOutput === 1) playerTurn = requestPlayer
+      else playerTurn = requestPlayer === 1 ? 2 : 1
       dispatchGameAction({
         type: "UPDATE",
         serverState,
         clientPlayer: player(),
+        playerTurn,
       })
       dispatchGameAction({
         type: "PLAYER_RESULT",
@@ -591,8 +463,8 @@ You get to go first! Please select a card from your hand to request a match with
     dispatchGameAction({ type: "GAME_OVER" })
   })
 
-  props.socket.on("player_turn_switch", () => {
-    dispatchGameAction({ type: "PLAYER_TURN_SWITCH" })
+  props.socket.on("player_turn_switch", playerTurn => {
+    dispatchGameAction({ type: "PLAYER_TURN_SWITCH", playerTurn })
     dispatchGameAction({ type: "GAME_OVER" })
   })
 
@@ -608,7 +480,7 @@ You get to go first! Please select a card from your hand to request a match with
         <PairsModal gameState={gameState} />
       </Show>
       <QuitGameModal multiplayer={true} socket={props.socket} />
-      <Sidebar gameMode="multiplayer" />
+      <Sidebar gameState={gameState} />
     </div>
   )
 }

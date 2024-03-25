@@ -28,13 +28,14 @@
 
   &__actions {
     display: flex;
-    justify-content: space-around;
-    margin: auto;
+    flex-direction: column;
+    align-items: center;
     margin-top: 2rem;
     max-width: 482px;
   }
 
   &__button {
     @include menu-button;
+    width: 200px;
   }
 }

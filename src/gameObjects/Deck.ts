@@ -1,5 +1,8 @@
-import { createRoot } from "solid-js"
-import { JSX } from "solid-js"
+import {
+  gameAction,
+  gameActionMultiplayer,
+  playerRequest,
+} from "../types/general"
 import Card from "./Card"
 
 export default class Deck {
@@ -53,15 +56,13 @@ export default class Deck {
     return hand
   }
 
-  deckUI = (
-    gameDeckHandler?: JSX.EventHandlerUnion<HTMLImageElement, MouseEvent>
-  ) =>
-    createRoot(() => (
-      <img
-        class="card card--deck"
-        src={`./cards/back.png`}
-        alt="game deck"
-        onclick={() => gameDeckHandler}
-      />
-    ))
+  handlerMultiplayer(
+    playerRequest: playerRequest,
+    dispatchGameAction: (action: gameActionMultiplayer) => void
+  ) {
+    dispatchGameAction({
+      type: "PLAYER_DEALT",
+      playerRequest,
+    })
+  }
 }

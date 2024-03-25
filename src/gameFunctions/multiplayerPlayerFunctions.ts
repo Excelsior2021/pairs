@@ -4,42 +4,46 @@ import {
   playerResponseHandlerMultiplayerType,
   playerTurnHandlerMultiplayerType,
 } from "../types/function-types"
-import { cardRequestMultiplayer } from "../types/general"
+import { playerRequest } from "../types/general"
 
 export const playerTurnHandler: playerTurnHandlerMultiplayerType = (
   playerHandEvent,
-  playerHand,
-  player
+  player,
+  clientPlayer
 ) => {
   let chosenCard: Card
-  for (const card of playerHand)
-    if (card.id === playerHandEvent.target.id) chosenCard = card
+  if (player && playerHandEvent.target)
+    for (const card of player.hand)
+      if (card.id === playerHandEvent.target.id) {
+        chosenCard = card
+        break
+      }
 
   dispatchGameAction({
     type: "PLAYER_REQUEST",
-    playerRequest: { card: chosenCard!, player },
+    playerRequest: { card: chosenCard!, clientPlayer },
   })
 }
 
 export const playerResponseHandler: playerResponseHandlerMultiplayerType = (
   hasCard,
-  opponentRequest,
-  playerHand,
-  player
+  opponentRequestMultiplayer,
+  player,
+  clientPlayer
 ) => {
-  const { card: opponentRequestCard } = opponentRequest
+  const { card: opponentRequestCard } = opponentRequestMultiplayer
   let log
-  let playerCard: cardRequestMultiplayer
+  let playerCard: playerRequest
 
   if (hasCard) {
-    for (const card of playerHand) {
+    for (const card of player.hand) {
       if (card.value === opponentRequestCard.value) {
         log = `It's your opponent's turn again.`
-        playerCard = { player, card }
+        playerCard = { clientPlayer, card }
         dispatchGameAction({
           type: "PLAYER_MATCH",
           playerCard,
-          opponentRequest,
+          opponentRequestMultiplayer,
           log,
         })
         return
@@ -54,7 +58,7 @@ export const playerResponseHandler: playerResponseHandlerMultiplayerType = (
   }
 
   if (!hasCard) {
-    for (const card of playerHand) {
+    for (const card of player.hand) {
       if (card.value === opponentRequestCard.value) {
         const log = `Are you sure? Do you have a ${opponentRequestCard.value}?`
         dispatchGameAction({
@@ -65,7 +69,11 @@ export const playerResponseHandler: playerResponseHandlerMultiplayerType = (
       }
     }
     const log = "Your opponent must now deal a card from the deck."
-    dispatchGameAction({ type: "NO_PLAYER_MATCH", opponentRequest, log })
+    dispatchGameAction({
+      type: "NO_PLAYER_MATCH",
+      opponentRequestMultiplayer,
+      log,
+    })
   }
 }
 

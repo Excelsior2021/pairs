@@ -1,13 +1,16 @@
-import { playerTurnHandler } from "../gameFunctions/playerFunctions"
-import { playerTurnHandlerType, updateUIType } from "../types/function-types"
-import { gameAction, playerHandEventType } from "../types/general"
+import { playerTurnHandlerType } from "../types/function-types"
+import { gameAction } from "../types/general"
 import Card from "./Card"
 import Deck from "./Deck"
 import Opponent from "./Opponent"
 import Player from "./Player"
+import { Outcome } from "../types/enums"
 
 export default class Game {
-  start(dispatchGameAction: (action: gameAction) => void) {
+  start(
+    playerTurnHandler: playerTurnHandlerType,
+    dispatchGameAction: (action: gameAction) => void
+  ) {
     const deck = new Deck()
     const player = new Player()
     const opponent = new Opponent()
@@ -21,7 +24,7 @@ export default class Game {
     opponent.pairs = this.initialPairs(opponent.hand)
 
     const log =
-      "The cards have been dealt. Any initial pairs of cards have been added to your Pairs. Please select a card from your hand to request a match with your opponent."
+      "The cards have been dealt. Any initial pair of cards have been added to your Pairs. Please select a card from your hand to request a match with your opponent."
 
     this.updateUI(
       deck,
@@ -64,19 +67,40 @@ export default class Game {
     opponent: Opponent,
     playerTurnHandler: playerTurnHandlerType,
     dispatchGameAction: (action: gameAction) => void,
-    playerHandClickable = false
+    playerHandClickable = false,
+    playerChosenCardEvent: MouseEvent | null = null,
+    opponentTurn = false,
+    opponentRequest: Card | null = null,
+    deckClickable = false
   ) {
-    const playerTurnEventHandler = (playerHandEvent: playerHandEventType) =>
+    const playerTurnHandlerWrapper = (playerHandEvent: MouseEvent) =>
       playerTurnHandler(playerHandEvent, this, deck, player, opponent)
 
     dispatchGameAction({
       type: "UPDATE",
+      game: this,
       deck,
       player,
       opponent,
-      playerTurnEventHandler,
+      playerTurnHandlerWrapper,
       playerHandClickable,
+      playerChosenCardEvent,
+      opponentTurn,
+      opponentRequest,
+      deckClickable,
     })
+  }
+
+  outcome(player: Player, opponent: Opponent) {
+    let outcome
+    if (player.pairs.length > opponent.pairs.length) {
+      outcome = Outcome.Player
+    } else if (player.pairs.length === opponent.pairs.length) {
+      outcome = Outcome.Draw
+    } else {
+      outcome = Outcome.Opponent
+    }
+    return outcome
   }
 
   end(
@@ -91,46 +115,18 @@ export default class Game {
       opponent.hand.length === 0 ||
       deck.deck.length === 0
     ) {
-      let outcome
-      if (player.pairs.length > opponent.pairs.length) {
-        outcome = "You won! Well done!"
-      } else if (player.pairs.length === opponent.pairs.length) {
-        outcome = "It's a draw!"
-      } else {
-        outcome = "Your opponent won! Better luck next time!"
-      }
-      const log = (
-        <div class="game__game-over">
-          <div class="game__outcome">
-            <h2 class="game__game-over-heading">GAME OVER</h2>
-            <p class="game__game-over-text">{outcome}</p>
-          </div>
-          <div class="game__stats">
-            <h2 class="game__game-over-heading">STATS</h2>
-            <p class="game__game-over-text">
-              Your Pairs: {player.pairs.length}
-            </p>
-            <p class="game__game-over-text">
-              Opponent Pairs: {opponent.pairs.length}
-            </p>
-            <p class="game__game-over-text">
-              Remaining cards in deck: {deck.deck.length}
-            </p>
-          </div>
-        </div>
-      )
-      dispatchGameAction({ type: "GAME_LOG", log })
+      const outcome = this.outcome(player, opponent)
 
       this.updateUI(
         deck,
         player,
         opponent,
         playerTurnHandler,
-        dispatchGameAction,
-        true
+        dispatchGameAction
       )
-      dispatchGameAction({ type: "GAME_OVER" })
+      dispatchGameAction({ type: "GAME_OVER", outcome, gameOver: true })
       return true
     }
+    return false
   }
 }

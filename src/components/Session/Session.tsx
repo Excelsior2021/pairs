@@ -1,4 +1,4 @@
-import { Component } from "solid-js"
+import { Component, createEffect } from "solid-js"
 import { createReducer } from "@solid-primitives/memo"
 import Game from "../Game/Game"
 import Sidebar from "../Sidebar/Sidebar"
@@ -16,24 +16,26 @@ import {
   PlayerMatchSubHeading,
   PlayerOutput,
 } from "../../types/enums"
+import { playerTurnHandler } from "../../gameFunctions/playerFunctions"
+import { GameMode } from "../../types/enums"
 import "./Session.scss"
 
 const initialGameState = {
-  playerHandUI: () => [],
-  playerPairsUI: () => [],
-  opponentHandUI: () => [],
-  opponentPairsUI: () => [],
-  playerHandClickable: null,
-  playerTurnEventHandler: null,
-  playerAnswerHandler: null,
+  gameMode: GameMode.SinglePlayer,
+  game: null,
+  deck: null,
+  player: null,
+  opponent: null,
+  playerHandClickable: false,
+  playerTurnHandlerFactory: null,
+  playerChosenCardEvent: null,
   playerOutput: null,
-  question: null,
-  yesButton: null,
-  noButton: null,
-  log: null,
-  playerHandLast: () => [],
-  playerPairsLastTwo: () => [],
-  playerPairsSecondLast: () => [],
+  opponentTurn: false,
+  opponentRequest: null,
+  log: "",
+  outcome: "",
+  gameOver: false,
+  deckClickable: false,
 }
 
 const gameReducer = (
@@ -42,27 +44,23 @@ const gameReducer = (
 ): gameStateType => {
   switch (action.type) {
     case "UPDATE": {
-      if (action.player && action.opponent) {
-        let playerHandUI
-        if (action.playerHandClickable)
-          playerHandUI = action.player.createHandUI(
-            action.playerTurnEventHandler,
-            action.playerHandClickable
-          )
-        else {
-          playerHandUI = action.player.createHandUI(
-            undefined,
-            action.playerHandClickable
-          )
-        }
+      let playerTurnHandlerFactory
+      if (action.playerHandClickable)
+        playerTurnHandlerFactory = action.playerTurnHandlerWrapper!
+      else playerTurnHandlerFactory = null
 
-        return {
-          ...state,
-          playerHandUI,
-          playerPairsUI: action.player.createPairsUI(),
-          opponentHandUI: action.opponent.createHandUI(),
-          opponentPairsUI: action.opponent.createPairsUI(),
-        }
+      return {
+        ...state,
+        game: action.game!,
+        deck: action.deck!,
+        player: action.player!,
+        opponent: action.opponent!,
+        playerTurnHandlerFactory,
+        playerChosenCardEvent: action.playerChosenCardEvent!,
+        opponentTurn: action.opponentTurn!,
+        opponentRequest: action.opponentRequest!,
+        deckClickable: action.deckClickable!,
+        gameOver: false,
       }
     }
     case "PLAYER_ACTION": {
@@ -76,7 +74,6 @@ const gameReducer = (
           return {
             ...state,
             playerOutput: action.playerOutput,
-            playerPairsLastTwo: action.player!.lastTwoCardsPairs,
           }
         }
         case PlayerOutput.DeckMatch: {
@@ -85,7 +82,6 @@ const gameReducer = (
           return {
             ...state,
             playerOutput: action.playerOutput,
-            playerPairsLastTwo: action.player!.lastTwoCardsPairs,
           }
         }
         case PlayerOutput.HandMatch: {
@@ -94,7 +90,6 @@ const gameReducer = (
           return {
             ...state,
             playerOutput: action.playerOutput,
-            playerPairsLastTwo: action.player!.lastTwoCardsPairs,
           }
         }
         case PlayerOutput.NoMatch: {
@@ -103,7 +98,6 @@ const gameReducer = (
           return {
             ...state,
             playerOutput: action.playerOutput,
-            playerHandLast: action.player!.lastCardHand,
           }
         }
         default:
@@ -111,14 +105,19 @@ const gameReducer = (
       }
     }
     case "GAME_LOG": {
-      const question = action.question
-      const yesButton = action.yesButton
-      const noButton = action.noButton
-      const log = action.log
-      return { ...state, question, yesButton, noButton, log }
+      return {
+        ...state,
+        log: action.log!,
+      }
     }
     case "GAME_OVER": {
-      return state
+      if (action.gameOver)
+        return {
+          ...state,
+          outcome: action.outcome!,
+          gameOver: action.gameOver!,
+          log: "",
+        }
     }
     default:
       return state
@@ -131,11 +130,11 @@ export const [gameState, dispatchGameAction] = createReducer(
 )
 
 const Session: Component = () => {
-  new GameObject().start(dispatchGameAction)
+  new GameObject().start(playerTurnHandler, dispatchGameAction)
   return (
     <div class="session">
       <Game gameState={gameState} />
-      <Sidebar gameMode="single player" />
+      <Sidebar gameState={gameState} />
       <PlayerModal gameState={gameState} />
       <PairsModal gameState={gameState} />
       <QuitGameModal multiplayer={false} socket={null} />
