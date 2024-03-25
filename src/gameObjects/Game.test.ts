@@ -3,6 +3,7 @@ import Game from "./Game"
 import Deck from "./Deck"
 import Player from "./Player"
 import Opponent from "./Opponent"
+import { Outcome } from "../types/enums"
 
 const hand = [
   {
@@ -47,7 +48,7 @@ describe("game class", () => {
   let opponent: Opponent = new Opponent()
   const playerTurnHandler = vi.fn()
   const dispatchGameAction = vi.fn()
-  let updateUISpy
+  let updateUISpy: any
 
   beforeEach(() => {
     game = new Game()
@@ -85,9 +86,7 @@ describe("game class", () => {
     ).toBe(true)
     expect(dispatchGameAction).toHaveBeenCalled()
     expect(updateUISpy).toHaveBeenCalled()
-    expect(dispatchGameAction.mock.calls[1][0].outcome).toBe(
-      "You won! Well done!"
-    )
+    expect(dispatchGameAction.mock.calls[1][0].outcome).toBe(Outcome.Player)
   })
 
   test(".end() oppponent wins", () => {
@@ -100,9 +99,7 @@ describe("game class", () => {
     ).toBe(true)
     expect(dispatchGameAction).toHaveBeenCalled()
     expect(updateUISpy).toHaveBeenCalled()
-    expect(dispatchGameAction.mock.calls[1][0].outcome).toBe(
-      "Your opponent won! Better luck next time!"
-    )
+    expect(dispatchGameAction.mock.calls[1][0].outcome).toBe(Outcome.Opponent)
   })
 
   test(".end() draw", () => {
@@ -115,7 +112,7 @@ describe("game class", () => {
     ).toBe(true)
     expect(dispatchGameAction).toHaveBeenCalled()
     expect(updateUISpy).toHaveBeenCalled()
-    expect(dispatchGameAction.mock.calls[1][0].outcome).toBe("It's a draw!")
+    expect(dispatchGameAction.mock.calls[1][0].outcome).toBe(Outcome.Draw)
   })
 
   test(".end() return false", () => {

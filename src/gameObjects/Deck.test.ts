@@ -1,4 +1,4 @@
-import { test, describe, expect, beforeEach, afterEach } from "vitest"
+import { test, describe, expect, beforeEach } from "vitest"
 import Deck from "./Deck"
 
 describe("deck class", () => {
@@ -33,7 +33,6 @@ describe("deck class", () => {
     expect(dealtCard).toHaveProperty("suit")
     expect(dealtCard).toHaveProperty("value")
     expect(dealtCard).toHaveProperty("img")
-    expect(dealtCard).toBe
   })
 
   test("`dealHand()` deals correct number of cards", () => {

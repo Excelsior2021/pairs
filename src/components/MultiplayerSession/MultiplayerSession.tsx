@@ -17,8 +17,9 @@ import {
   gameStateType,
   multiplayerSessionProps,
 } from "../../types/general"
-import { PlayerOutput, GameMode } from "../../types/enums"
+import { PlayerOutput, GameMode, Outcome } from "../../types/enums"
 import Player from "../../gameObjects/Player"
+import { playerTurnHandlerFactory } from "../../types/function-types"
 import "../Session/Session.scss"
 
 const initialGameState = {
@@ -26,7 +27,7 @@ const initialGameState = {
   player: null,
   opponent: null,
   shuffledDeck: null,
-  playerTurnHandler: null,
+  playerTurnHandlerFactory: null,
   playerOutput: null,
   log: "",
   outcome: "",
@@ -36,13 +37,14 @@ const initialGameState = {
   gameState: null,
   opponentTurn: false,
   playerTurn: null,
+  gameOver: false,
+  deckClickable: false,
 }
 
 const multiplayerReducer = (
   state: gameStateType,
   action: gameActionMultiplayer
 ): gameStateType => {
-  console.log(action.type, state)
   switch (action.type) {
     case "START_SESSION": {
       return {
@@ -67,11 +69,12 @@ const multiplayerReducer = (
       if (state.opponentTurn) state.opponentTurn = false
       const { player1, player2, shuffledDeck } = action.serverState!
 
-      let player: Player | null
-      let opponent: Player | null
-      let log: string
-      let gameState: clientStateMutiplayer | null
-      let playerTurnHandler
+      let player: Player | null = null
+      let opponent: Player | null = null
+      let log: string = ""
+      let gameState: clientStateMutiplayer | null = null
+      let clientPlayer: number
+      let playerTurnHandlerFactory: playerTurnHandlerFactory | null = null
 
       switch (action.clientPlayer) {
         case 1: {
@@ -85,6 +88,7 @@ const multiplayerReducer = (
           }
 
           log = action.player1Log || state.log
+          clientPlayer = action.clientPlayer
           break
         }
         case 2: {
@@ -98,22 +102,17 @@ const multiplayerReducer = (
           }
 
           log = action.player2Log || state.log
+          clientPlayer = action.clientPlayer
           break
-        }
-        default: {
-          player = null
-          opponent = null
-          gameState = null
-          log = ""
         }
       }
 
       if (action.clientPlayer === action.playerTurn)
-        playerTurnHandler = playerHandEvent =>
+        playerTurnHandlerFactory = (playerHandEvent: MouseEvent) =>
           playerMultiplayerFunctions.playerTurnHandler(
             playerHandEvent,
             player,
-            action.clientPlayer
+            clientPlayer
           )
 
       return {
@@ -124,7 +123,7 @@ const multiplayerReducer = (
         log,
         gameState,
         clientPlayer: action.clientPlayer!,
-        playerTurnHandler,
+        playerTurnHandlerFactory,
       }
     }
     case "PLAYER_REQUEST": {
@@ -140,11 +139,11 @@ const multiplayerReducer = (
       return {
         ...state,
         log,
-        playerTurnHandler: null,
+        playerTurnHandlerFactory: null,
       }
     }
     case "PLAYER_RESPONSE": {
-      const { card } = action.opponentRequest! //opponentRequest
+      const { card } = action.opponentRequestMultiplayer! //opponentRequest
       let opponentTurn = false
 
       if (state.clientPlayer === 1) opponentTurn = true
@@ -155,17 +154,17 @@ const multiplayerReducer = (
       return {
         ...state,
         log,
-        opponentRequest: action.opponentRequest,
+        opponentRequestMultiplayer: action.opponentRequestMultiplayer,
         opponentTurn,
       }
     }
     case "PLAYER_MATCH": {
-      if (action.playerCard && action.opponentRequest) {
+      if (action.playerCard && action.opponentRequestMultiplayer) {
         const playerOutput = 0
         if (state.socket)
           state.socket.emit(
             "player_match",
-            action.opponentRequest,
+            action.opponentRequestMultiplayer,
             action.playerCard,
             state.gameState,
             playerOutput,
@@ -176,12 +175,16 @@ const multiplayerReducer = (
           log: action.log!,
         }
       }
+      return {
+        ...state,
+        log: action.log!,
+      }
     }
     case "NO_PLAYER_MATCH": {
       if (state.socket)
         state.socket.emit(
           "no_player_match",
-          action.opponentRequest,
+          action.opponentRequestMultiplayer,
           state.sessionID
         )
       return {
@@ -313,7 +316,7 @@ const multiplayerReducer = (
       }
     }
     case "PLAYER_TURN_SWITCH": {
-      const playerTurnHandler = playerHandEvent =>
+      const playerTurnHandlerFactory = (playerHandEvent: MouseEvent) =>
         playerMultiplayerFunctions.playerTurnHandler(
           playerHandEvent,
           state.player!,
@@ -321,12 +324,11 @@ const multiplayerReducer = (
         )
       return {
         ...state,
-        playerTurnHandler,
+        playerTurnHandlerFactory,
       }
     }
     case "PLAYER_DISCONNECTED": {
-      const log =
-        "Unfortunately, your opponent has disconnected. The game has ended."
+      const log = "Your opponent has disconnected. The game has ended."
 
       return {
         ...state,
@@ -343,13 +345,13 @@ const multiplayerReducer = (
         ) {
           let outcome
           if (state.player.pairs.length > state.opponent.pairs.length) {
-            outcome = "You won! Well done!"
+            outcome = Outcome.Player
           } else if (
             state.player.pairs.length === state.opponent.pairs.length
           ) {
-            outcome = "It's a draw!"
+            outcome = Outcome.Draw
           } else {
-            outcome = "Your opponent won! Better luck next time!"
+            outcome = Outcome.Opponent
           }
           return {
             ...state,
@@ -402,8 +404,8 @@ You get to go first! Please select a card from your hand to request a match with
     dispatchGameAction({ type: "GAME_OVER" })
   })
 
-  props.socket.on("player_requested", opponentRequest => {
-    dispatchGameAction({ type: "PLAYER_RESPONSE", opponentRequest })
+  props.socket.on("player_requested", opponentRequestMultiplayer => {
+    dispatchGameAction({ type: "PLAYER_RESPONSE", opponentRequestMultiplayer })
     dispatchGameAction({ type: "GAME_OVER" })
   })
 

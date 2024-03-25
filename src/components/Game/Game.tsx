@@ -4,33 +4,36 @@ import { gameStateProp } from "../../types/general"
 import { playerResponseHandler } from "../../gameFunctions/playerFunctions"
 import { playerResponseHandler as playerResponseHandlerMultiplayer } from "../../gameFunctions/multiplayerPlayerFunctions"
 import { GameMode } from "../../types/enums"
+import Opponent from "../../gameObjects/Opponent"
+import Card from "../../gameObjects/Card"
 import "./Game.scss"
 
 const Game: Component<gameStateProp> = props => {
-  const [deck, setDeck] = createSignal(null)
+  const [deck, setDeck] = createSignal([] as Card[])
 
   createEffect(() => {
-    if (props.gameState().deck) setDeck(props.gameState().deck.deck)
-    else if (props.gameState().shuffledDeck)
-      setDeck(props.gameState().shuffledDeck)
+    if (props.gameState().gameMode === GameMode.SinglePlayer)
+      setDeck(props.gameState().deck!.deck)
+    if (props.gameState().gameMode === GameMode.Multiplayer)
+      setDeck(props.gameState().shuffledDeck!)
   })
 
   const handlePlayerResponse = (hasCard: boolean) => {
     if (props.gameState().gameMode === GameMode.SinglePlayer)
       playerResponseHandler(
         hasCard,
-        props.gameState().game,
-        props.gameState().deck,
-        props.gameState().player,
-        props.gameState().opponent,
-        props.gameState().opponentRequest
+        props.gameState().game!,
+        props.gameState().deck!,
+        props.gameState().player!,
+        props.gameState().opponent! as Opponent,
+        props.gameState().opponentRequest!
       )
     if (props.gameState().gameMode === GameMode.Multiplayer) {
       playerResponseHandlerMultiplayer(
         hasCard,
-        props.gameState().opponentRequest,
-        props.gameState().player,
-        props.gameState().clientPlayer
+        props.gameState().opponentRequestMultiplayer!,
+        props.gameState().player!,
+        props.gameState().clientPlayer!
       )
     }
   }
@@ -79,7 +82,7 @@ const Game: Component<gameStateProp> = props => {
         heading="Your Hand"
         hand={props.gameState().player!.hand}
         player={true}
-        playerTurnHandler={props.gameState().playerTurnHandler}
+        playerTurnHandler={props.gameState().playerTurnHandlerFactory!}
         gameMode={props.gameState().gameMode}
       />
     </div>

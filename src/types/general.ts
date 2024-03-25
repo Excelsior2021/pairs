@@ -1,15 +1,15 @@
 import { Accessor } from "solid-js"
-import { JSX } from "solid-js/jsx-runtime"
 import { Socket } from "socket.io-client"
-import { playerTurnHandlerType } from "./function-types"
+import {
+  playerTurnHandlerFactory,
+  playerTurnHandlerType,
+} from "./function-types"
 import Card from "../gameObjects/Card"
 import Player from "../gameObjects/Player"
 import Opponent from "../gameObjects/Opponent"
 import Deck from "../gameObjects/Deck"
 import Game from "../gameObjects/Game"
 import { GameMode } from "./enums"
-
-export type playerHandEventType = PointerEvent | null
 
 export type gameStateProp = {
   gameState: Accessor<gameStateType>
@@ -18,8 +18,9 @@ export type gameStateProp = {
 export type handProp = {
   heading: string
   hand: Card[]
-  player: boolean
-  playerTurnHandler: playerHandEventType
+  player?: boolean
+  playerTurnHandler?: (playerHandEvent: MouseEvent) => void
+  gameMode?: string
 }
 
 export type multiplayerSessionProps = {
@@ -31,6 +32,11 @@ export type quitGameModalProps = {
   socket: Socket | null
 }
 
+export type playerRequest = {
+  card: Card
+  clientPlayer: number
+}
+
 export type gameStateType = {
   gameMode: GameMode.SinglePlayer | GameMode.Multiplayer
   game?: Game | null
@@ -38,12 +44,13 @@ export type gameStateType = {
   player?: Player | null
   opponent?: Opponent | Player | null
   playerHandClickable?: boolean
-  playerTurnHandler: playerTurnHandlerType | null
-  playerChosenCardEvent?: playerHandEventType | null
+  playerTurnHandlerFactory?: playerTurnHandlerFactory | null
+  playerChosenCardEvent?: MouseEvent | null
   playerOutput: number | null
   opponentTurn: boolean
   opponentRequest?: Card | null
-  playerRequest?: number
+  opponentRequestMultiplayer?: playerRequest | null
+  playerRequest?: playerRequest
   log: string
   outcome: string
   gameOver: boolean
@@ -64,8 +71,8 @@ export type gameAction = {
   player?: Player
   opponent?: Opponent
   playerHandClickable?: boolean
-  playerTurnHandlerWrapper?: (playerHandEvent: playerHandEventType) => void
-  playerChosenCardEvent?: playerHandEventType
+  playerTurnHandlerWrapper?: (playerHandEvent: MouseEvent) => void
+  playerChosenCardEvent?: MouseEvent | null
   playerOutput?: number | boolean
   opponentTurn?: boolean
   opponentRequest?: Card | null
@@ -73,7 +80,7 @@ export type gameAction = {
   chosenCard?: Card
   opponentAsked?: Card
   outcome?: string
-  gameOver?: boolean | undefined
+  gameOver?: boolean
   deckClickable?: boolean
 }
 
@@ -83,10 +90,10 @@ export type gameActionMultiplayer = {
   opponent?: Player
   shuffledDeck?: Card[]
   playerHandClickable?: boolean
-  playerTurnHandler?: JSX.EventHandlerUnion<HTMLImageElement, MouseEvent>
-  playerAnswerHandler?: JSX.EventHandlerUnion<HTMLImageElement, MouseEvent>
+  playerTurnHandler?: playerTurnHandlerType
   playerOutput?: number | boolean
-  opponentRequest?: Card | null
+  playerCard?: playerRequest
+  opponentRequestMultiplayer?: playerRequest | null
   log?: string
   chosenCard?: Card
   opponentAsked?: Card
@@ -97,16 +104,9 @@ export type gameActionMultiplayer = {
   playerTurn?: number
   player1Log?: string
   player2Log?: string
-  playerRequest?: number
-  // opponentRequest?: cardRequestMultiplayer
-  playerCard?: cardRequestMultiplayer
+  playerRequest?: playerRequest
   requestPlayer?: number
   dealtCard?: Card
-}
-
-export type cardRequestMultiplayer = {
-  card: Card
-  player: number
 }
 
 export type serverStateMultiplayer = {

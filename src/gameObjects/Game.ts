@@ -1,9 +1,10 @@
 import { playerTurnHandlerType } from "../types/function-types"
-import { gameAction, playerHandEventType } from "../types/general"
+import { gameAction } from "../types/general"
 import Card from "./Card"
 import Deck from "./Deck"
 import Opponent from "./Opponent"
 import Player from "./Player"
+import { Outcome } from "../types/enums"
 
 export default class Game {
   start(
@@ -16,8 +17,8 @@ export default class Game {
 
     deck.shuffle()
 
-    player.hand = deck.dealHand(20)
-    opponent.hand = deck.dealHand(20)
+    player.hand = deck.dealHand(7)
+    opponent.hand = deck.dealHand(7)
 
     player.pairs = this.initialPairs(player.hand)
     opponent.pairs = this.initialPairs(opponent.hand)
@@ -67,12 +68,12 @@ export default class Game {
     playerTurnHandler: playerTurnHandlerType,
     dispatchGameAction: (action: gameAction) => void,
     playerHandClickable = false,
-    playerChosenCardEvent = null,
+    playerChosenCardEvent: MouseEvent | null = null,
     opponentTurn = false,
-    opponentRequest = null,
+    opponentRequest: Card | null = null,
     deckClickable = false
   ) {
-    const playerTurnHandlerWrapper = (playerHandEvent: playerHandEventType) =>
+    const playerTurnHandlerWrapper = (playerHandEvent: MouseEvent) =>
       playerTurnHandler(playerHandEvent, this, deck, player, opponent)
 
     dispatchGameAction({
@@ -90,6 +91,18 @@ export default class Game {
     })
   }
 
+  outcome(player: Player, opponent: Opponent) {
+    let outcome
+    if (player.pairs.length > opponent.pairs.length) {
+      outcome = Outcome.Player
+    } else if (player.pairs.length === opponent.pairs.length) {
+      outcome = Outcome.Draw
+    } else {
+      outcome = Outcome.Opponent
+    }
+    return outcome
+  }
+
   end(
     deck: Deck,
     player: Player,
@@ -102,14 +115,7 @@ export default class Game {
       opponent.hand.length === 0 ||
       deck.deck.length === 0
     ) {
-      let outcome
-      if (player.pairs.length > opponent.pairs.length) {
-        outcome = "You won! Well done!"
-      } else if (player.pairs.length === opponent.pairs.length) {
-        outcome = "It's a draw!"
-      } else {
-        outcome = "Your opponent won! Better luck next time!"
-      }
+      const outcome = this.outcome(player, opponent)
 
       this.updateUI(
         deck,

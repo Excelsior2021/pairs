@@ -3,24 +3,28 @@ import { setShowPairsModal } from "../PairsModal/PairsModal"
 import { setShowInstructions } from "../Instructions/Instructions"
 import { setShowQuitGameModal } from "../QuitGameModal/QuitGameModal"
 import { gameDeckHandler } from "../../gameFunctions/deckFunctions"
-import { gameDeckHandler as gameDeckHandlerMultiplayer } from "../../gameFunctions/multiplayerUIFunctions"
+import { dispatchGameAction } from "../MultiplayerSession/MultiplayerSession"
 import { gameStateProp } from "../../types/general"
 import { GameMode } from "../../types/enums"
 import "./Sidebar.scss"
+import Opponent from "../../gameObjects/Opponent"
 
 const Sidebar: Component<gameStateProp> = props => {
   const handleGameDeck = () => {
     if (props.gameState().deckClickable) {
       if (props.gameState().gameMode === GameMode.SinglePlayer)
         gameDeckHandler(
-          props.gameState().playerChosenCardEvent,
-          props.gameState().game,
-          props.gameState().deck,
-          props.gameState().player,
-          props.gameState().opponent
+          props.gameState().playerChosenCardEvent!,
+          props.gameState().game!,
+          props.gameState().deck!,
+          props.gameState().player!,
+          props.gameState().opponent as Opponent
         )
       if (props.gameState().gameMode === GameMode.Multiplayer)
-        gameDeckHandlerMultiplayer(props.gameState().playerRequest)
+        dispatchGameAction({
+          type: "PLAYER_DEALT",
+          playerRequest: props.gameState().playerRequest,
+        })
     }
   }
   return (

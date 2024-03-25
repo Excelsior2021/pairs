@@ -31,12 +31,22 @@ export default class Opponent {
   ) {
     const dealtCard = deck.dealCard()
 
-    if (dealtCard) {
-      if (this.asked) {
-        if (dealtCard.value === this.asked.value) {
+    if (dealtCard && this.asked) {
+      if (dealtCard.value === this.asked.value) {
+        const requestedCardIndex = this.hand.indexOf(this.asked)
+        this.pairs.push(dealtCard)
+        this.pairs.push(this.asked)
+        if (requestedCardIndex !== -1) this.hand.splice(requestedCardIndex, 1)
+        game.updateUI(deck, player, this, playerTurnHandler, dispatchGameAction)
+        return OpponentOutput.DeckMatch
+      }
+
+      for (const card of this.hand) {
+        if (dealtCard.value === card.value) {
+          const handMatchIndex = this.hand.indexOf(card)
           this.pairs.push(dealtCard)
-          this.pairs.push(this.asked)
-          this.hand.splice(this.hand.indexOf(this.asked), 1)
+          this.pairs.push(card)
+          if (handMatchIndex !== -1) this.hand.splice(handMatchIndex, 1)
           game.updateUI(
             deck,
             player,
@@ -44,24 +54,7 @@ export default class Opponent {
             playerTurnHandler,
             dispatchGameAction
           )
-          return OpponentOutput.DeckMatch
-        }
-
-        for (const card of this.hand) {
-          if (dealtCard.value === card.value) {
-            this.pairs.push(dealtCard)
-            this.pairs.push(card)
-            this.hand.splice(this.hand.indexOf(card), 1)
-            game.updateUI(
-              deck,
-              player,
-              this,
-              playerTurnHandler,
-              dispatchGameAction
-            )
-
-            return OpponentOutput.HandMatch
-          }
+          return OpponentOutput.HandMatch
         }
       }
 

@@ -1,14 +1,13 @@
-import { cardRequestMultiplayer } from "./general"
-import { playerHandEventType } from "./general"
 import Card from "../gameObjects/Card"
 import Deck from "../gameObjects/Deck"
 import Player from "../gameObjects/Player"
 import Opponent from "../gameObjects/Opponent"
 import Game from "../gameObjects/Game"
+import { playerRequest } from "./general"
 
 //DECK FUNCTIONS
 export type gameDeckHandlerType = (
-  playerHandEvent: playerHandEventType,
+  playerHandEvent: MouseEvent,
   game: Game,
   deck: Deck,
   player: Player,
@@ -17,12 +16,12 @@ export type gameDeckHandlerType = (
 
 export type gameDeckHandlerMultiplayerType = (
   shuffledDeck: Card[],
-  playerRequest: cardRequestMultiplayer
+  playerRequest: playerRequest
 ) => void
 
 //PLAYER FUNCTIONS
 export type playerMatchType = (
-  playerHandEvent: playerHandEventType,
+  playerHandEvent: MouseEvent,
   game: Game,
   deck: Deck,
   player: Player,
@@ -30,7 +29,7 @@ export type playerMatchType = (
 ) => number | boolean | undefined
 
 export type playerDealtType = (
-  playerHandEvent: playerHandEventType,
+  playerHandEvent: MouseEvent,
   game: Game,
   deck: Deck,
   player: Player,
@@ -38,7 +37,7 @@ export type playerDealtType = (
 ) => number | undefined
 
 export type playerTurnHandlerType = (
-  playerHandEvent: playerHandEventType,
+  playerHandEvent: MouseEvent,
   game: Game,
   deck: Deck,
   player: Player,
@@ -46,10 +45,12 @@ export type playerTurnHandlerType = (
 ) => void
 
 export type playerTurnHandlerMultiplayerType = (
-  playerHandEvent: playerHandEventType,
-  player: Player,
+  playerHandEvent: MouseEvent,
+  player: Player | null,
   clientPlayer: number
 ) => void
+
+export type playerTurnHandlerFactory = (playerHandEvent: MouseEvent) => void
 
 export type playerResponseHandlerType = (
   hasCard: boolean,
@@ -62,9 +63,9 @@ export type playerResponseHandlerType = (
 
 export type playerResponseHandlerMultiplayerType = (
   hasCard: boolean,
-  oppenentRequest: cardRequestMultiplayer,
-  playerHand: Card[],
-  player: number
+  oppenentRequest: playerRequest,
+  player: Player,
+  clientPlayer: number
 ) => void
 
 //OPPONENT FUNCTIONS

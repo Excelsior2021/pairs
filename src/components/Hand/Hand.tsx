@@ -4,7 +4,7 @@ import { handProp } from "../../types/general"
 import "./Hand.scss"
 
 const Hand: Component<handProp> = props => {
-  const handleCardClick = e => {
+  const handleCardClick = (e: MouseEvent) => {
     if (props.playerTurnHandler) props.playerTurnHandler(e)
   }
 
@@ -16,7 +16,7 @@ const Hand: Component<handProp> = props => {
           {card => {
             return (
               <img
-                class={props.playerTurnHandler ? "card card--player" : "card"}
+                class={props.playerTurnHandler! ? "card card--player" : "card"}
                 id={props.player ? card.id : undefined}
                 src={props.player ? card.img : `./cards/back.png`}
                 alt={props.player ? card.id : "opponent card"}

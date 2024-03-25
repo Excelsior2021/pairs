@@ -1,3 +1,8 @@
+import {
+  gameAction,
+  gameActionMultiplayer,
+  playerRequest,
+} from "../types/general"
 import Card from "./Card"
 
 export default class Deck {
@@ -49,5 +54,15 @@ export default class Deck {
     const hand: Card[] = new Array(handSize)
     for (let i = 0; i < handSize; i++) hand[i] = this.dealCard()!
     return hand
+  }
+
+  handlerMultiplayer(
+    playerRequest: playerRequest,
+    dispatchGameAction: (action: gameActionMultiplayer) => void
+  ) {
+    dispatchGameAction({
+      type: "PLAYER_DEALT",
+      playerRequest,
+    })
   }
 }

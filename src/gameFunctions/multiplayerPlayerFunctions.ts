@@ -4,7 +4,7 @@ import {
   playerResponseHandlerMultiplayerType,
   playerTurnHandlerMultiplayerType,
 } from "../types/function-types"
-import { cardRequestMultiplayer } from "../types/general"
+import { playerRequest } from "../types/general"
 
 export const playerTurnHandler: playerTurnHandlerMultiplayerType = (
   playerHandEvent,
@@ -12,11 +12,12 @@ export const playerTurnHandler: playerTurnHandlerMultiplayerType = (
   clientPlayer
 ) => {
   let chosenCard: Card
-  for (const card of player.hand)
-    if (card.id === playerHandEvent.target.id) {
-      chosenCard = card
-      break
-    }
+  if (player && playerHandEvent.target)
+    for (const card of player.hand)
+      if (card.id === playerHandEvent.target.id) {
+        chosenCard = card
+        break
+      }
 
   dispatchGameAction({
     type: "PLAYER_REQUEST",
@@ -26,13 +27,13 @@ export const playerTurnHandler: playerTurnHandlerMultiplayerType = (
 
 export const playerResponseHandler: playerResponseHandlerMultiplayerType = (
   hasCard,
-  opponentRequest,
+  opponentRequestMultiplayer,
   player,
   clientPlayer
 ) => {
-  const { card: opponentRequestCard } = opponentRequest
+  const { card: opponentRequestCard } = opponentRequestMultiplayer
   let log
-  let playerCard: cardRequestMultiplayer
+  let playerCard: playerRequest
 
   if (hasCard) {
     for (const card of player.hand) {
@@ -42,7 +43,7 @@ export const playerResponseHandler: playerResponseHandlerMultiplayerType = (
         dispatchGameAction({
           type: "PLAYER_MATCH",
           playerCard,
-          opponentRequest,
+          opponentRequestMultiplayer,
           log,
         })
         return
@@ -68,7 +69,11 @@ export const playerResponseHandler: playerResponseHandlerMultiplayerType = (
       }
     }
     const log = "Your opponent must now deal a card from the deck."
-    dispatchGameAction({ type: "NO_PLAYER_MATCH", opponentRequest, log })
+    dispatchGameAction({
+      type: "NO_PLAYER_MATCH",
+      opponentRequestMultiplayer,
+      log,
+    })
   }
 }
 

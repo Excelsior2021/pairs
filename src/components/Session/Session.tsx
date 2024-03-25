@@ -1,4 +1,4 @@
-import { Component } from "solid-js"
+import { Component, createEffect } from "solid-js"
 import { createReducer } from "@solid-primitives/memo"
 import Game from "../Game/Game"
 import Sidebar from "../Sidebar/Sidebar"
@@ -27,7 +27,7 @@ const initialGameState = {
   player: null,
   opponent: null,
   playerHandClickable: false,
-  playerTurnHandler: null,
+  playerTurnHandlerFactory: null,
   playerChosenCardEvent: null,
   playerOutput: null,
   opponentTurn: false,
@@ -44,10 +44,10 @@ const gameReducer = (
 ): gameStateType => {
   switch (action.type) {
     case "UPDATE": {
-      let playerTurnHandler
+      let playerTurnHandlerFactory
       if (action.playerHandClickable)
-        playerTurnHandler = action.playerTurnHandlerWrapper!
-      else playerTurnHandler = null
+        playerTurnHandlerFactory = action.playerTurnHandlerWrapper!
+      else playerTurnHandlerFactory = null
 
       return {
         ...state,
@@ -55,11 +55,12 @@ const gameReducer = (
         deck: action.deck!,
         player: action.player!,
         opponent: action.opponent!,
-        playerTurnHandler,
+        playerTurnHandlerFactory,
         playerChosenCardEvent: action.playerChosenCardEvent!,
         opponentTurn: action.opponentTurn!,
         opponentRequest: action.opponentRequest!,
         deckClickable: action.deckClickable!,
+        gameOver: false,
       }
     }
     case "PLAYER_ACTION": {
