@@ -1,8 +1,4 @@
-import {
-  gameAction,
-  gameActionMultiplayer,
-  playerRequest,
-} from "../types/general"
+import { gameActionMultiplayer, playerRequest } from "../types/general"
 import Card from "./Card"
 
 export default class Deck {

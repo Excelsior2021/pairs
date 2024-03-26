@@ -1,4 +1,3 @@
-import playerFunctions from "./playerFunctions"
 import { dispatchGameAction } from "../components/Session/Session"
 import { gameDeckHandlerType } from "../types/function-types"
 import { PlayerOutput } from "../types/enums"
@@ -10,12 +9,13 @@ export const gameDeckHandler: gameDeckHandlerType = (
   player,
   opponent
 ) => {
-  const playerOutput = playerFunctions.playerDealt(
+  const playerOutput = player.dealt(
     playerHandEvent,
     game,
     deck,
     player,
-    opponent
+    opponent,
+    dispatchGameAction
   )
 
   dispatchGameAction({
@@ -28,21 +28,9 @@ export const gameDeckHandler: gameDeckHandlerType = (
     playerOutput === PlayerOutput.HandMatch ||
     playerOutput === PlayerOutput.NoMatch
   )
-    opponent.turn(
-      game,
-      deck,
-      player,
-      playerFunctions.playerTurnHandler,
-      dispatchGameAction
-    )
+    opponent.turn(game, deck, player, dispatchGameAction)
 
-  game.end(
-    deck,
-    player,
-    opponent,
-    playerFunctions.playerTurnHandler,
-    dispatchGameAction
-  )
+  game.end(deck, player, opponent, dispatchGameAction)
 }
 
 export default {

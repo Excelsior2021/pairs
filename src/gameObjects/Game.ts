@@ -7,10 +7,7 @@ import Player from "./Player"
 import { Outcome } from "../types/enums"
 
 export default class Game {
-  start(
-    playerTurnHandler: playerTurnHandlerType,
-    dispatchGameAction: (action: gameAction) => void
-  ) {
+  start(dispatchGameAction: (action: gameAction) => void) {
     const deck = new Deck()
     const player = new Player()
     const opponent = new Opponent()
@@ -26,14 +23,7 @@ export default class Game {
     const log =
       "The cards have been dealt. Any initial pair of cards have been added to your Pairs. Please select a card from your hand to request a match with your opponent."
 
-    this.updateUI(
-      deck,
-      player,
-      opponent,
-      playerTurnHandler,
-      dispatchGameAction,
-      true
-    )
+    this.updateUI(deck, player, opponent, dispatchGameAction, true)
     dispatchGameAction({ type: "GAME_LOG", log })
   }
 
@@ -65,7 +55,6 @@ export default class Game {
     deck: Deck,
     player: Player,
     opponent: Opponent,
-    playerTurnHandler: playerTurnHandlerType,
     dispatchGameAction: (action: gameAction) => void,
     playerHandClickable = false,
     playerChosenCardEvent: MouseEvent | null = null,
@@ -74,7 +63,14 @@ export default class Game {
     deckClickable = false
   ) {
     const playerTurnHandlerWrapper = (playerHandEvent: MouseEvent) =>
-      playerTurnHandler(playerHandEvent, this, deck, player, opponent)
+      player.turn(
+        playerHandEvent,
+        this,
+        deck,
+        player,
+        opponent,
+        dispatchGameAction
+      )
 
     dispatchGameAction({
       type: "UPDATE",
@@ -107,7 +103,6 @@ export default class Game {
     deck: Deck,
     player: Player,
     opponent: Opponent,
-    playerTurnHandler: playerTurnHandlerType,
     dispatchGameAction: (action: gameAction) => void
   ) {
     if (
@@ -117,13 +112,7 @@ export default class Game {
     ) {
       const outcome = this.outcome(player, opponent)
 
-      this.updateUI(
-        deck,
-        player,
-        opponent,
-        playerTurnHandler,
-        dispatchGameAction
-      )
+      this.updateUI(deck, player, opponent, dispatchGameAction)
       dispatchGameAction({ type: "GAME_OVER", outcome, gameOver: true })
       return true
     }

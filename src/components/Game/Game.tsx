@@ -1,11 +1,11 @@
 import { Component, createEffect, createSignal } from "solid-js"
 import Hand from "../Hand/Hand"
 import { gameStateProp } from "../../types/general"
-import { playerResponseHandler } from "../../gameFunctions/playerFunctions"
 import { playerResponseHandler as playerResponseHandlerMultiplayer } from "../../gameFunctions/multiplayerPlayerFunctions"
 import { GameMode } from "../../types/enums"
 import Opponent from "../../gameObjects/Opponent"
 import Card from "../../gameObjects/Card"
+import { dispatchGameAction } from "../Session/Session"
 import "./Game.scss"
 
 const Game: Component<gameStateProp> = props => {
@@ -20,14 +20,17 @@ const Game: Component<gameStateProp> = props => {
 
   const handlePlayerResponse = (hasCard: boolean) => {
     if (props.gameState().gameMode === GameMode.SinglePlayer)
-      playerResponseHandler(
-        hasCard,
-        props.gameState().game!,
-        props.gameState().deck!,
-        props.gameState().player!,
-        props.gameState().opponent! as Opponent,
-        props.gameState().opponentRequest!
-      )
+      props
+        .gameState()
+        .player!.response(
+          hasCard,
+          props.gameState().game!,
+          props.gameState().deck!,
+          props.gameState().player!,
+          props.gameState().opponent! as Opponent,
+          props.gameState().opponentRequest!,
+          dispatchGameAction
+        )
     if (props.gameState().gameMode === GameMode.Multiplayer) {
       playerResponseHandlerMultiplayer(
         hasCard,

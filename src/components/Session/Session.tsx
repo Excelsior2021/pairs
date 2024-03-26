@@ -16,7 +16,7 @@ import {
   PlayerMatchSubHeading,
   PlayerOutput,
 } from "../../types/enums"
-import { playerTurnHandler } from "../../gameFunctions/playerFunctions"
+// import { playerTurnHandler } from "../../gameFunctions/playerFunctions"
 import { GameMode } from "../../types/enums"
 import "./Session.scss"
 
@@ -130,7 +130,7 @@ export const [gameState, dispatchGameAction] = createReducer(
 )
 
 const Session: Component = () => {
-  new GameObject().start(playerTurnHandler, dispatchGameAction)
+  new GameObject().start(dispatchGameAction)
   return (
     <div class="session">
       <Game gameState={gameState} />

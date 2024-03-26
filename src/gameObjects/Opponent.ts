@@ -2,7 +2,6 @@ import Card from "./Card"
 import Deck from "./Deck"
 import Player from "./Player"
 import Game from "./Game"
-import { playerTurnHandlerType } from "../types/function-types"
 import { gameAction } from "../types/general"
 import { OpponentOutput } from "../types/enums"
 
@@ -26,7 +25,6 @@ export default class Opponent {
     game: Game,
     deck: Deck,
     player: Player,
-    playerTurnHandler: playerTurnHandlerType,
     dispatchGameAction: (action: gameAction) => void
   ) {
     const dealtCard = deck.dealCard()
@@ -37,7 +35,7 @@ export default class Opponent {
         this.pairs.push(dealtCard)
         this.pairs.push(this.asked)
         if (requestedCardIndex !== -1) this.hand.splice(requestedCardIndex, 1)
-        game.updateUI(deck, player, this, playerTurnHandler, dispatchGameAction)
+        game.updateUI(deck, player, this, dispatchGameAction)
         return OpponentOutput.DeckMatch
       }
 
@@ -47,19 +45,13 @@ export default class Opponent {
           this.pairs.push(dealtCard)
           this.pairs.push(card)
           if (handMatchIndex !== -1) this.hand.splice(handMatchIndex, 1)
-          game.updateUI(
-            deck,
-            player,
-            this,
-            playerTurnHandler,
-            dispatchGameAction
-          )
+          game.updateUI(deck, player, this, dispatchGameAction)
           return OpponentOutput.HandMatch
         }
       }
 
       this.hand.push(dealtCard)
-      game.updateUI(deck, player, this, playerTurnHandler, dispatchGameAction)
+      game.updateUI(deck, player, this, dispatchGameAction)
       return OpponentOutput.NoMatch
     }
   }
@@ -68,16 +60,9 @@ export default class Opponent {
     game: Game,
     deck: Deck,
     player: Player,
-    playerTurnHandler: playerTurnHandlerType,
     dispatchGameAction: (action: gameAction) => void
   ) {
-    const gameOver = game.end(
-      deck,
-      player,
-      this,
-      playerTurnHandler,
-      dispatchGameAction
-    )
+    const gameOver = game.end(deck, player, this, dispatchGameAction)
 
     if (!gameOver) {
       const opponentRequest = this.ask()
@@ -91,7 +76,6 @@ export default class Opponent {
         deck,
         player,
         this,
-        playerTurnHandler,
         dispatchGameAction,
         false,
         null,
