@@ -1,5 +1,9 @@
 import { OpponentOutput, PlayerOutput } from "../types/enums"
+import { gameAction } from "../types/general"
 import Card from "./Card"
+import Deck from "./Deck"
+import Game from "./Game"
+import Opponent from "./Opponent"
 
 export default class Player {
   hand: Card[]
@@ -11,12 +15,12 @@ export default class Player {
   }
 
   match(
-    playerChosenCardEvent,
-    game,
-    deck,
-    player,
-    opponent,
-    dispatchGameAction
+    playerChosenCardEvent: MouseEvent,
+    game: Game,
+    deck: Deck,
+    player: Player,
+    opponent: Opponent,
+    dispatchGameAction: (action: gameAction) => void
   ) {
     let chosenCard
     const eventTarget = playerChosenCardEvent.target as HTMLImageElement
@@ -46,12 +50,12 @@ export default class Player {
   }
 
   dealt(
-    playerChosenCardEvent,
-    game,
-    deck,
-    player,
-    opponent,
-    dispatchGameAction
+    playerChosenCardEvent: MouseEvent,
+    game: Game,
+    deck: Deck,
+    player: Player,
+    opponent: Opponent,
+    dispatchGameAction: (action: gameAction) => void
   ) {
     const dealtCard = deck.dealCard()
     let chosenCard
@@ -91,12 +95,12 @@ export default class Player {
   }
 
   turn(
-    playerChosenCardEvent,
-    game,
-    deck,
-    player,
-    opponent,
-    dispatchGameAction
+    playerChosenCardEvent: MouseEvent,
+    game: Game,
+    deck: Deck,
+    player: Player,
+    opponent: Opponent,
+    dispatchGameAction: (action: gameAction) => void
   ) {
     const playerOutput = this.match(
       playerChosenCardEvent,
@@ -137,13 +141,13 @@ export default class Player {
   }
 
   response(
-    hasCard,
-    game,
-    deck,
-    player,
-    opponent,
-    opponentRequest,
-    dispatchGameAction
+    hasCard: boolean,
+    game: Game,
+    deck: Deck,
+    player: Player,
+    opponent: Opponent,
+    opponentRequest: Card,
+    dispatchGameAction: (action: gameAction) => void
   ) {
     const opponentTurn = () =>
       opponent.turn(game, deck, player, dispatchGameAction)
