@@ -1,4 +1,4 @@
-import { Component, createEffect } from "solid-js"
+import { Component } from "solid-js"
 import { createReducer } from "@solid-primitives/memo"
 import Game from "../Game/Game"
 import Sidebar from "../Sidebar/Sidebar"
@@ -15,9 +15,8 @@ import {
   PlayerMatchHeading,
   PlayerMatchSubHeading,
   PlayerOutput,
+  GameMode,
 } from "../../types/enums"
-// import { playerTurnHandler } from "../../gameFunctions/playerFunctions"
-import { GameMode } from "../../types/enums"
 import "./Session.scss"
 
 const initialGameState = {

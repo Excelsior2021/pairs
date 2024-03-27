@@ -66,10 +66,15 @@ const MultiplayerMenu: Component = () => {
       </div>
       {pleaseWait() && <p class="multiplayer-menu__text">please wait...</p>}
       {serverNotConnected() && !pleaseWait() && (
-        <p class="multiplayer-menu__text">
-          There seems to be an issue connecting to the server. Please check your
-          internet connection or try again later.
-        </p>
+        <>
+          <p class="multiplayer-menu__text">
+            Please wait a few moments, the server may be initializing.
+          </p>
+          <p class="multiplayer-menu__text">
+            Otherwise, there may be an issue connecting to the server. Please
+            try again later.
+          </p>
+        </>
       )}
     </div>
   )

@@ -1,5 +1,13 @@
-import { gameActionMultiplayer, playerRequest } from "../types/general"
-import Card from "./Card"
+import Card, { nonNumValue, suit } from "./Card"
+import Game from "./Game"
+import Opponent from "./Opponent"
+import Player from "./Player"
+import {
+  gameAction,
+  gameActionMultiplayer,
+  playerRequest,
+} from "../types/general"
+import { PlayerOutput } from "../types/enums"
 
 export default class Deck {
   deck: Card[]
@@ -10,11 +18,16 @@ export default class Deck {
 
   create() {
     const deck: Card[] = new Array(52)
-    const non_num_cards = ["ace", "jack", "queen", "king"]
-    const suits = ["clubs", "diamonds", "hearts", "spades"]
+    const non_num_cards = [
+      nonNumValue.ace,
+      nonNumValue.jack,
+      nonNumValue.queen,
+      nonNumValue.king,
+    ]
+    const suits = [suit.clubs, suit.diamonds, suit.hearts, suit.spades]
     let deckIndex = 0
 
-    for (const value of non_num_cards) {
+    const createSuits = (value: number | nonNumValue) => {
       for (const suit of suits) {
         const id = `${value}_of_${suit}`
         const img = `./cards/${id}.png`
@@ -23,14 +36,9 @@ export default class Deck {
       }
     }
 
-    for (let value = 2; value < 11; value++) {
-      for (const suit of suits) {
-        const id = `${value}_of_${suit}`
-        const img = `./cards/${id}.png`
-        deck[deckIndex] = new Card(id, value, suit, img)
-        deckIndex++
-      }
-    }
+    for (const value of non_num_cards) createSuits(value)
+
+    for (let value = 2; value < 11; value++) createSuits(value)
 
     return deck
   }
@@ -50,6 +58,38 @@ export default class Deck {
     const hand: Card[] = new Array(handSize)
     for (let i = 0; i < handSize; i++) hand[i] = this.dealCard()!
     return hand
+  }
+
+  handler(
+    playerHandEvent: MouseEvent,
+    game: Game,
+    deck: Deck,
+    player: Player,
+    opponent: Opponent,
+    dispatchGameAction: (action: gameAction) => void
+  ) {
+    const playerOutput = player.dealt(
+      playerHandEvent,
+      game,
+      deck,
+      player,
+      opponent,
+      dispatchGameAction
+    )
+
+    dispatchGameAction({
+      type: "PLAYER_ACTION",
+      playerOutput,
+      player,
+    })
+
+    if (
+      playerOutput === PlayerOutput.HandMatch ||
+      playerOutput === PlayerOutput.NoMatch
+    )
+      opponent.turn(game, deck, player, dispatchGameAction)
+
+    game.end(deck, player, opponent, dispatchGameAction)
   }
 
   handlerMultiplayer(
