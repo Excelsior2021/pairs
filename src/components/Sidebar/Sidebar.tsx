@@ -2,30 +2,19 @@ import { Component } from "solid-js"
 import { setShowPairsModal } from "../PairsModal/PairsModal"
 import { setShowInstructions } from "../Instructions/Instructions"
 import { setShowQuitGameModal } from "../QuitGameModal/QuitGameModal"
-import { dispatchGameAction } from "../Session/Session"
 import { dispatchGameAction as dispatchGameActionMultiplayer } from "../MultiplayerSession/MultiplayerSession"
 import { gameStateProp } from "../../types/general"
-import { GameMode } from "../../types/enums"
+import { GameAction, GameMode } from "../../types/enums"
 import "./Sidebar.scss"
-import Opponent from "../../gameObjects/Opponent"
 
 const Sidebar: Component<gameStateProp> = props => {
-  const handleGameDeck = () => {
+  const gameDeckHandler = () => {
     if (props.gameState().deckClickable) {
       if (props.gameState().gameMode === GameMode.SinglePlayer)
-        props
-          .gameState()
-          .deck?.handler(
-            props.gameState().playerChosenCardEvent!,
-            props.gameState().game!,
-            props.gameState().deck!,
-            props.gameState().player!,
-            props.gameState().opponent as Opponent,
-            dispatchGameAction
-          )
+        props.gameState().deckHandlerFactory!()
       if (props.gameState().gameMode === GameMode.Multiplayer)
         dispatchGameActionMultiplayer({
-          type: "PLAYER_DEALT",
+          type: GameAction.PLAYER_DEALT,
           playerRequest: props.gameState().playerRequest,
         })
     }
@@ -42,7 +31,7 @@ const Sidebar: Component<gameStateProp> = props => {
           }
           src="./cards/back.png"
           alt="game deck"
-          onclick={handleGameDeck}
+          onclick={gameDeckHandler}
         />
       </div>
       <div class="sidebar__actions">

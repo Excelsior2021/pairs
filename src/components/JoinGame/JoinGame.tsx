@@ -7,6 +7,7 @@ import {
 } from "../GameScreen/GameScreen"
 import { dispatchGameAction } from "../MultiplayerSession/MultiplayerSession"
 import { io, Socket } from "socket.io-client"
+import { GameAction } from "../../types/enums"
 import "./JoinGame.scss"
 
 const JoinGame: Component = () => {
@@ -14,7 +15,9 @@ const JoinGame: Component = () => {
   const [sessionID, setSessionID] = createSignal("")
   const [sessionIDNotValid, setSessionIDNotValid] = createSignal(false)
   const [noSessionExists, setNoSessionExists] = createSignal(false)
-  const [serverConnected, setServerConnected] = createSignal(true)
+  const [serverConnected, setServerConnected] = createSignal<boolean | null>(
+    null
+  )
   setSocket(socket)
 
   const joinGameHandler = (socket: Socket, sessionID: string) => {
@@ -32,14 +35,10 @@ const JoinGame: Component = () => {
 
     socket.emit("join_session", sessionID)
 
-    socket.on("no-sessionID", () => {
-      setNoSessionExists(true)
-      return
-    })
+    socket.on("no-sessionID", () => setNoSessionExists(true))
 
     socket.on("sessionID-exists", () => {
-      dispatchGameAction({ type: "JOIN_SESSION", sessionID })
-
+      dispatchGameAction({ type: GameAction.JOIN_SESSION, sessionID })
       setJoinGame(false)
       setMultiplayerSessionStarted(true)
     })
@@ -67,11 +66,10 @@ const JoinGame: Component = () => {
       )}
       {noSessionExists() && (
         <p class="join-game__text join-game__text--error">
-          This session does not exist. Please check that the session ID is
-          correct.
+          This session does not exist. Please check the session ID is correct.
         </p>
       )}
-      {!serverConnected() && (
+      {serverConnected() === false && (
         <p class="join-game__text join-game__text--error">
           There seems to be an issue connecting to the server. Please check your
           internet connection or try again later.
@@ -88,7 +86,6 @@ const JoinGame: Component = () => {
           onclick={() => {
             setJoinGame(false)
             setMultiplayerMenu(true)
-            setServerConnected(true)
             setSessionIDNotValid(false)
             setNoSessionExists(false)
             socket.disconnect()

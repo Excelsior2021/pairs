@@ -1,5 +1,6 @@
 import { dispatchGameAction } from "../components/MultiplayerSession/MultiplayerSession"
 import Card from "../gameObjects/Card"
+import { GameAction } from "../types/enums"
 import {
   playerResponseHandlerMultiplayerType,
   playerTurnHandlerMultiplayerType,
@@ -12,15 +13,16 @@ export const playerTurnHandler: playerTurnHandlerMultiplayerType = (
   clientPlayer
 ) => {
   let chosenCard: Card
-  if (player && playerHandEvent.target)
+  const eventTarget = playerHandEvent.target as HTMLImageElement
+  if (player && eventTarget)
     for (const card of player.hand)
-      if (card.id === playerHandEvent.target.id) {
+      if (card.id === eventTarget.id) {
         chosenCard = card
         break
       }
 
   dispatchGameAction({
-    type: "PLAYER_REQUEST",
+    type: GameAction.PLAYER_REQUEST,
     playerRequest: { card: chosenCard!, clientPlayer },
   })
 }
@@ -41,7 +43,7 @@ export const playerResponseHandler: playerResponseHandlerMultiplayerType = (
         log = `It's your opponent's turn again.`
         playerCard = { clientPlayer, card }
         dispatchGameAction({
-          type: "PLAYER_MATCH",
+          type: GameAction.PLAYER_MATCH,
           playerCard,
           opponentRequestMultiplayer,
           log,
@@ -51,7 +53,7 @@ export const playerResponseHandler: playerResponseHandlerMultiplayerType = (
     }
     log = `Are you sure? Do you have a ${opponentRequestCard.value}?`
     dispatchGameAction({
-      type: "PLAYER_MATCH",
+      type: GameAction.PLAYER_MATCH,
       log,
     })
     return
@@ -62,7 +64,7 @@ export const playerResponseHandler: playerResponseHandlerMultiplayerType = (
       if (card.value === opponentRequestCard.value) {
         const log = `Are you sure? Do you have a ${opponentRequestCard.value}?`
         dispatchGameAction({
-          type: "PLAYER_MATCH",
+          type: GameAction.PLAYER_MATCH,
           log,
         })
         return
@@ -70,7 +72,7 @@ export const playerResponseHandler: playerResponseHandlerMultiplayerType = (
     }
     const log = "Your opponent must now deal a card from the deck."
     dispatchGameAction({
-      type: "NO_PLAYER_MATCH",
+      type: GameAction.NO_PLAYER_MATCH,
       opponentRequestMultiplayer,
       log,
     })

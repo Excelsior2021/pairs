@@ -1,9 +1,5 @@
 import { Accessor } from "solid-js"
 import { Socket } from "socket.io-client"
-import {
-  playerTurnHandlerFactory,
-  playerTurnHandlerType,
-} from "./function-types"
 import Card from "../gameObjects/Card"
 import Player from "../gameObjects/Player"
 import Opponent from "../gameObjects/Opponent"
@@ -43,9 +39,11 @@ export type gameStateType = {
   deck?: Deck | null
   player?: Player | null
   opponent?: Opponent | Player | null
+  playerTurnHandlerFactory?: ((playerHandEvent: MouseEvent) => void) | null
   playerHandClickable?: boolean
-  playerTurnHandlerFactory?: playerTurnHandlerFactory | null
-  playerChosenCardEvent?: MouseEvent | null
+  playerResponseHandlerFactory?: ((hasCard: boolean) => void) | null
+  deckHandlerFactory?: (() => void) | null
+  deckClickable: boolean
   playerOutput: number | null
   opponentTurn: boolean
   opponentRequest?: Card | null
@@ -54,7 +52,6 @@ export type gameStateType = {
   log: string
   outcome: string
   gameOver: boolean
-  deckClickable: boolean
   //multiplayer
   shuffledDeck?: Card[] | null
   socket?: Socket
@@ -70,9 +67,11 @@ export type gameAction = {
   deck?: Deck
   player?: Player
   opponent?: Opponent
+  playerTurnHandlerFactory?: (playerHandEvent: MouseEvent) => void
   playerHandClickable?: boolean
-  playerTurnHandlerWrapper?: (playerHandEvent: MouseEvent) => void
-  playerChosenCardEvent?: MouseEvent | null
+  playerResponseHandlerFactory?: (hasCard: boolean) => void
+  deckHandlerFactory?: () => void
+  deckClickable?: boolean
   playerOutput?: number | boolean
   opponentTurn?: boolean
   opponentRequest?: Card | null
@@ -81,7 +80,6 @@ export type gameAction = {
   opponentAsked?: Card
   outcome?: string
   gameOver?: boolean
-  deckClickable?: boolean
 }
 
 export type gameActionMultiplayer = {
@@ -90,7 +88,7 @@ export type gameActionMultiplayer = {
   opponent?: Player
   shuffledDeck?: Card[]
   playerHandClickable?: boolean
-  playerTurnHandler?: playerTurnHandlerType
+  playerTurnHandler?: (playerHandEvent: MouseEvent) => void
   playerOutput?: number | boolean
   playerCard?: playerRequest
   opponentRequestMultiplayer?: playerRequest | null

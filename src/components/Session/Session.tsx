@@ -16,6 +16,7 @@ import {
   PlayerMatchSubHeading,
   PlayerOutput,
   GameMode,
+  GameAction,
 } from "../../types/enums"
 import "./Session.scss"
 
@@ -25,8 +26,11 @@ const initialGameState = {
   deck: null,
   player: null,
   opponent: null,
-  playerHandClickable: false,
   playerTurnHandlerFactory: null,
+  playerHandClickable: false,
+  playerResponseHandlerFactory: null,
+  deckHandlerFactory: null,
+  deckClickable: false,
   playerChosenCardEvent: null,
   playerOutput: null,
   opponentTurn: false,
@@ -34,7 +38,6 @@ const initialGameState = {
   log: "",
   outcome: "",
   gameOver: false,
-  deckClickable: false,
 }
 
 const gameReducer = (
@@ -42,27 +45,29 @@ const gameReducer = (
   action: gameAction
 ): gameStateType => {
   switch (action.type) {
-    case "UPDATE": {
-      let playerTurnHandlerFactory
+    case GameAction.UPDATE: {
       if (action.playerHandClickable)
-        playerTurnHandlerFactory = action.playerTurnHandlerWrapper!
-      else playerTurnHandlerFactory = null
+        state.playerTurnHandlerFactory = action.playerTurnHandlerFactory
+      else state.playerTurnHandlerFactory = null
+
+      if (action.deckClickable)
+        state.deckHandlerFactory = action.deckHandlerFactory
+      else state.deckHandlerFactory = null
+
+      if (!state.playerResponseHandlerFactory)
+        state.playerResponseHandlerFactory = action.playerResponseHandlerFactory
 
       return {
         ...state,
-        game: action.game!,
         deck: action.deck!,
         player: action.player!,
         opponent: action.opponent!,
-        playerTurnHandlerFactory,
-        playerChosenCardEvent: action.playerChosenCardEvent!,
         opponentTurn: action.opponentTurn!,
-        opponentRequest: action.opponentRequest!,
         deckClickable: action.deckClickable!,
         gameOver: false,
       }
     }
-    case "PLAYER_ACTION": {
+    case GameAction.PLAYER_ACTION: {
       if (action.playerOutput !== PlayerOutput.NoOpponentMatch)
         setShowPlayerModal(true)
 
@@ -103,13 +108,13 @@ const gameReducer = (
           return state
       }
     }
-    case "GAME_LOG": {
+    case GameAction.GAME_LOG: {
       return {
         ...state,
         log: action.log!,
       }
     }
-    case "GAME_OVER": {
+    case GameAction.GAME_OVER: {
       if (action.gameOver)
         return {
           ...state,

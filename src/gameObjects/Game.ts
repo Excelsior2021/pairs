@@ -3,7 +3,7 @@ import Card from "./Card"
 import Deck from "./Deck"
 import Opponent from "./Opponent"
 import Player from "./Player"
-import { Outcome } from "../types/enums"
+import { GameAction, Outcome } from "../types/enums"
 
 export default class Game {
   start(dispatchGameAction: (action: gameAction) => void) {
@@ -23,7 +23,7 @@ export default class Game {
       "The cards have been dealt. Any initial pair of cards have been added to your Pairs. Please select a card from your hand to request a match with your opponent."
 
     this.updateUI(deck, player, opponent, dispatchGameAction, true)
-    dispatchGameAction({ type: "GAME_LOG", log })
+    dispatchGameAction({ type: GameAction.GAME_LOG, log })
   }
 
   initialPairs(hand: Card[]) {
@@ -56,33 +56,29 @@ export default class Game {
     opponent: Opponent,
     dispatchGameAction: (action: gameAction) => void,
     playerHandClickable = false,
-    playerChosenCardEvent: MouseEvent | null = null,
     opponentTurn = false,
-    opponentRequest: Card | null = null,
     deckClickable = false
   ) {
-    const playerTurnHandlerWrapper = (playerHandEvent: MouseEvent) =>
-      player.turn(
-        playerHandEvent,
-        this,
-        deck,
-        player,
-        opponent,
-        dispatchGameAction
-      )
+    const playerTurnHandlerFactory = (playerHandEvent: MouseEvent) =>
+      player.turn(playerHandEvent, this, deck, opponent, dispatchGameAction)
+
+    const playerResponseHandlerFactory = (hasCard: boolean) =>
+      player.response(hasCard, this, deck, opponent, dispatchGameAction)
+
+    const deckHandlerFactory = () =>
+      deck.handler(this, player, opponent, dispatchGameAction)
 
     dispatchGameAction({
-      type: "UPDATE",
-      game: this,
+      type: GameAction.UPDATE,
       deck,
       player,
       opponent,
-      playerTurnHandlerWrapper,
+      playerTurnHandlerFactory,
       playerHandClickable,
-      playerChosenCardEvent,
-      opponentTurn,
-      opponentRequest,
+      playerResponseHandlerFactory,
+      deckHandlerFactory,
       deckClickable,
+      opponentTurn,
     })
   }
 
@@ -112,7 +108,11 @@ export default class Game {
       const outcome = this.outcome(player, opponent)
 
       this.updateUI(deck, player, opponent, dispatchGameAction)
-      dispatchGameAction({ type: "GAME_OVER", outcome, gameOver: true })
+      dispatchGameAction({
+        type: GameAction.GAME_OVER,
+        outcome,
+        gameOver: true,
+      })
       return true
     }
     return false

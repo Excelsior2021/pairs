@@ -3,23 +3,26 @@ import { createReducer } from "@solid-primitives/memo"
 import Game from "../Game/Game"
 import Sidebar from "../Sidebar/Sidebar"
 import CreateGame from "../CreateGame/CreateGame"
+import PairsModal from "../PairsModal/PairsModal"
+import QuitGameModal from "../QuitGameModal/QuitGameModal"
 import PlayerModal, {
   setShowPlayerModal,
   setMatchStatusHeading,
   setMatchStatusSubHeading,
 } from "../PlayerModal/PlayerModal"
-import PairsModal from "../PairsModal/PairsModal"
-import QuitGameModal from "../QuitGameModal/QuitGameModal"
-import playerMultiplayerFunctions from "../../gameFunctions/multiplayerPlayerFunctions"
+import { io } from "socket.io-client"
+import Player from "../../gameObjects/Player"
+import {
+  playerTurnHandler,
+  playerResponseHandler,
+} from "../../gameFunctions/multiplayerEventFunctions"
 import {
   clientStateMutiplayer,
   gameActionMultiplayer,
   gameStateType,
   multiplayerSessionProps,
 } from "../../types/general"
-import { PlayerOutput, GameMode, Outcome } from "../../types/enums"
-import Player from "../../gameObjects/Player"
-import { playerTurnHandlerFactory } from "../../types/function-types"
+import { PlayerOutput, GameMode, Outcome, GameAction } from "../../types/enums"
 import "../Session/Session.scss"
 
 const initialGameState = {
@@ -31,8 +34,8 @@ const initialGameState = {
   playerOutput: null,
   log: "",
   outcome: "",
-  socket: null,
-  clientPlayer: null,
+  socket: io(),
+  clientPlayer: 0,
   sessionID: "",
   gameState: null,
   opponentTurn: false,
@@ -46,26 +49,26 @@ const multiplayerReducer = (
   action: gameActionMultiplayer
 ): gameStateType => {
   switch (action.type) {
-    case "START_SESSION": {
+    case GameAction.START_SESSION: {
       return {
         ...state,
         socket: action.socket!,
       }
     }
-    case "CREATE_SESSION": {
+    case GameAction.CREATE_SESSION: {
       if (state.socket) state.socket.emit("create_session", action.sessionID)
       return {
         ...state,
         sessionID: action.sessionID,
       }
     }
-    case "JOIN_SESSION": {
+    case GameAction.JOIN_SESSION: {
       return {
         ...state,
         sessionID: action.sessionID,
       }
     }
-    case "UPDATE": {
+    case GameAction.UPDATE: {
       if (state.opponentTurn) state.opponentTurn = false
       const { player1, player2, shuffledDeck } = action.serverState!
 
@@ -74,7 +77,9 @@ const multiplayerReducer = (
       let log: string = ""
       let gameState: clientStateMutiplayer | null = null
       let clientPlayer: number
-      let playerTurnHandlerFactory: playerTurnHandlerFactory | null = null
+      let playerTurnHandlerFactory:
+        | ((playerHandEvent: MouseEvent) => void)
+        | null = null
 
       switch (action.clientPlayer) {
         case 1: {
@@ -109,11 +114,7 @@ const multiplayerReducer = (
 
       if (action.clientPlayer === action.playerTurn)
         playerTurnHandlerFactory = (playerHandEvent: MouseEvent) =>
-          playerMultiplayerFunctions.playerTurnHandler(
-            playerHandEvent,
-            player,
-            clientPlayer
-          )
+          playerTurnHandler(playerHandEvent, player, clientPlayer)
 
       return {
         ...state,
@@ -126,7 +127,7 @@ const multiplayerReducer = (
         playerTurnHandlerFactory,
       }
     }
-    case "PLAYER_REQUEST": {
+    case GameAction.PLAYER_REQUEST: {
       if (state.socket)
         state.socket.emit(
           "player_request",
@@ -142,7 +143,7 @@ const multiplayerReducer = (
         playerTurnHandlerFactory: null,
       }
     }
-    case "PLAYER_RESPONSE": {
+    case GameAction.PLAYER_RESPONSE: {
       const { card } = action.opponentRequestMultiplayer! //opponentRequest
       let opponentTurn = false
 
@@ -151,14 +152,23 @@ const multiplayerReducer = (
 
       const log = `Do you have a ${card.value}?`
 
+      const playerResponseHandlerFactory = (hasCard: boolean) =>
+        playerResponseHandler(
+          hasCard,
+          action.opponentRequestMultiplayer!,
+          state.player!,
+          state.clientPlayer!
+        )
+
       return {
         ...state,
         log,
+        playerResponseHandlerFactory,
         opponentRequestMultiplayer: action.opponentRequestMultiplayer,
         opponentTurn,
       }
     }
-    case "PLAYER_MATCH": {
+    case GameAction.PLAYER_MATCH: {
       if (action.playerCard && action.opponentRequestMultiplayer) {
         const playerOutput = 0
         if (state.socket)
@@ -180,7 +190,7 @@ const multiplayerReducer = (
         log: action.log!,
       }
     }
-    case "NO_PLAYER_MATCH": {
+    case GameAction.NO_PLAYER_MATCH: {
       if (state.socket)
         state.socket.emit(
           "no_player_match",
@@ -193,7 +203,7 @@ const multiplayerReducer = (
         opponentTurn: false,
       }
     }
-    case "PLAYER_DEALS": {
+    case GameAction.PLAYER_DEALS: {
       const log =
         "There were no matches with your opponent. You must now deal a card from the deck."
       return {
@@ -203,7 +213,7 @@ const multiplayerReducer = (
         deckClickable: true,
       }
     }
-    case "PLAYER_DEALT": {
+    case GameAction.PLAYER_DEALT: {
       if (state.socket)
         state.socket.emit(
           "player_dealt",
@@ -213,7 +223,7 @@ const multiplayerReducer = (
         )
       return { ...state, deckClickable: false }
     }
-    case "PLAYER_RESULT": {
+    case GameAction.PLAYER_RESULT: {
       if (action.requestPlayer === state.clientPlayer) {
         setShowPlayerModal(true)
 
@@ -293,7 +303,7 @@ const multiplayerReducer = (
       }
       return state
     }
-    case "PLAYER_RESPONSE_MESSAGE": {
+    case GameAction.PLAYER_RESPONSE_MESSAGE: {
       let log: string
       switch (action.playerOutput) {
         case 1: {
@@ -315,19 +325,15 @@ const multiplayerReducer = (
           return state
       }
     }
-    case "PLAYER_TURN_SWITCH": {
+    case GameAction.PLAYER_TURN_SWITCH: {
       const playerTurnHandlerFactory = (playerHandEvent: MouseEvent) =>
-        playerMultiplayerFunctions.playerTurnHandler(
-          playerHandEvent,
-          state.player!,
-          state.clientPlayer!
-        )
+        playerTurnHandler(playerHandEvent, state.player!, state.clientPlayer!)
       return {
         ...state,
         playerTurnHandlerFactory,
       }
     }
-    case "PLAYER_DISCONNECTED": {
+    case GameAction.PLAYER_DISCONNECTED: {
       const log = "Your opponent has disconnected. The game has ended."
 
       return {
@@ -336,7 +342,7 @@ const multiplayerReducer = (
         gameOver: false,
       }
     }
-    case "GAME_OVER": {
+    case GameAction.GAME_OVER: {
       if (state.player && state.opponent && state.shuffledDeck)
         if (
           state.player.hand.length === 0 ||
@@ -376,7 +382,7 @@ const MultiplayerSession: Component<multiplayerSessionProps> = props => {
   const [player, setPlayer] = createSignal(0)
   const [startGame, setStartGame] = createSignal(false)
 
-  dispatchGameAction({ type: "START_SESSION", socket: props.socket })
+  dispatchGameAction({ type: GameAction.START_SESSION, socket: props.socket })
 
   props.socket.on("setPlayer", player => setPlayer(player))
 
@@ -392,7 +398,7 @@ You get to go first! Please select a card from your hand to request a match with
     const player2Log = playerTurn === 2 ? startPlayerLog : nonStartPlayerLog
 
     dispatchGameAction({
-      type: "UPDATE",
+      type: GameAction.UPDATE,
       serverState,
       clientPlayer: player(),
       player1Log,
@@ -401,39 +407,42 @@ You get to go first! Please select a card from your hand to request a match with
       sessionID,
     })
     setStartGame(true)
-    dispatchGameAction({ type: "GAME_OVER" })
+    dispatchGameAction({ type: GameAction.GAME_OVER })
   })
 
   props.socket.on("player_requested", opponentRequestMultiplayer => {
-    dispatchGameAction({ type: "PLAYER_RESPONSE", opponentRequestMultiplayer })
-    dispatchGameAction({ type: "GAME_OVER" })
+    dispatchGameAction({
+      type: GameAction.PLAYER_RESPONSE,
+      opponentRequestMultiplayer,
+    })
+    dispatchGameAction({ type: GameAction.GAME_OVER })
   })
 
   props.socket.on(
     "player_match",
     (serverState, playerOutput, requestPlayer) => {
       dispatchGameAction({
-        type: "UPDATE",
+        type: GameAction.UPDATE,
         serverState,
         clientPlayer: player(),
         playerTurn: requestPlayer,
       })
       dispatchGameAction({
-        type: "PLAYER_RESULT",
+        type: GameAction.PLAYER_RESULT,
         playerOutput,
         requestPlayer,
         serverState,
       })
-      dispatchGameAction({ type: "GAME_OVER" })
+      dispatchGameAction({ type: GameAction.GAME_OVER })
     }
   )
 
   props.socket.on("player_to_deal", playerRequest => {
     dispatchGameAction({
-      type: "PLAYER_DEALS",
+      type: GameAction.PLAYER_DEALS,
       playerRequest,
     })
-    dispatchGameAction({ type: "GAME_OVER" })
+    dispatchGameAction({ type: GameAction.GAME_OVER })
   })
 
   props.socket.on(
@@ -443,33 +452,39 @@ You get to go first! Please select a card from your hand to request a match with
       if (playerOutput === 1) playerTurn = requestPlayer
       else playerTurn = requestPlayer === 1 ? 2 : 1
       dispatchGameAction({
-        type: "UPDATE",
+        type: GameAction.UPDATE,
         serverState,
         clientPlayer: player(),
         playerTurn,
       })
       dispatchGameAction({
-        type: "PLAYER_RESULT",
+        type: GameAction.PLAYER_RESULT,
         playerOutput,
         requestPlayer,
         serverState,
       })
-      dispatchGameAction({ type: "GAME_OVER" })
+      dispatchGameAction({ type: GameAction.GAME_OVER })
     }
   )
 
   props.socket.on("player_response_message", playerOutput => {
-    dispatchGameAction({ type: "PLAYER_RESPONSE_MESSAGE", playerOutput })
-    dispatchGameAction({ type: "GAME_OVER" })
+    dispatchGameAction({
+      type: GameAction.PLAYER_RESPONSE_MESSAGE,
+      playerOutput,
+    })
+    dispatchGameAction({ type: GameAction.GAME_OVER })
   })
 
   props.socket.on("player_turn_switch", playerTurn => {
-    dispatchGameAction({ type: "PLAYER_TURN_SWITCH", playerTurn })
-    dispatchGameAction({ type: "GAME_OVER" })
+    dispatchGameAction({
+      type: GameAction.PLAYER_TURN_SWITCH,
+      playerTurn,
+    })
+    dispatchGameAction({ type: GameAction.GAME_OVER })
   })
 
   props.socket.on("player_disconnected", () =>
-    dispatchGameAction({ type: "PLAYER_DISCONNECTED" })
+    dispatchGameAction({ type: GameAction.PLAYER_DISCONNECTED })
   )
 
   return (

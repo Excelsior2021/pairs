@@ -2,12 +2,8 @@ import Card, { nonNumValue, suit } from "./Card"
 import Game from "./Game"
 import Opponent from "./Opponent"
 import Player from "./Player"
-import {
-  gameAction,
-  gameActionMultiplayer,
-  playerRequest,
-} from "../types/general"
-import { PlayerOutput } from "../types/enums"
+import { gameAction } from "../types/general"
+import { GameAction, PlayerOutput } from "../types/enums"
 
 export default class Deck {
   deck: Card[]
@@ -61,24 +57,15 @@ export default class Deck {
   }
 
   handler(
-    playerHandEvent: MouseEvent,
     game: Game,
-    deck: Deck,
     player: Player,
     opponent: Opponent,
     dispatchGameAction: (action: gameAction) => void
   ) {
-    const playerOutput = player.dealt(
-      playerHandEvent,
-      game,
-      deck,
-      player,
-      opponent,
-      dispatchGameAction
-    )
+    const playerOutput = player.dealt(game, this, opponent, dispatchGameAction)
 
     dispatchGameAction({
-      type: "PLAYER_ACTION",
+      type: GameAction.PLAYER_ACTION,
       playerOutput,
       player,
     })
@@ -87,18 +74,8 @@ export default class Deck {
       playerOutput === PlayerOutput.HandMatch ||
       playerOutput === PlayerOutput.NoMatch
     )
-      opponent.turn(game, deck, player, dispatchGameAction)
+      opponent.turn(game, this, player, dispatchGameAction)
 
-    game.end(deck, player, opponent, dispatchGameAction)
-  }
-
-  handlerMultiplayer(
-    playerRequest: playerRequest,
-    dispatchGameAction: (action: gameActionMultiplayer) => void
-  ) {
-    dispatchGameAction({
-      type: "PLAYER_DEALT",
-      playerRequest,
-    })
+    game.end(this, player, opponent, dispatchGameAction)
   }
 }

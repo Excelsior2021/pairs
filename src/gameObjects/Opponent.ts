@@ -3,22 +3,22 @@ import Deck from "./Deck"
 import Player from "./Player"
 import Game from "./Game"
 import { gameAction } from "../types/general"
-import { OpponentOutput } from "../types/enums"
+import { GameAction, OpponentOutput } from "../types/enums"
 
 export default class Opponent {
   hand: Card[]
   pairs: Card[]
-  asked: Card | null
+  request: Card | null
 
   constructor() {
     this.hand = []
     this.pairs = []
-    this.asked = null
+    this.request = null
   }
 
   ask() {
-    this.asked = this.hand[Math.floor(Math.random() * this.hand.length)]
-    return this.asked
+    this.request = this.hand[Math.floor(Math.random() * this.hand.length)]
+    return this.request
   }
 
   dealt(
@@ -29,11 +29,11 @@ export default class Opponent {
   ) {
     const dealtCard = deck.dealCard()
 
-    if (dealtCard && this.asked) {
-      if (dealtCard.value === this.asked.value) {
-        const requestedCardIndex = this.hand.indexOf(this.asked)
+    if (dealtCard && this.request) {
+      if (dealtCard.value === this.request.value) {
+        const requestedCardIndex = this.hand.indexOf(this.request)
         this.pairs.push(dealtCard)
-        this.pairs.push(this.asked)
+        this.pairs.push(this.request)
         if (requestedCardIndex !== -1) this.hand.splice(requestedCardIndex, 1)
         game.updateUI(deck, player, this, dispatchGameAction)
         return OpponentOutput.DeckMatch
@@ -65,23 +65,16 @@ export default class Opponent {
     const gameOver = game.end(deck, player, this, dispatchGameAction)
 
     if (!gameOver) {
-      const opponentRequest = this.ask()
-      const log = `Do you have a ${opponentRequest.value}?`
-      dispatchGameAction({
-        type: "GAME_LOG",
-        log,
-      })
+      this.ask()
+      if (this.request) {
+        const log = `Do you have a ${this.request.value}?`
+        dispatchGameAction({
+          type: GameAction.GAME_LOG,
+          log,
+        })
 
-      game.updateUI(
-        deck,
-        player,
-        this,
-        dispatchGameAction,
-        false,
-        null,
-        true,
-        opponentRequest
-      )
+        game.updateUI(deck, player, this, dispatchGameAction, false, true)
+      }
     }
   }
 }
