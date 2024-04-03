@@ -24,9 +24,8 @@ const JoinGame: Component = () => {
     setSessionIDNotValid(false)
     setNoSessionExists(false)
     setServerConnected(null)
-    if (!socket()) setSocket(io(import.meta.env.VITE_SERVER_URL))
+    const socketVar = setSocket(io(import.meta.env.VITE_SERVER_URL))
 
-    const socketVar = socket()
     let timeoutCounter = 0
 
     const interval = setInterval(() => {
@@ -37,7 +36,7 @@ const JoinGame: Component = () => {
           else if (timeoutCounter >= 50) {
             setServerConnected(false)
             setLoading(false)
-            socket()?.disconnect()
+            socketVar.disconnect()
             clearInterval(interval)
             return
           }
@@ -50,12 +49,16 @@ const JoinGame: Component = () => {
           if (!sessionID) {
             setSessionIDNotValid(true)
             clearInterval(interval)
+            socketVar.disconnect()
             return
           }
 
           socketVar.emit("join_session", sessionID)
 
-          socketVar.on("no-sessionID", () => setNoSessionExists(true))
+          socketVar.on("no-sessionID", () => {
+            setNoSessionExists(true)
+            socketVar.disconnect()
+          })
 
           socketVar.on("sessionID-exists", () => {
             dispatchGameAction({ type: GameAction.JOIN_SESSION, sessionID })
