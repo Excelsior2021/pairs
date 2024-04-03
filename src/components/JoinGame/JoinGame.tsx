@@ -20,40 +20,40 @@ const JoinGame: Component = () => {
   )
 
   const joinGameHandler = async (sessionID: string) => {
-    if (socket()) socket()!.disconnect()
+    if (!socket()) setSocket(io(import.meta.env.VITE_SERVER_URL))
 
-    const newSocket = io(import.meta.env.VITE_SERVER_URL)
+    const socketVar = socket()
 
     const interval = setInterval(() => {
-      setSocket(newSocket)
-      if (!newSocket.connected) {
-        setServerConnected(false)
-        newSocket.disconnect()
-        return
-      }
-      if (newSocket.connected) {
-        setSessionIDNotValid(false)
-        setNoSessionExists(false)
-        setServerConnected(true)
+      if (socketVar) {
+        if (!socketVar.connected) {
+          setServerConnected(false)
+          return
+        }
+        if (socketVar.connected) {
+          setSessionIDNotValid(false)
+          setNoSessionExists(false)
+          setServerConnected(true)
 
-        if (!sessionID) {
-          setSessionIDNotValid(true)
+          if (!sessionID) {
+            setSessionIDNotValid(true)
+            clearInterval(interval)
+            return
+          }
+
+          socketVar.emit("join_session", sessionID)
+
+          socketVar.on("no-sessionID", () => setNoSessionExists(true))
+
+          socketVar.on("sessionID-exists", () => {
+            dispatchGameAction({ type: GameAction.JOIN_SESSION, sessionID })
+            setJoinGame(false)
+            setMultiplayerSessionStarted(true)
+          })
+
           clearInterval(interval)
           return
         }
-
-        newSocket.emit("join_session", sessionID)
-
-        newSocket.on("no-sessionID", () => setNoSessionExists(true))
-
-        newSocket.on("sessionID-exists", () => {
-          dispatchGameAction({ type: GameAction.JOIN_SESSION, sessionID })
-          setJoinGame(false)
-          setMultiplayerSessionStarted(true)
-        })
-
-        clearInterval(interval)
-        return
       }
     }, 100)
   }
