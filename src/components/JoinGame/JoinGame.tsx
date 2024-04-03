@@ -15,6 +15,7 @@ const JoinGame: Component = () => {
   const [sessionID, setSessionID] = createSignal("")
   const [sessionIDNotValid, setSessionIDNotValid] = createSignal(false)
   const [noSessionExists, setNoSessionExists] = createSignal(false)
+  const [loading, setLoading] = createSignal(false)
   const [serverConnected, setServerConnected] = createSignal<boolean | null>(
     null
   )
@@ -23,11 +24,17 @@ const JoinGame: Component = () => {
     if (!socket()) setSocket(io(import.meta.env.VITE_SERVER_URL))
 
     const socketVar = socket()
+    let timeoutCounter = 0
 
     const interval = setInterval(() => {
+      timeoutCounter++
       if (socketVar) {
         if (!socketVar.connected) {
-          setServerConnected(false)
+          if (timeoutCounter < 50 && !loading()) setLoading(true)
+          else {
+            setServerConnected(false)
+            setLoading(false)
+          }
           return
         }
         if (socketVar.connected) {
@@ -73,6 +80,7 @@ const JoinGame: Component = () => {
         onchange={event => setSessionID(event.currentTarget.value)}
         aria-label="session id"
       />
+      {loading() && <p>Please wait...</p>}
       {sessionIDNotValid() && (
         <p class="join-game__text join-game__text--error">
           Please enter a valid session ID.
