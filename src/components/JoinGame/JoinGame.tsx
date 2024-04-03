@@ -21,6 +21,9 @@ const JoinGame: Component = () => {
   )
 
   const joinGameHandler = async (sessionID: string) => {
+    setSessionIDNotValid(false)
+    setNoSessionExists(false)
+    setServerConnected(null)
     if (!socket()) setSocket(io(import.meta.env.VITE_SERVER_URL))
 
     const socketVar = socket()
@@ -31,11 +34,13 @@ const JoinGame: Component = () => {
       if (socketVar) {
         if (!socketVar.connected) {
           if (timeoutCounter < 50 && !loading()) setLoading(true)
-          else {
+          else if (timeoutCounter >= 50) {
             setServerConnected(false)
             setLoading(false)
+            socket()?.disconnect()
+            clearInterval(interval)
+            return
           }
-          return
         }
         if (socketVar.connected) {
           setSessionIDNotValid(false)
@@ -80,27 +85,30 @@ const JoinGame: Component = () => {
         onchange={event => setSessionID(event.currentTarget.value)}
         aria-label="session id"
       />
-      {loading() && <p>Please wait...</p>}
+      {loading() && (
+        <p class="join-game__text join-game__text--info">Please wait...</p>
+      )}
       {sessionIDNotValid() && (
-        <p class="join-game__text join-game__text--error">
+        <p class="join-game__text join-game__text--info">
           Please enter a valid session ID.
         </p>
       )}
       {noSessionExists() && (
-        <p class="join-game__text join-game__text--error">
+        <p class="join-game__text join-game__text--info">
           This session does not exist. Please check the session ID is correct.
         </p>
       )}
       {serverConnected() === false && (
-        <p class="join-game__text join-game__text--error">
-          There seems to be an issue connecting to the server. Please check your
-          internet connection or try again later.
+        <p class="join-game__text join-game__text--info">
+          There seems to be an issue connecting to the server. Please try again
+          later.
         </p>
       )}
       <div class="join-game__actions">
         <button
           class="join-game__button"
-          onclick={() => joinGameHandler(sessionID())}>
+          onclick={() => joinGameHandler(sessionID())}
+          disabled={loading()}>
           join
         </button>
         <button
@@ -110,7 +118,7 @@ const JoinGame: Component = () => {
             setMultiplayerMenu(true)
             setSessionIDNotValid(false)
             setNoSessionExists(false)
-            socket()?.disconnect
+            socket()?.disconnect()
           }}>
           ←
         </button>
