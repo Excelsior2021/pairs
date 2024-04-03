@@ -42,6 +42,7 @@ const JoinGame: Component = () => {
           }
         }
         if (socketVar.connected) {
+          setLoading(false)
           setSessionIDNotValid(false)
           setNoSessionExists(false)
           setServerConnected(true)
