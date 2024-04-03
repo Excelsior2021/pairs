@@ -20,7 +20,7 @@ export type handProp = {
 }
 
 export type multiplayerSessionProps = {
-  socket: Socket
+  socket: Socket | null
 }
 
 export type quitGameModalProps = {
@@ -54,7 +54,7 @@ export type gameStateType = {
   gameOver: boolean
   //multiplayer
   shuffledDeck?: Card[] | null
-  socket?: Socket
+  socket?: Socket | null
   clientPlayer?: number
   sessionID?: string | undefined
   gameState?: clientStateMutiplayer | null
@@ -95,7 +95,7 @@ export type gameActionMultiplayer = {
   log?: string
   chosenCard?: Card
   opponentAsked?: Card
-  socket?: Socket
+  socket?: Socket | null
   clientPlayer?: number
   sessionID?: string
   serverState?: serverStateMultiplayer

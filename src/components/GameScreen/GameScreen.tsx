@@ -1,5 +1,5 @@
 import { Component, createSignal, Switch, Match } from "solid-js"
-import { io } from "socket.io-client"
+import { Socket } from "socket.io-client"
 import MainMenu from "../MainMenu/MainMenu"
 import Session from "../Session/Session"
 import Instructions from "../Instructions/Instructions"
@@ -14,7 +14,7 @@ export const [joinGame, setJoinGame] = createSignal(false)
 export const [multiplayerSessionStarted, setMultiplayerSessionStarted] =
   createSignal(false)
 export const [sessionID, setSessionID] = createSignal("")
-export const [socket, setSocket] = createSignal(io())
+export const [socket, setSocket] = createSignal<Socket | null>(null)
 
 const GameScreen: Component = () => (
   <main class="game-screen">

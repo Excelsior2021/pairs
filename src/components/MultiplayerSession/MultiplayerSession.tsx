@@ -10,7 +10,6 @@ import PlayerModal, {
   setMatchStatusHeading,
   setMatchStatusSubHeading,
 } from "../PlayerModal/PlayerModal"
-import { io } from "socket.io-client"
 import Player from "../../gameObjects/Player"
 import {
   playerTurnHandler,
@@ -34,7 +33,7 @@ const initialGameState = {
   playerOutput: null,
   log: "",
   outcome: "",
-  socket: io(),
+  socket: null,
   clientPlayer: 0,
   sessionID: "",
   gameState: null,
@@ -382,110 +381,113 @@ const MultiplayerSession: Component<multiplayerSessionProps> = props => {
   const [player, setPlayer] = createSignal(0)
   const [startGame, setStartGame] = createSignal(false)
 
-  dispatchGameAction({ type: GameAction.START_SESSION, socket: props.socket })
+  if (props.socket) {
+    dispatchGameAction({ type: GameAction.START_SESSION, socket: props.socket })
 
-  props.socket.on("setPlayer", player => setPlayer(player))
+    props.socket.on("setPlayer", player => setPlayer(player))
 
-  props.socket.on("start", (serverState, playerTurn, sessionID) => {
-    const startPlayerLog =
-      "The cards have been dealt. Any initial pairs of cards have been added to your Pairs.\
-You get to go first! Please select a card from your hand to request a match with your opponent."
+    props.socket.on("start", (serverState, playerTurn, sessionID) => {
+      const startPlayerLog =
+        "The cards have been dealt. Any initial pairs of cards have been added to your Pairs.\
+  You get to go first! Please select a card from your hand to request a match with your opponent."
 
-    const nonStartPlayerLog = "Waiting for your opponent to request a value..."
+      const nonStartPlayerLog =
+        "Waiting for your opponent to request a value..."
 
-    const player1Log = playerTurn === 1 ? startPlayerLog : nonStartPlayerLog
+      const player1Log = playerTurn === 1 ? startPlayerLog : nonStartPlayerLog
 
-    const player2Log = playerTurn === 2 ? startPlayerLog : nonStartPlayerLog
+      const player2Log = playerTurn === 2 ? startPlayerLog : nonStartPlayerLog
 
-    dispatchGameAction({
-      type: GameAction.UPDATE,
-      serverState,
-      clientPlayer: player(),
-      player1Log,
-      player2Log,
-      playerTurn,
-      sessionID,
-    })
-    setStartGame(true)
-    dispatchGameAction({ type: GameAction.GAME_OVER })
-  })
-
-  props.socket.on("player_requested", opponentRequestMultiplayer => {
-    dispatchGameAction({
-      type: GameAction.PLAYER_RESPONSE,
-      opponentRequestMultiplayer,
-    })
-    dispatchGameAction({ type: GameAction.GAME_OVER })
-  })
-
-  props.socket.on(
-    "player_match",
-    (serverState, playerOutput, requestPlayer) => {
       dispatchGameAction({
         type: GameAction.UPDATE,
         serverState,
         clientPlayer: player(),
-        playerTurn: requestPlayer,
+        player1Log,
+        player2Log,
+        playerTurn,
+        sessionID,
       })
+      setStartGame(true)
+      dispatchGameAction({ type: GameAction.GAME_OVER })
+    })
+
+    props.socket.on("player_requested", opponentRequestMultiplayer => {
       dispatchGameAction({
-        type: GameAction.PLAYER_RESULT,
-        playerOutput,
-        requestPlayer,
-        serverState,
+        type: GameAction.PLAYER_RESPONSE,
+        opponentRequestMultiplayer,
       })
       dispatchGameAction({ type: GameAction.GAME_OVER })
-    }
-  )
-
-  props.socket.on("player_to_deal", playerRequest => {
-    dispatchGameAction({
-      type: GameAction.PLAYER_DEALS,
-      playerRequest,
     })
-    dispatchGameAction({ type: GameAction.GAME_OVER })
-  })
 
-  props.socket.on(
-    "player_dealt",
-    (serverState, playerOutput, requestPlayer) => {
-      let playerTurn: number
-      if (playerOutput === 1) playerTurn = requestPlayer
-      else playerTurn = requestPlayer === 1 ? 2 : 1
+    props.socket.on(
+      "player_match",
+      (serverState, playerOutput, requestPlayer) => {
+        dispatchGameAction({
+          type: GameAction.UPDATE,
+          serverState,
+          clientPlayer: player(),
+          playerTurn: requestPlayer,
+        })
+        dispatchGameAction({
+          type: GameAction.PLAYER_RESULT,
+          playerOutput,
+          requestPlayer,
+          serverState,
+        })
+        dispatchGameAction({ type: GameAction.GAME_OVER })
+      }
+    )
+
+    props.socket.on("player_to_deal", playerRequest => {
       dispatchGameAction({
-        type: GameAction.UPDATE,
-        serverState,
-        clientPlayer: player(),
+        type: GameAction.PLAYER_DEALS,
+        playerRequest,
+      })
+      dispatchGameAction({ type: GameAction.GAME_OVER })
+    })
+
+    props.socket.on(
+      "player_dealt",
+      (serverState, playerOutput, requestPlayer) => {
+        let playerTurn: number
+        if (playerOutput === 1) playerTurn = requestPlayer
+        else playerTurn = requestPlayer === 1 ? 2 : 1
+        dispatchGameAction({
+          type: GameAction.UPDATE,
+          serverState,
+          clientPlayer: player(),
+          playerTurn,
+        })
+        dispatchGameAction({
+          type: GameAction.PLAYER_RESULT,
+          playerOutput,
+          requestPlayer,
+          serverState,
+        })
+        dispatchGameAction({ type: GameAction.GAME_OVER })
+      }
+    )
+
+    props.socket.on("player_response_message", playerOutput => {
+      dispatchGameAction({
+        type: GameAction.PLAYER_RESPONSE_MESSAGE,
+        playerOutput,
+      })
+      dispatchGameAction({ type: GameAction.GAME_OVER })
+    })
+
+    props.socket.on("player_turn_switch", playerTurn => {
+      dispatchGameAction({
+        type: GameAction.PLAYER_TURN_SWITCH,
         playerTurn,
       })
-      dispatchGameAction({
-        type: GameAction.PLAYER_RESULT,
-        playerOutput,
-        requestPlayer,
-        serverState,
-      })
       dispatchGameAction({ type: GameAction.GAME_OVER })
-    }
-  )
-
-  props.socket.on("player_response_message", playerOutput => {
-    dispatchGameAction({
-      type: GameAction.PLAYER_RESPONSE_MESSAGE,
-      playerOutput,
     })
-    dispatchGameAction({ type: GameAction.GAME_OVER })
-  })
 
-  props.socket.on("player_turn_switch", playerTurn => {
-    dispatchGameAction({
-      type: GameAction.PLAYER_TURN_SWITCH,
-      playerTurn,
-    })
-    dispatchGameAction({ type: GameAction.GAME_OVER })
-  })
-
-  props.socket.on("player_disconnected", () =>
-    dispatchGameAction({ type: GameAction.PLAYER_DISCONNECTED })
-  )
+    props.socket.on("player_disconnected", () =>
+      dispatchGameAction({ type: GameAction.PLAYER_DISCONNECTED })
+    )
+  }
 
   return (
     <div class="session">

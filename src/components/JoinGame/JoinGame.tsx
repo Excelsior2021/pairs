@@ -4,44 +4,49 @@ import {
   setMultiplayerSessionStarted,
   setMultiplayerMenu,
   setSocket,
+  socket,
 } from "../GameScreen/GameScreen"
 import { dispatchGameAction } from "../MultiplayerSession/MultiplayerSession"
-import { io, Socket } from "socket.io-client"
+import { io } from "socket.io-client"
 import { GameAction } from "../../types/enums"
 import "./JoinGame.scss"
 
 const JoinGame: Component = () => {
-  const socket = io(import.meta.env.VITE_SERVER_URL)
   const [sessionID, setSessionID] = createSignal("")
   const [sessionIDNotValid, setSessionIDNotValid] = createSignal(false)
   const [noSessionExists, setNoSessionExists] = createSignal(false)
   const [serverConnected, setServerConnected] = createSignal<boolean | null>(
     null
   )
-  setSocket(socket)
 
-  const joinGameHandler = (socket: Socket, sessionID: string) => {
-    if (!socket.connected) {
-      setServerConnected(false)
-      return
-    }
-    setSessionIDNotValid(false)
-    setNoSessionExists(false)
-    setServerConnected(true)
-    if (!sessionID) {
-      setSessionIDNotValid(true)
-      return
-    }
+  const joinGameHandler = (sessionID: string) => {
+    const socket = io(import.meta.env.VITE_SERVER_URL)
+    setSocket(socket)
 
-    socket.emit("join_session", sessionID)
+    setTimeout(() => {
+      if (!socket.connected) {
+        setServerConnected(false)
+        socket.disconnect()
+        return
+      }
+      setSessionIDNotValid(false)
+      setNoSessionExists(false)
+      setServerConnected(true)
+      if (!sessionID) {
+        setSessionIDNotValid(true)
+        return
+      }
 
-    socket.on("no-sessionID", () => setNoSessionExists(true))
+      socket.emit("join_session", sessionID)
 
-    socket.on("sessionID-exists", () => {
-      dispatchGameAction({ type: GameAction.JOIN_SESSION, sessionID })
-      setJoinGame(false)
-      setMultiplayerSessionStarted(true)
-    })
+      socket.on("no-sessionID", () => setNoSessionExists(true))
+
+      socket.on("sessionID-exists", () => {
+        dispatchGameAction({ type: GameAction.JOIN_SESSION, sessionID })
+        setJoinGame(false)
+        setMultiplayerSessionStarted(true)
+      })
+    }, 100)
   }
 
   return (
@@ -78,7 +83,7 @@ const JoinGame: Component = () => {
       <div class="join-game__actions">
         <button
           class="join-game__button"
-          onclick={() => joinGameHandler(socket, sessionID())}>
+          onclick={() => joinGameHandler(sessionID())}>
           join
         </button>
         <button
@@ -88,7 +93,7 @@ const JoinGame: Component = () => {
             setMultiplayerMenu(true)
             setSessionIDNotValid(false)
             setNoSessionExists(false)
-            socket.disconnect()
+            socket()?.disconnect
           }}>
           ←
         </button>
