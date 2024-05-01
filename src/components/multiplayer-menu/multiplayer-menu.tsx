@@ -6,11 +6,11 @@ import {
   setSocket,
   setSessionID,
   socket,
-} from "../GameScreen/GameScreen"
-import { dispatchGameAction } from "../MultiplayerSession/MultiplayerSession"
+} from "../game-screen/game-screen"
+import { dispatchGameAction } from "../multiplayer-session/multiplayer-session"
 import { io } from "socket.io-client"
 import { GameAction } from "../../types/enums"
-import "./MultiplayerMenu.scss"
+import "./multiplayer-menu.scss"
 
 const MultiplayerMenu: Component = () => {
   const [serverConnected, setServerConnected] = createSignal<boolean | null>(

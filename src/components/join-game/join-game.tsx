@@ -5,11 +5,11 @@ import {
   setMultiplayerMenu,
   setSocket,
   socket,
-} from "../GameScreen/GameScreen"
-import { dispatchGameAction } from "../MultiplayerSession/MultiplayerSession"
+} from "../game-screen/game-screen"
+import { dispatchGameAction } from "../multiplayer-session/multiplayer-session"
 import { io } from "socket.io-client"
 import { GameAction } from "../../types/enums"
-import "./JoinGame.scss"
+import "./join-game.scss"
 
 const JoinGame: Component = () => {
   const [sessionID, setSessionID] = createSignal("")

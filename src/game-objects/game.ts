@@ -1,8 +1,8 @@
 import { gameAction } from "../types/general"
-import Card from "./Card"
-import Deck from "./Deck"
-import Opponent from "./Opponent"
-import Player from "./Player"
+import Card from "./card"
+import Deck from "./deck"
+import Opponent from "./opponent"
+import Player from "./player"
 import { GameAction, Outcome } from "../types/enums"
 
 export default class Game {

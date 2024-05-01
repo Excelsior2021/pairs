@@ -1,5 +1,5 @@
 import { ParentComponent, Show, Accessor, Setter } from "solid-js"
-import "./Modal.scss"
+import "./modal.scss"
 
 type contentProps = {
   heading: string | null

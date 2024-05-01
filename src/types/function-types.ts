@@ -1,4 +1,4 @@
-import Player from "../gameObjects/Player"
+import Player from "../game-objects/player"
 import { playerRequest } from "./general"
 
 //PLAYER FUNCTIONS

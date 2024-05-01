@@ -1,7 +1,7 @@
-import Card, { nonNumValue, suit } from "./Card"
-import Game from "./Game"
-import Opponent from "./Opponent"
-import Player from "./Player"
+import Card, { nonNumValue, suit } from "./card"
+import Game from "./game"
+import Opponent from "./opponent"
+import Player from "./player"
 import { gameAction } from "../types/general"
 import { GameAction, PlayerOutput } from "../types/enums"
 

@@ -1,5 +1,5 @@
 import { test, describe, expect, beforeEach } from "vitest"
-import Deck from "./Deck"
+import Deck from "./deck"
 
 describe("deck class", () => {
   let deck: Deck

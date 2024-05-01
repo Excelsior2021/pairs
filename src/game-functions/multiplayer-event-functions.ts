@@ -1,5 +1,5 @@
-import { dispatchGameAction } from "../components/MultiplayerSession/MultiplayerSession"
-import Card from "../gameObjects/Card"
+import { dispatchGameAction } from "../components/multiplayer-session/multiplayer-session"
+import Card from "../game-objects/card"
 import { GameAction } from "../types/enums"
 import {
   playerResponseHandlerMultiplayerType,

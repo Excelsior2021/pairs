@@ -1,15 +1,15 @@
 import { Component } from "solid-js"
 import { createReducer } from "@solid-primitives/memo"
-import Game from "../Game/Game"
-import Sidebar from "../Sidebar/Sidebar"
+import Game from "../game/game"
+import Sidebar from "../sidebar/sidebar"
 import PlayerModal, {
   setShowPlayerModal,
   setMatchStatusHeading,
   setMatchStatusSubHeading,
-} from "../PlayerModal/PlayerModal"
-import PairsModal from "../PairsModal/PairsModal"
-import QuitGameModal from "../QuitGameModal/QuitGameModal"
-import GameObject from "../../gameObjects/Game"
+} from "../player-modal/player-modal"
+import PairsModal from "../pairs-modal/pairs-modal"
+import QuitGameModal from "../quit-game-modal/quit-game-modal"
+import GameObject from "../../game-objects/game"
 import { gameStateType, gameAction } from "../../types/general"
 import {
   PlayerMatchHeading,
@@ -18,7 +18,7 @@ import {
   GameMode,
   GameAction,
 } from "../../types/enums"
-import "./Session.scss"
+import "./session.scss"
 
 const initialGameState = {
   gameMode: GameMode.SinglePlayer,

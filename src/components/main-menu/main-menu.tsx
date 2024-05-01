@@ -2,13 +2,14 @@ import { Component, createEffect, createSignal } from "solid-js"
 import {
   setSinglePlayerStarted,
   setMultiplayerMenu,
-} from "../GameScreen/GameScreen"
-import { setShowInstructions } from "../Instructions/Instructions"
-import "./MainMenu.scss"
+} from "../game-screen/game-screen"
+import { setShowInstructions } from "../instructions/instructions"
+import "./main-menu.scss"
+
+const [appLoaded, setAppLoaded] = createSignal(false)
 
 const MainMenu: Component = () => {
-  const [appLoaded, setAppLoaded] = createSignal(false)
-  createEffect(() => setTimeout(() => setAppLoaded(true), 1000))
+  createEffect(() => setTimeout(() => setAppLoaded(true), 500))
   return (
     <div
       class={appLoaded() ? "main-menu main-menu--no-animation" : "main-menu"}>
@@ -30,9 +31,6 @@ const MainMenu: Component = () => {
           instructions
         </button>
       </div>
-      {/* <p class="main-menu__text">
-      Multiplayer is disabled as the server is currently down.
-    </p> */}
     </div>
   )
 }

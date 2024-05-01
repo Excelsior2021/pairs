@@ -1,7 +1,7 @@
-import Card from "./Card"
-import Deck from "./Deck"
-import Player from "./Player"
-import Game from "./Game"
+import Card from "./card"
+import Deck from "./deck"
+import Player from "./player"
+import Game from "./game"
 import { gameAction } from "../types/general"
 import { GameAction, OpponentOutput } from "../types/enums"
 

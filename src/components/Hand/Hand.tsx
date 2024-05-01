@@ -1,7 +1,7 @@
 import type { Component } from "solid-js"
 import { For } from "solid-js"
 import { handProp } from "../../types/general"
-import "./Hand.scss"
+import "./hand.scss"
 
 const Hand: Component<handProp> = props => {
   const handleCardClick = (e: MouseEvent) => {

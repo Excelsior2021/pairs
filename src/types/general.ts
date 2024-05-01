@@ -1,10 +1,10 @@
 import { Accessor } from "solid-js"
 import { Socket } from "socket.io-client"
-import Card from "../gameObjects/Card"
-import Player from "../gameObjects/Player"
-import Opponent from "../gameObjects/Opponent"
-import Deck from "../gameObjects/Deck"
-import Game from "../gameObjects/Game"
+import Card from "../game-objects/card"
+import Player from "../game-objects/player"
+import Opponent from "../game-objects/opponent"
+import Deck from "../game-objects/deck"
+import Game from "../game-objects/game"
 import { GameMode } from "./enums"
 
 export type gameStateProp = {

@@ -1,20 +1,20 @@
 import { Component, createSignal, Show } from "solid-js"
 import { createReducer } from "@solid-primitives/memo"
-import Game from "../Game/Game"
-import Sidebar from "../Sidebar/Sidebar"
-import CreateGame from "../CreateGame/CreateGame"
-import PairsModal from "../PairsModal/PairsModal"
-import QuitGameModal from "../QuitGameModal/QuitGameModal"
+import Game from "../game/game"
+import Sidebar from "../sidebar/sidebar"
+import CreateGame from "../create-game/create-game"
+import PairsModal from "../pairs-modal/pairs-modal"
+import QuitGameModal from "../quit-game-modal/quit-game-modal"
 import PlayerModal, {
   setShowPlayerModal,
   setMatchStatusHeading,
   setMatchStatusSubHeading,
-} from "../PlayerModal/PlayerModal"
-import Player from "../../gameObjects/Player"
+} from "../player-modal/player-modal"
+import Player from "../../game-objects/player"
 import {
   playerTurnHandler,
   playerResponseHandler,
-} from "../../gameFunctions/multiplayerEventFunctions"
+} from "../../game-functions/multiplayer-event-functions"
 import {
   clientStateMutiplayer,
   gameActionMultiplayer,
@@ -22,7 +22,7 @@ import {
   multiplayerSessionProps,
 } from "../../types/general"
 import { PlayerOutput, GameMode, Outcome, GameAction } from "../../types/enums"
-import "../Session/Session.scss"
+import "../session/session.scss"
 
 const initialGameState = {
   gameMode: GameMode.Multiplayer,

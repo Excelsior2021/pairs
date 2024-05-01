@@ -1,6 +1,6 @@
 import type { Component } from "solid-js"
-import GameScreen from "./components/GameScreen/GameScreen"
-import "./App.scss"
+import GameScreen from "./components/game-screen/game-screen"
+import "./app.scss"
 
 const App: Component = () => (
   <div class="app">
