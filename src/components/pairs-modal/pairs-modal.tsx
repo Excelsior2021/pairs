@@ -1,5 +1,5 @@
 import { Component, For, createSignal } from "solid-js"
-import { gameStateProp } from "../../types/general"
+import { gameStateProp } from "../../../types"
 import Modal from "../modal/modal"
 import "./pairs-modal.scss"
 

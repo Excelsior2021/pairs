@@ -8,7 +8,7 @@ import {
 } from "../game-screen/game-screen"
 import { dispatchGameAction } from "../multiplayer-session/multiplayer-session"
 import { io } from "socket.io-client"
-import { GameAction } from "../../types/enums"
+import { GameAction } from "../../enums"
 import "./join-game.scss"
 
 const JoinGame: Component = () => {

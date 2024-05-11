@@ -3,9 +3,10 @@ import { setShowPairsModal } from "../pairs-modal/pairs-modal"
 import { setShowInstructions } from "../instructions/instructions"
 import { setShowQuitGameModal } from "../quit-game-modal/quit-game-modal"
 import { dispatchGameAction as dispatchGameActionMultiplayer } from "../multiplayer-session/multiplayer-session"
-import { gameStateProp } from "../../types/general"
-import { GameAction, GameMode } from "../../types/enums"
+import { GameAction, GameMode } from "../../enums"
 import "./sidebar.scss"
+
+import type { gameStateProp } from "../../../types"
 
 const Sidebar: Component<gameStateProp> = props => {
   const gameDeckHandler = () => {

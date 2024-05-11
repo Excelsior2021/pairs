@@ -5,7 +5,8 @@ import {
   setSinglePlayerStarted,
 } from "../game-screen/game-screen"
 import "./quit-game-modal.scss"
-import { quitGameModalProps } from "../../types/general"
+
+import type { quitGameModalProps } from "../../../types"
 
 export const [showQuitGameModal, setShowQuitGameModal] = createSignal(false)
 

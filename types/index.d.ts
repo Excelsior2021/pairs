@@ -1,14 +1,14 @@
 import { Accessor } from "solid-js"
 import { Socket } from "socket.io-client"
-import Card from "../game-objects/card"
-import Player from "../game-objects/player"
-import Opponent from "../game-objects/opponent"
-import Deck from "../game-objects/deck"
-import Game from "../game-objects/game"
-import { GameMode } from "./enums"
+import Card from "../src/game-objects/card"
+import Player from "../src/game-objects/player"
+import Opponent from "../src/game-objects/opponent"
+import Deck from "../src/game-objects/deck"
+import Game from "../src/game-objects/game"
+import { GameMode } from "../src/enums"
 
 export type gameStateProp = {
-  gameState: Accessor<gameStateType>
+  gameState: Accessor<gameStateType & gameStateMultiplayer>
 }
 
 export type handProp = {
@@ -47,18 +47,20 @@ export type gameStateType = {
   playerOutput: number | null
   opponentTurn: boolean
   opponentRequest?: Card | null
-  opponentRequestMultiplayer?: playerRequest | null
   playerRequest?: playerRequest
   log: string
   outcome: string
   gameOver: boolean
-  //multiplayer
+}
+
+export type gameStateMultiplayer = gameStateType & {
   shuffledDeck?: Card[] | null
   socket?: Socket | null
   clientPlayer?: number
   sessionID?: string | undefined
   gameState?: clientStateMutiplayer | null
   playerTurn?: number | null
+  opponentRequestMultiplayer?: playerRequest | null
 }
 
 export type gameAction = {
@@ -82,19 +84,11 @@ export type gameAction = {
   gameOver?: boolean
 }
 
-export type gameActionMultiplayer = {
-  type: string
-  player?: Player
-  opponent?: Player
+export type gameActionMultiplayer = gameAction & {
   shuffledDeck?: Card[]
-  playerHandClickable?: boolean
   playerTurnHandler?: (playerHandEvent: MouseEvent) => void
-  playerOutput?: number | boolean
   playerCard?: playerRequest
   opponentRequestMultiplayer?: playerRequest | null
-  log?: string
-  chosenCard?: Card
-  opponentAsked?: Card
   socket?: Socket | null
   clientPlayer?: number
   sessionID?: string
@@ -107,14 +101,30 @@ export type gameActionMultiplayer = {
   dealtCard?: Card
 }
 
-export type serverStateMultiplayer = {
-  player1: Player
-  player2: Player
+type serverState = {
   shuffledDeck: Card[]
 }
 
-export type clientStateMutiplayer = {
+export type serverStateMultiplayer = serverState & {
+  player1: Player
+  player2: Player
+}
+
+export type clientStateMutiplayer = serverState & {
   player: Player
   opponent: Player
-  shuffledDeck: Card[]
 }
+
+//PLAYER FUNCTIONS
+export type playerTurnHandlerMultiplayerType = (
+  playerHandEvent: MouseEvent,
+  player: Player | null,
+  clientPlayer: number
+) => void
+
+export type playerResponseHandlerMultiplayerType = (
+  hasCard: boolean,
+  oppenentRequest: playerRequest,
+  player: Player,
+  clientPlayer: number
+) => void

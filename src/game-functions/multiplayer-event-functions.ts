@@ -1,11 +1,11 @@
 import { dispatchGameAction } from "../components/multiplayer-session/multiplayer-session"
 import Card from "../game-objects/card"
-import { GameAction } from "../types/enums"
+import { GameAction } from "../enums"
 import {
   playerResponseHandlerMultiplayerType,
   playerTurnHandlerMultiplayerType,
-} from "../types/function-types"
-import { playerRequest } from "../types/general"
+} from "../../types"
+import { playerRequest } from "../../types"
 
 export const playerTurnHandler: playerTurnHandlerMultiplayerType = (
   playerHandEvent,

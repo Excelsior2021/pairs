@@ -15,14 +15,15 @@ import {
   playerTurnHandler,
   playerResponseHandler,
 } from "../../game-functions/multiplayer-event-functions"
-import {
+import { PlayerOutput, GameMode, Outcome, GameAction } from "../../enums"
+import "../session/session.scss"
+
+import type {
   clientStateMutiplayer,
   gameActionMultiplayer,
-  gameStateType,
+  gameStateMultiplayer,
   multiplayerSessionProps,
-} from "../../types/general"
-import { PlayerOutput, GameMode, Outcome, GameAction } from "../../types/enums"
-import "../session/session.scss"
+} from "../../../types"
 
 const initialGameState = {
   gameMode: GameMode.Multiplayer,
@@ -44,9 +45,9 @@ const initialGameState = {
 }
 
 const multiplayerReducer = (
-  state: gameStateType,
+  state: gameStateMultiplayer,
   action: gameActionMultiplayer
-): gameStateType => {
+): gameStateMultiplayer => {
   switch (action.type) {
     case GameAction.START_SESSION: {
       return {

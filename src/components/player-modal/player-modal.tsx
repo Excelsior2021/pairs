@@ -1,8 +1,9 @@
 import { Component, createSignal, Switch, Match, For } from "solid-js"
 import Modal from "../modal/modal"
-import { gameStateProp } from "../../types/general"
-import { PlayerOutput } from "../../types/enums"
+import { PlayerOutput } from "../../enums"
 import "./player-modal.scss"
+
+import type { gameStateProp } from "../../../types"
 
 export const [showPlayerModal, setShowPlayerModal] = createSignal(false)
 export const [matchStatusHeading, setMatchStatusHeading] = createSignal("")

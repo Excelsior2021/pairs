@@ -3,7 +3,7 @@ import Opponent from "./opponent"
 import Deck from "./deck"
 import Game from "./game"
 import Player from "./player"
-import { OpponentOutput } from "../types/enums"
+import { OpponentOutput } from "../enums"
 import { suit } from "./card"
 
 const hand = [

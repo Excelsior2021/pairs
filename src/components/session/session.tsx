@@ -10,15 +10,16 @@ import PlayerModal, {
 import PairsModal from "../pairs-modal/pairs-modal"
 import QuitGameModal from "../quit-game-modal/quit-game-modal"
 import GameObject from "../../game-objects/game"
-import { gameStateType, gameAction } from "../../types/general"
 import {
   PlayerMatchHeading,
   PlayerMatchSubHeading,
   PlayerOutput,
   GameMode,
   GameAction,
-} from "../../types/enums"
+} from "../../enums"
 import "./session.scss"
+
+import type { gameStateType, gameAction } from "../../../types"
 
 const initialGameState = {
   gameMode: GameMode.SinglePlayer,
