@@ -1,11 +1,11 @@
-import { Accessor } from "solid-js"
-import { Socket } from "socket.io-client"
-import Card from "../src/game-objects/card"
-import Player from "../src/game-objects/player"
-import Opponent from "../src/game-objects/opponent"
-import Deck from "../src/game-objects/deck"
-import Game from "../src/game-objects/game"
-import { GameMode } from "../src/enums"
+import type { Accessor } from "solid-js"
+import type { Socket } from "socket.io-client"
+import type Card from "../src/game-objects/card"
+import type Player from "../src/game-objects/player"
+import type Opponent from "../src/game-objects/opponent"
+import type Deck from "../src/game-objects/deck"
+import type Game from "../src/game-objects/game"
+import type { GameMode } from "../src/enums"
 
 export type gameStateProp = {
   gameState: Accessor<gameStateType & gameStateMultiplayer>

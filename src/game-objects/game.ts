@@ -1,9 +1,10 @@
-import { gameAction } from "../../types"
-import Card from "./card"
 import Deck from "./deck"
 import Opponent from "./opponent"
 import Player from "./player"
 import { GameAction, Outcome } from "../enums"
+
+import type Card from "./card"
+import type { gameAction } from "../../types"
 
 export default class Game {
   start(dispatchGameAction: (action: gameAction) => void) {

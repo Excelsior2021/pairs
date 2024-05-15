@@ -1,4 +1,4 @@
-import { Component, createSignal, Show } from "solid-js"
+import { createSignal, Show } from "solid-js"
 import { createReducer } from "@solid-primitives/memo"
 import Game from "../game/game"
 import Sidebar from "../sidebar/sidebar"
@@ -10,7 +10,6 @@ import PlayerModal, {
   setMatchStatusHeading,
   setMatchStatusSubHeading,
 } from "../player-modal/player-modal"
-import Player from "../../game-objects/player"
 import {
   playerTurnHandler,
   playerResponseHandler,
@@ -18,6 +17,8 @@ import {
 import { PlayerOutput, GameMode, Outcome, GameAction } from "../../enums"
 import "../session/session.scss"
 
+import type { Component } from "solid-js"
+import type Player from "../../game-objects/player"
 import type {
   clientStateMutiplayer,
   gameActionMultiplayer,
@@ -350,15 +351,11 @@ const multiplayerReducer = (
           state.shuffledDeck.length === 0
         ) {
           let outcome
-          if (state.player.pairs.length > state.opponent.pairs.length) {
+          if (state.player.pairs.length > state.opponent.pairs.length)
             outcome = Outcome.Player
-          } else if (
-            state.player.pairs.length === state.opponent.pairs.length
-          ) {
+          else if (state.player.pairs.length === state.opponent.pairs.length)
             outcome = Outcome.Draw
-          } else {
-            outcome = Outcome.Opponent
-          }
+          else outcome = Outcome.Opponent
           return {
             ...state,
             log: "",

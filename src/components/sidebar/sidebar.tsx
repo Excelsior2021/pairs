@@ -1,4 +1,3 @@
-import { Component } from "solid-js"
 import { setShowPairsModal } from "../pairs-modal/pairs-modal"
 import { setShowInstructions } from "../instructions/instructions"
 import { setShowQuitGameModal } from "../quit-game-modal/quit-game-modal"
@@ -6,6 +5,7 @@ import { dispatchGameAction as dispatchGameActionMultiplayer } from "../multipla
 import { GameAction, GameMode } from "../../enums"
 import "./sidebar.scss"
 
+import type { Component } from "solid-js"
 import type { gameStateProp } from "../../../types"
 
 const Sidebar: Component<gameStateProp> = props => {

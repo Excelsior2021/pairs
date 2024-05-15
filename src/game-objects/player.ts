@@ -1,9 +1,10 @@
-import Card from "./card"
-import Deck from "./deck"
-import Game from "./game"
-import Opponent from "./opponent"
-import { gameAction } from "../../types"
 import { GameAction, OpponentOutput, PlayerOutput } from "../enums"
+
+import type Card from "./card"
+import type Deck from "./deck"
+import type Game from "./game"
+import type Opponent from "./opponent"
+import type { gameAction } from "../../types"
 
 export default class Player {
   hand: Card[]

@@ -1,7 +1,9 @@
-import { Component, For, createSignal } from "solid-js"
-import { gameStateProp } from "../../../types"
+import { For, createSignal } from "solid-js"
 import Modal from "../modal/modal"
 import "./pairs-modal.scss"
+
+import type { Component } from "solid-js"
+import type { gameStateProp } from "../../../types"
 
 export const [showPairsModal, setShowPairsModal] = createSignal(false)
 

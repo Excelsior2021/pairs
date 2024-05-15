@@ -1,9 +1,10 @@
 import Card, { nonNumValue, suit } from "./card"
-import Game from "./game"
-import Opponent from "./opponent"
-import Player from "./player"
-import { gameAction } from "../../types"
 import { GameAction, PlayerOutput } from "../enums"
+
+import type Game from "./game"
+import type Opponent from "./opponent"
+import type Player from "./player"
+import type { gameAction } from "../../types"
 
 export default class Deck {
   deck: Card[]

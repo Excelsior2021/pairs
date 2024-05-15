@@ -1,4 +1,3 @@
-import { Component } from "solid-js"
 import { createReducer } from "@solid-primitives/memo"
 import Game from "../game/game"
 import Sidebar from "../sidebar/sidebar"
@@ -19,6 +18,7 @@ import {
 } from "../../enums"
 import "./session.scss"
 
+import type { Component } from "solid-js"
 import type { gameStateType, gameAction } from "../../../types"
 
 const initialGameState = {

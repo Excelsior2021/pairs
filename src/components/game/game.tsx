@@ -1,9 +1,10 @@
-import { Component, createEffect, createSignal } from "solid-js"
+import { createEffect, createSignal } from "solid-js"
 import Hand from "../hand/hand"
 import { GameMode } from "../../enums"
-import Card from "../../game-objects/card"
 import "./game.scss"
 
+import type { Component } from "solid-js"
+import type Card from "../../game-objects/card"
 import type { gameStateProp } from "../../../types"
 
 const Game: Component<gameStateProp> = props => {

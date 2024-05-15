@@ -1,6 +1,7 @@
-import { Component } from "solid-js"
 import { sessionID } from "../game-screen/game-screen"
 import "./create-game.scss"
+
+import type { Component } from "solid-js"
 
 const CreateGame: Component = () => (
   <div class="create-game">

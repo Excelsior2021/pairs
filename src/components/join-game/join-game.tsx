@@ -1,4 +1,4 @@
-import { Component, createSignal } from "solid-js"
+import { createSignal } from "solid-js"
 import {
   setJoinGame,
   setMultiplayerSessionStarted,
@@ -10,6 +10,8 @@ import { dispatchGameAction } from "../multiplayer-session/multiplayer-session"
 import { io } from "socket.io-client"
 import { GameAction } from "../../enums"
 import "./join-game.scss"
+
+import type { Component } from "solid-js"
 
 const JoinGame: Component = () => {
   const [sessionID, setSessionID] = createSignal("")

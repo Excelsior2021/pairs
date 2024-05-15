@@ -1,10 +1,12 @@
-import { Component, createEffect, createSignal } from "solid-js"
+import { createEffect, createSignal } from "solid-js"
 import {
   setSinglePlayerStarted,
   setMultiplayerMenu,
 } from "../game-screen/game-screen"
 import { setShowInstructions } from "../instructions/instructions"
 import "./main-menu.scss"
+
+import type { Component } from "solid-js"
 
 const [appLoaded, setAppLoaded] = createSignal(false)
 
