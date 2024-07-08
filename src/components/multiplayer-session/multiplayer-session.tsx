@@ -115,7 +115,12 @@ const multiplayerReducer = (
 
       if (action.clientPlayer === action.playerTurn)
         playerTurnHandlerFactory = (playerHandEvent: MouseEvent) =>
-          playerTurnHandler(playerHandEvent, player, clientPlayer)
+          playerTurnHandler(
+            playerHandEvent,
+            player,
+            clientPlayer,
+            dispatchGameAction
+          )
 
       return {
         ...state,
@@ -158,7 +163,8 @@ const multiplayerReducer = (
           hasCard,
           action.opponentRequestMultiplayer!,
           state.player!,
-          state.clientPlayer!
+          state.clientPlayer!,
+          dispatchGameAction
         )
 
       return {
@@ -328,7 +334,12 @@ const multiplayerReducer = (
     }
     case GameAction.PLAYER_TURN_SWITCH: {
       const playerTurnHandlerFactory = (playerHandEvent: MouseEvent) =>
-        playerTurnHandler(playerHandEvent, state.player!, state.clientPlayer!)
+        playerTurnHandler(
+          playerHandEvent,
+          state.player!,
+          state.clientPlayer!,
+          dispatchGameAction
+        )
       return {
         ...state,
         playerTurnHandlerFactory,

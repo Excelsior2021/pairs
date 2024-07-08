@@ -17,7 +17,7 @@ const Hand: Component<handProp> = props => {
             <img
               class={props.playerTurnHandler! ? "card card--player" : "card"}
               id={props.player ? card.id : undefined}
-              src={props.player ? card.img : `./cards/back.png`}
+              src={props.player ? card.img : `./cards/back.webp`}
               alt={props.player ? card.id : "opponent card"}
               onclick={handleCardClick}
             />

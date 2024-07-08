@@ -1,4 +1,3 @@
-import { dispatchGameAction } from "../components/multiplayer-session/multiplayer-session"
 import { GameAction } from "../enums"
 
 import type Card from "../game-objects/card"
@@ -11,7 +10,8 @@ import type {
 export const playerTurnHandler: playerTurnHandlerMultiplayerType = (
   playerHandEvent,
   player,
-  clientPlayer
+  clientPlayer,
+  dispatchGameAction
 ) => {
   let chosenCard: Card
   const eventTarget = playerHandEvent.target as HTMLImageElement
@@ -32,7 +32,8 @@ export const playerResponseHandler: playerResponseHandlerMultiplayerType = (
   hasCard,
   opponentRequestMultiplayer,
   player,
-  clientPlayer
+  clientPlayer,
+  dispatchGameAction
 ) => {
   const { card: opponentRequestCard } = opponentRequestMultiplayer
   let log

@@ -30,7 +30,7 @@ const Sidebar: Component<gameStateProp> = props => {
               ? "card card--deck card--deck--active"
               : "card card--deck"
           }
-          src="./cards/back.png"
+          src="./cards/back.webp"
           alt="game deck"
           onclick={gameDeckHandler}
         />

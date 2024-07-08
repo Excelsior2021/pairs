@@ -18,6 +18,11 @@ import {
 } from "../../enums"
 import "./session.scss"
 
+import Deck from "../../game-objects/deck"
+import Player from "../../game-objects/player"
+import Opponent from "../../game-objects/opponent"
+import Card from "../../game-objects/card"
+
 import type { Component } from "solid-js"
 import type { gameStateType, gameAction } from "../../../types"
 
@@ -135,7 +140,13 @@ export const [gameState, dispatchGameAction] = createReducer(
 )
 
 const Session: Component = () => {
-  new GameObject().start(dispatchGameAction)
+  const deck = new Deck(Card, dispatchGameAction)
+  const player = new Player(dispatchGameAction)
+  const opponent = new Opponent(dispatchGameAction)
+  const game = new GameObject(deck, player, opponent, dispatchGameAction)
+
+  game.start()
+
   return (
     <div class="session">
       <Game gameState={gameState} />

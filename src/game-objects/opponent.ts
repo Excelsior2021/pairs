@@ -2,32 +2,29 @@ import { GameAction, OpponentOutput } from "../enums"
 
 import type Card from "./card"
 import type Deck from "./deck"
-import type Player from "./player"
 import type Game from "./game"
-import type { gameAction } from "../../types"
+import type { dispatchGameActionType } from "../../types"
 
 export default class Opponent {
   hand: Card[]
   pairs: Card[]
   request: Card | null
+  dispatchGameAction: dispatchGameActionType
 
-  constructor() {
+  constructor(dispatchGameAction: dispatchGameActionType) {
     this.hand = []
     this.pairs = []
     this.request = null
+    this.dispatchGameAction = dispatchGameAction
   }
 
   ask() {
+    console.log("hit")
     this.request = this.hand[Math.floor(Math.random() * this.hand.length)]
     return this.request
   }
 
-  dealt(
-    game: Game,
-    deck: Deck,
-    player: Player,
-    dispatchGameAction: (action: gameAction) => void
-  ) {
+  dealt(game: Game, deck: Deck) {
     const dealtCard = deck.dealCard()
 
     if (dealtCard && this.request) {
@@ -36,7 +33,7 @@ export default class Opponent {
         this.pairs.push(dealtCard)
         this.pairs.push(this.request)
         if (requestedCardIndex !== -1) this.hand.splice(requestedCardIndex, 1)
-        game.updateUI(deck, player, this, dispatchGameAction)
+        game.updateUI()
         return OpponentOutput.DeckMatch
       }
 
@@ -46,35 +43,31 @@ export default class Opponent {
           this.pairs.push(dealtCard)
           this.pairs.push(card)
           if (handMatchIndex !== -1) this.hand.splice(handMatchIndex, 1)
-          game.updateUI(deck, player, this, dispatchGameAction)
+          game.updateUI()
           return OpponentOutput.HandMatch
         }
       }
 
       this.hand.push(dealtCard)
-      game.updateUI(deck, player, this, dispatchGameAction)
+      game.updateUI()
       return OpponentOutput.NoMatch
     }
   }
 
-  turn(
-    game: Game,
-    deck: Deck,
-    player: Player,
-    dispatchGameAction: (action: gameAction) => void
-  ) {
-    const gameOver = game.end(deck, player, this, dispatchGameAction)
+  turn(game: Game) {
+    const gameOver = game.end()
 
     if (!gameOver) {
       this.ask()
       if (this.request) {
+        console.log(this.request)
         const log = `Do you have a ${this.request.value}?`
-        dispatchGameAction({
+        this.dispatchGameAction({
           type: GameAction.GAME_LOG,
           log,
         })
 
-        game.updateUI(deck, player, this, dispatchGameAction, false, true)
+        game.updateUI(false, true)
       }
     }
   }

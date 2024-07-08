@@ -101,6 +101,10 @@ export type gameActionMultiplayer = gameAction & {
   dealtCard?: Card
 }
 
+export type dispatchGameActionType = (
+  action: gameAction | gameActionMultiplayer
+) => void
+
 type serverState = {
   shuffledDeck: Card[]
 }
@@ -119,12 +123,14 @@ export type clientStateMutiplayer = serverState & {
 export type playerTurnHandlerMultiplayerType = (
   playerHandEvent: MouseEvent,
   player: Player | null,
-  clientPlayer: number
+  clientPlayer: number,
+  dispatchGAmeAction: dispatchGameActionType
 ) => void
 
 export type playerResponseHandlerMultiplayerType = (
   hasCard: boolean,
   oppenentRequest: playerRequest,
   player: Player,
-  clientPlayer: number
+  clientPlayer: number,
+  dispatchGAmeAction: dispatchGameActionType
 ) => void

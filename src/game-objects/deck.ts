@@ -1,16 +1,26 @@
-import Card, { nonNumValue, suit } from "./card"
+import { nonNumValue, suit } from "./card"
 import { GameAction, PlayerOutput } from "../enums"
 
+import type Card from "./card"
 import type Game from "./game"
 import type Opponent from "./opponent"
 import type Player from "./player"
-import type { gameAction } from "../../types"
+import type { dispatchGameActionType } from "../../types"
 
 export default class Deck {
+  card: (
+    id: string,
+    value: number | nonNumValue,
+    suit: suit,
+    img: string
+  ) => Card
   deck: Card[]
+  dispatchGameAction: dispatchGameActionType
 
-  constructor() {
+  constructor(Card: any, dispatchGameAction: dispatchGameActionType) {
+    this.card = (id, value, suit, img) => new Card(id, value, suit, img)
     this.deck = this.create()
+    this.dispatchGameAction = dispatchGameAction
   }
 
   create() {
@@ -27,8 +37,8 @@ export default class Deck {
     const createSuits = (value: number | nonNumValue) => {
       for (const suit of suits) {
         const id = `${value}_of_${suit}`
-        const img = `./cards/${id}.png`
-        deck[deckIndex] = new Card(id, value, suit, img)
+        const img = `./cards/${id}.webp`
+        deck[deckIndex] = this.card(id, value, suit, img)
         deckIndex++
       }
     }
@@ -57,15 +67,10 @@ export default class Deck {
     return hand
   }
 
-  handler(
-    game: Game,
-    player: Player,
-    opponent: Opponent,
-    dispatchGameAction: (action: gameAction) => void
-  ) {
-    const playerOutput = player.dealt(game, this, opponent, dispatchGameAction)
+  handler(game: Game, player: Player, opponent: Opponent) {
+    const playerOutput = player.dealt(game, this)
 
-    dispatchGameAction({
+    this.dispatchGameAction({
       type: GameAction.PLAYER_ACTION,
       playerOutput,
       player,
@@ -75,8 +80,8 @@ export default class Deck {
       playerOutput === PlayerOutput.HandMatch ||
       playerOutput === PlayerOutput.NoMatch
     )
-      opponent.turn(game, this, player, dispatchGameAction)
+      opponent.turn(game)
 
-    game.end(this, player, opponent, dispatchGameAction)
+    game.end()
   }
 }

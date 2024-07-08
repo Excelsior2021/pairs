@@ -4,26 +4,26 @@ import Deck from "./deck"
 import Player from "./player"
 import Opponent from "./opponent"
 import { Outcome } from "../enums"
-import { suit } from "./card"
+import Card, { suit } from "./card"
 
 const hand = [
   {
     id: "4_of_clubs",
     value: 4,
     suit: suit.clubs,
-    img: "./cards/4_of_clubs.png",
+    img: "./cards/4_of_clubs.webp",
   },
   {
     id: "4_of_diamonds",
     value: 4,
     suit: suit.diamonds,
-    img: "./cards/4_of_diamonds.png",
+    img: "./cards/4_of_diamonds.webp",
   },
   {
     id: "8_of_diamonds",
     value: 8,
     suit: suit.diamonds,
-    img: "./cards/8_of_diamonds.png",
+    img: "./cards/8_of_diamonds.webp",
   },
 ]
 
@@ -32,26 +32,29 @@ const pairs = [
     id: "4_of_clubs",
     value: 4,
     suit: suit.clubs,
-    img: "./cards/4_of_clubs.png",
+    img: "./cards/4_of_clubs.webp",
   },
   {
     id: "4_of_diamonds",
     value: 4,
     suit: suit.diamonds,
-    img: "./cards/4_of_diamonds.png",
+    img: "./cards/4_of_diamonds.webp",
   },
 ]
 
 describe("game class", () => {
+  const dispatchGameAction = vi.fn()
   let game: Game
   let deck: Deck
-  let player: Player = new Player()
-  let opponent: Opponent = new Opponent()
-  const dispatchGameAction = vi.fn()
+  let player: Player
+  let opponent: Opponent
   let updateUISpy: any
 
   beforeEach(() => {
-    game = new Game()
+    deck = new Deck(Card, dispatchGameAction)
+    player = new Player(dispatchGameAction)
+    opponent = new Opponent(dispatchGameAction)
+    game = new Game(deck, player, opponent, dispatchGameAction)
     updateUISpy = vi.spyOn(game, "updateUI")
   })
 
@@ -59,10 +62,12 @@ describe("game class", () => {
     vi.restoreAllMocks()
   })
 
-  test(".start()", () => {
-    game.start(dispatchGameAction)
-    expect(updateUISpy).toHaveBeenCalled()
-    expect(dispatchGameAction).toHaveBeenCalledTimes(2)
+  describe(".start()", () => {
+    test("game starts", () => {
+      game.start()
+      expect(updateUISpy).toHaveBeenCalled()
+      expect(dispatchGameAction).toHaveBeenCalledTimes(2)
+    })
   })
 
   test(".initialPairs()", () => {
@@ -72,49 +77,50 @@ describe("game class", () => {
   })
 
   test(".updateUI()", () => {
-    game.updateUI(deck, player, opponent, dispatchGameAction)
+    game.updateUI()
     expect(dispatchGameAction).toHaveBeenCalled()
   })
 
-  test(".end() player wins", () => {
-    player.pairs = new Array(10).fill(null)
-    opponent.pairs = new Array(5).fill(null)
-    game.end(deck, player, opponent, dispatchGameAction)
+  describe(".end()", () => {
+    test("player wins", () => {
+      player.pairs = new Array(10).fill(null)
+      opponent.pairs = new Array(5).fill(null)
+      game.end()
 
-    expect(game.end(deck, player, opponent, dispatchGameAction)).toBe(true)
-    expect(dispatchGameAction).toHaveBeenCalled()
-    expect(updateUISpy).toHaveBeenCalled()
-    expect(dispatchGameAction.mock.calls[1][0].outcome).toBe(Outcome.Player)
-  })
+      expect(game.end()).toBe(true)
+      expect(dispatchGameAction).toHaveBeenCalled()
+      expect(updateUISpy).toHaveBeenCalled()
+      expect(dispatchGameAction.mock.calls[1][0].outcome).toBe(Outcome.Player)
+    })
 
-  test(".end() oppponent wins", () => {
-    player.pairs = new Array(5).fill(null)
-    opponent.pairs = new Array(10).fill(null)
-    game.end(deck, player, opponent, dispatchGameAction)
+    test("oppponent wins", () => {
+      player.pairs = new Array(5).fill(null)
+      opponent.pairs = new Array(10).fill(null)
+      game.end()
 
-    expect(game.end(deck, player, opponent, dispatchGameAction)).toBe(true)
-    expect(dispatchGameAction).toHaveBeenCalled()
-    expect(updateUISpy).toHaveBeenCalled()
-    expect(dispatchGameAction.mock.calls[1][0].outcome).toBe(Outcome.Opponent)
-  })
+      expect(game.end()).toBe(true)
+      expect(dispatchGameAction).toHaveBeenCalled()
+      expect(updateUISpy).toHaveBeenCalled()
+      expect(dispatchGameAction.mock.calls[1][0].outcome).toBe(Outcome.Opponent)
+    })
 
-  test(".end() draw", () => {
-    player.pairs = new Array(10).fill(null)
-    opponent.pairs = new Array(10).fill(null)
-    game.end(deck, player, opponent, dispatchGameAction)
+    test("a draw", () => {
+      player.pairs = new Array(10).fill(null)
+      opponent.pairs = new Array(10).fill(null)
+      game.end()
 
-    expect(game.end(deck, player, opponent, dispatchGameAction)).toBe(true)
-    expect(dispatchGameAction).toHaveBeenCalled()
-    expect(updateUISpy).toHaveBeenCalled()
-    expect(dispatchGameAction.mock.calls[1][0].outcome).toBe(Outcome.Draw)
-  })
+      expect(game.end()).toBe(true)
+      expect(dispatchGameAction).toHaveBeenCalled()
+      expect(updateUISpy).toHaveBeenCalled()
+      expect(dispatchGameAction.mock.calls[1][0].outcome).toBe(Outcome.Draw)
+    })
 
-  test(".end() return false", () => {
-    player.hand = new Array(10).fill(null)
-    opponent.hand = new Array(10).fill(null)
-    deck = new Deck()
-    game.end(deck, player, opponent, dispatchGameAction)
+    test("game has not ended", () => {
+      player.hand = new Array(10).fill(null)
+      opponent.hand = new Array(10).fill(null)
+      game.end()
 
-    expect(game.end(deck, player, opponent, dispatchGameAction)).toBe(false)
+      expect(game.end()).toBe(false)
+    })
   })
 })

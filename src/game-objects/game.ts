@@ -1,36 +1,49 @@
-import Deck from "./deck"
-import Opponent from "./opponent"
-import Player from "./player"
 import { GameAction, Outcome } from "../enums"
 
 import type Card from "./card"
-import type { gameAction } from "../../types"
+import type Deck from "./deck"
+import type Player from "./player"
+import type Opponent from "./opponent"
+import type { dispatchGameActionType } from "../../types"
 
 export default class Game {
-  start(dispatchGameAction: (action: gameAction) => void) {
-    const deck = new Deck()
-    const player = new Player()
-    const opponent = new Opponent()
+  deck: Deck
+  player: Player
+  opponent: Opponent
+  dispatchGameAction: dispatchGameActionType
 
-    deck.shuffle()
+  constructor(
+    Deck: Deck,
+    Player: Player,
+    Opponent: Opponent,
+    dispatchGameAction: dispatchGameActionType
+  ) {
+    this.deck = Deck
+    this.player = Player
+    this.opponent = Opponent
+    this.dispatchGameAction = dispatchGameAction
+  }
 
-    player.hand = deck.dealHand(7)
-    opponent.hand = deck.dealHand(7)
+  start() {
+    this.deck.shuffle()
 
-    player.pairs = this.initialPairs(player.hand)
-    opponent.pairs = this.initialPairs(opponent.hand)
+    this.player.hand = this.deck.dealHand(7)
+    this.opponent.hand = this.deck.dealHand(7)
+
+    this.player.pairs = this.initialPairs(this.player.hand)
+    this.opponent.pairs = this.initialPairs(this.opponent.hand)
 
     const log =
       "The cards have been dealt. Any initial pair of cards have been added to your Pairs. Please select a card from your hand to request a match with your opponent."
 
-    this.updateUI(deck, player, opponent, dispatchGameAction, true)
-    dispatchGameAction({ type: GameAction.GAME_LOG, log })
+    this.updateUI(true)
+    this.dispatchGameAction({ type: GameAction.GAME_LOG, log })
   }
 
   initialPairs(hand: Card[]) {
     const pairs: Card[] = []
     hand.forEach(cardX =>
-      hand.forEach(cardY => {
+      hand.some(cardY => {
         if (
           cardX.value === cardY.value &&
           cardX.suit !== cardY.suit &&
@@ -42,38 +55,40 @@ export default class Game {
     )
 
     pairs.forEach(cardP =>
-      hand.forEach(cardH => {
-        if (cardP === cardH) {
-          hand.splice(hand.indexOf(cardH), 1)
-        }
+      hand.some(cardH => {
+        if (cardP === cardH) hand.splice(hand.indexOf(cardH), 1)
       })
     )
     return pairs
   }
 
   updateUI(
-    deck: Deck,
-    player: Player,
-    opponent: Opponent,
-    dispatchGameAction: (action: gameAction) => void,
     playerHandClickable = false,
     opponentTurn = false,
     deckClickable = false
   ) {
+    // console.log(
+    //   this.deck,
+    //   "deck\n",
+    //   this.player,
+    //   "player\n",
+    //   this.opponent,
+    //   "opponent\n"
+    // )
     const playerTurnHandlerFactory = (playerHandEvent: MouseEvent) =>
-      player.turn(playerHandEvent, this, deck, opponent, dispatchGameAction)
+      this.player.turn(playerHandEvent, this, this.opponent)
 
     const playerResponseHandlerFactory = (hasCard: boolean) =>
-      player.response(hasCard, this, deck, opponent, dispatchGameAction)
+      this.player.response(hasCard, this, this.deck, this.opponent)
 
     const deckHandlerFactory = () =>
-      deck.handler(this, player, opponent, dispatchGameAction)
+      this.deck.handler(this, this.player, this.opponent)
 
-    dispatchGameAction({
+    this.dispatchGameAction({
       type: GameAction.UPDATE,
-      deck,
-      player,
-      opponent,
+      deck: this.deck,
+      player: this.player,
+      opponent: this.opponent,
       playerTurnHandlerFactory,
       playerHandClickable,
       playerResponseHandlerFactory,
@@ -83,11 +98,11 @@ export default class Game {
     })
   }
 
-  outcome(player: Player, opponent: Opponent) {
+  outcome() {
     let outcome
-    if (player.pairs.length > opponent.pairs.length) {
+    if (this.player.pairs.length > this.opponent.pairs.length) {
       outcome = Outcome.Player
-    } else if (player.pairs.length === opponent.pairs.length) {
+    } else if (this.player.pairs.length === this.opponent.pairs.length) {
       outcome = Outcome.Draw
     } else {
       outcome = Outcome.Opponent
@@ -95,21 +110,16 @@ export default class Game {
     return outcome
   }
 
-  end(
-    deck: Deck,
-    player: Player,
-    opponent: Opponent,
-    dispatchGameAction: (action: gameAction) => void
-  ) {
+  end() {
     if (
-      player.hand.length === 0 ||
-      opponent.hand.length === 0 ||
-      deck.deck.length === 0
+      this.player.hand.length === 0 ||
+      this.opponent.hand.length === 0 ||
+      this.deck.deck.length === 0
     ) {
-      const outcome = this.outcome(player, opponent)
+      const outcome = this.outcome()
 
-      this.updateUI(deck, player, opponent, dispatchGameAction)
-      dispatchGameAction({
+      this.updateUI()
+      this.dispatchGameAction({
         type: GameAction.GAME_OVER,
         outcome,
         gameOver: true,

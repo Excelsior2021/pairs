@@ -4,25 +4,22 @@ import type Card from "./card"
 import type Deck from "./deck"
 import type Game from "./game"
 import type Opponent from "./opponent"
-import type { gameAction } from "../../types"
+import type { dispatchGameActionType } from "../../types"
 
 export default class Player {
   hand: Card[]
   pairs: Card[]
   chosenCard: Card | null
+  dispatchGameAction: dispatchGameActionType
 
-  constructor() {
+  constructor(dispatchGameAction: dispatchGameActionType) {
     this.hand = []
     this.pairs = []
     this.chosenCard = null
+    this.dispatchGameAction = dispatchGameAction
   }
 
-  match(
-    game: Game,
-    deck: Deck,
-    opponent: Opponent,
-    dispatchGameAction: (action: gameAction) => void
-  ) {
+  match(game: Game, opponent: Opponent) {
     if (this.chosenCard) {
       for (const card of opponent.hand) {
         if (card.value === this.chosenCard.value) {
@@ -33,8 +30,8 @@ export default class Player {
             if (this.chosenCard!.id === card.id) {
               this.pairs.push(card)
               this.hand.splice(this.hand.indexOf(card), 1)
-              game.updateUI(deck, this, opponent, dispatchGameAction, true)
-              dispatchGameAction({ type: GameAction.GAME_LOG, log: "" })
+              game.updateUI(true)
+              this.dispatchGameAction({ type: GameAction.GAME_LOG, log: "" })
               this.chosenCard = null
               return PlayerOutput.OpponentMatch
             }
@@ -45,23 +42,18 @@ export default class Player {
     }
   }
 
-  dealt(
-    game: Game,
-    deck: Deck,
-    opponent: Opponent,
-    dispatchGameAction: (action: gameAction) => void
-  ) {
+  dealt(game: Game, deck: Deck) {
     const dealtCard = deck.dealCard()
 
     if (this.chosenCard && dealtCard) {
       if (this.chosenCard.value === dealtCard.value) {
         this.pairs.push(dealtCard)
-        for (let card of this.hand) {
+        for (const card of this.hand) {
           if (this.chosenCard.id === card.id) {
             this.pairs.push(card)
             this.hand.splice(this.hand.indexOf(card), 1)
-            game.updateUI(deck, this, opponent, dispatchGameAction, true)
-            dispatchGameAction({ type: GameAction.GAME_LOG, log: "" })
+            game.updateUI(true)
+            this.dispatchGameAction({ type: GameAction.GAME_LOG, log: "" })
             return PlayerOutput.DeckMatch
           }
         }
@@ -74,69 +66,49 @@ export default class Player {
           this.pairs.push(dealtCard)
           this.pairs.push(card)
           this.hand.splice(this.hand.indexOf(card), 1)
-          game.updateUI(deck, this, opponent, dispatchGameAction)
+          game.updateUI()
           return PlayerOutput.HandMatch
         }
       }
 
       this.hand.push(dealtCard)
-      game.updateUI(deck, this, opponent, dispatchGameAction)
+      game.updateUI()
       return PlayerOutput.NoMatch
     }
   }
 
-  turn(
-    playerChosenCardEvent: MouseEvent,
-    game: Game,
-    deck: Deck,
-    opponent: Opponent,
-    dispatchGameAction: (action: gameAction) => void
-  ) {
+  turn(playerChosenCardEvent: MouseEvent, game: Game, opponent: Opponent) {
     const eventTarget = playerChosenCardEvent.target as HTMLImageElement
     for (const card of this.hand)
       if (card.id === eventTarget.id) this.chosenCard = card
 
-    const playerOutput = this.match(game, deck, opponent, dispatchGameAction)
+    const playerOutput = this.match(game, opponent)
 
-    dispatchGameAction({
+    this.dispatchGameAction({
       type: GameAction.PLAYER_ACTION,
       playerOutput,
       player: this,
     })
 
-    const gameOver = game.end(deck, this, opponent, dispatchGameAction)
+    const gameOver = game.end()
 
     if (!gameOver) {
       if (playerOutput === PlayerOutput.NoOpponentMatch) {
         const log =
           "You didn't match with any card in your opponent's hand. Please deal a card from the deck."
-        game.updateUI(
-          deck,
-          this,
-          opponent,
-          dispatchGameAction,
-          false,
-          false,
-          true
-        )
-        dispatchGameAction({ type: GameAction.GAME_LOG, log })
+        game.updateUI(false, false, true)
+        this.dispatchGameAction({ type: GameAction.GAME_LOG, log })
       }
     }
   }
 
-  response(
-    hasCard: boolean,
-    game: Game,
-    deck: Deck,
-    opponent: Opponent,
-    dispatchGameAction: (action: gameAction) => void
-  ) {
-    const opponentTurn = () =>
-      opponent.turn(game, deck, this, dispatchGameAction)
+  response(hasCard: boolean, game: Game, deck: Deck, opponent: Opponent) {
+    const opponentTurn = () => opponent.turn(game)
 
     let log
 
     if (opponent.request) {
+      console.log(hasCard)
       if (hasCard) {
         for (const card of this.hand) {
           if (card.value === opponent.request.value) {
@@ -146,17 +118,17 @@ export default class Player {
             opponent.pairs.push(card)
             this.hand.splice(this.hand.indexOf(card), 1)
 
-            game.updateUI(deck, this, opponent, dispatchGameAction)
+            game.updateUI()
 
             log = "It's your opponent's turn again."
-            dispatchGameAction({ type: "GAME_LOG", log })
+            this.dispatchGameAction({ type: "GAME_LOG", log })
             setTimeout(opponentTurn, 2000)
             return
           }
         }
         log = `Are you sure? Do you have a ${opponent.request.value}?`
 
-        dispatchGameAction({
+        this.dispatchGameAction({
           type: "GAME_LOG",
           log,
         })
@@ -168,7 +140,7 @@ export default class Player {
           if (card.value === opponent.request.value) {
             log = `Are you sure? Do you have a ${opponent.request.value}?`
 
-            dispatchGameAction({
+            this.dispatchGameAction({
               type: "GAME_LOG",
               log,
             })
@@ -176,19 +148,14 @@ export default class Player {
           }
         }
 
-        const opponentOutput = opponent.dealt(
-          game,
-          deck,
-          this,
-          dispatchGameAction
-        )
+        const opponentOutput = opponent.dealt(game, deck)
 
         if (opponentOutput === OpponentOutput.DeckMatch) {
-          game.updateUI(deck, this, opponent, dispatchGameAction)
+          game.updateUI()
           log =
             "Your opponent has dealt a card from the deck and matched with the dealt card. It's your opponent's turn again."
 
-          dispatchGameAction({ type: "GAME_LOG", log })
+          this.dispatchGameAction({ type: "GAME_LOG", log })
           setTimeout(opponentTurn, 2000)
         }
         if (opponentOutput === OpponentOutput.HandMatch) {
@@ -202,7 +169,7 @@ export default class Player {
       }
     }
 
-    game.updateUI(deck, this, opponent, dispatchGameAction, true, false)
-    dispatchGameAction({ type: "GAME_LOG", log })
+    game.updateUI(true, false)
+    this.dispatchGameAction({ type: "GAME_LOG", log })
   }
 }
