@@ -60,9 +60,6 @@ const gameReducer = (
         state.deckHandlerFactory = action.deckHandlerFactory
       else state.deckHandlerFactory = null
 
-      if (!state.playerResponseHandlerFactory)
-        state.playerResponseHandlerFactory = action.playerResponseHandlerFactory
-
       return {
         ...state,
         deck: action.deck!,
@@ -70,6 +67,7 @@ const gameReducer = (
         opponent: action.opponent!,
         opponentTurn: action.opponentTurn!,
         deckClickable: action.deckClickable!,
+        playerResponseHandlerFactory: action.playerResponseHandlerFactory,
         gameOver: false,
       }
     }
@@ -134,12 +132,12 @@ const gameReducer = (
   }
 }
 
-export const [gameState, dispatchGameAction] = createReducer(
-  gameReducer,
-  initialGameState
-)
-
 const Session: Component = () => {
+  const [gameState, dispatchGameAction] = createReducer(
+    gameReducer,
+    initialGameState
+  )
+
   const deck = new Deck(Card, dispatchGameAction)
   const player = new Player(dispatchGameAction)
   const opponent = new Opponent(dispatchGameAction)

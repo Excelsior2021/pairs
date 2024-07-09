@@ -19,7 +19,6 @@ export default class Opponent {
   }
 
   ask() {
-    console.log("hit")
     this.request = this.hand[Math.floor(Math.random() * this.hand.length)]
     return this.request
   }
@@ -60,7 +59,6 @@ export default class Opponent {
     if (!gameOver) {
       this.ask()
       if (this.request) {
-        console.log(this.request)
         const log = `Do you have a ${this.request.value}?`
         this.dispatchGameAction({
           type: GameAction.GAME_LOG,

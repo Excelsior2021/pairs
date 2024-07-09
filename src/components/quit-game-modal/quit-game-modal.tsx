@@ -28,7 +28,7 @@ const QuitGameModal: Component<quitGameModalProps> = props => (
           setMultiplayerSessionStarted(false)
           setShowQuitGameModal(false)
           if (props.multiplayer) props.socket?.disconnect()
-          window.location.reload()
+          // window.location.reload()
         }}>
         confirm
       </button>

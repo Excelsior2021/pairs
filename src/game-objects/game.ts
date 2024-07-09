@@ -67,14 +67,6 @@ export default class Game {
     opponentTurn = false,
     deckClickable = false
   ) {
-    // console.log(
-    //   this.deck,
-    //   "deck\n",
-    //   this.player,
-    //   "player\n",
-    //   this.opponent,
-    //   "opponent\n"
-    // )
     const playerTurnHandlerFactory = (playerHandEvent: MouseEvent) =>
       this.player.turn(playerHandEvent, this, this.opponent)
 

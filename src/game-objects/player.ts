@@ -108,7 +108,6 @@ export default class Player {
     let log
 
     if (opponent.request) {
-      console.log(hasCard)
       if (hasCard) {
         for (const card of this.hand) {
           if (card.value === opponent.request.value) {
