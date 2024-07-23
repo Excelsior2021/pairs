@@ -4,7 +4,7 @@ import {
   setMultiplayerSessionStarted,
   setJoinGame,
   setSocket,
-  setSessionID,
+  setCreateSessionID,
   socket,
 } from "../game-screen/game-screen"
 import { dispatchGameAction } from "../multiplayer-session/multiplayer-session"
@@ -43,7 +43,7 @@ const MultiplayerMenu: Component = () => {
         const sessionIDGenerator = () => Math.floor(Math.random() * 10 ** 4)
         const sessionID = sessionIDGenerator().toString().padStart(4, "0")
 
-        setSessionID(sessionID)
+        setCreateSessionID(sessionID)
 
         socket.emit("recieve_sessionID")
 

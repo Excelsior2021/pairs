@@ -1,4 +1,4 @@
-import { createSignal, Show } from "solid-js"
+import { createSignal, Show, type Component } from "solid-js"
 import { createReducer } from "@solid-primitives/memo"
 import Game from "../game/game"
 import Sidebar from "../sidebar/sidebar"
@@ -17,13 +17,12 @@ import {
 import { PlayerOutput, GameMode, Outcome, GameAction } from "../../enums"
 import "../session/session.scss"
 
-import type { Component } from "solid-js"
+import type { Socket } from "socket.io-client"
 import type Player from "../../game-objects/player"
 import type {
   clientStateMutiplayer,
   gameActionMultiplayer,
   gameStateMultiplayer,
-  multiplayerSessionProps,
 } from "../../../types"
 
 const initialGameState = {
@@ -386,7 +385,11 @@ export const [gameState, dispatchGameAction] = createReducer(
   initialGameState
 )
 
-const MultiplayerSession: Component<multiplayerSessionProps> = props => {
+type props = {
+  socket: Socket | null
+}
+
+const MultiplayerSession: Component<props> = props => {
   const [player, setPlayer] = createSignal(0)
   const [startGame, setStartGame] = createSignal(false)
 

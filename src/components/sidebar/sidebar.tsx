@@ -1,14 +1,18 @@
 import { setShowPairsModal } from "../pairs-modal/pairs-modal"
 import { setShowInstructions } from "../instructions/instructions"
-import { setShowQuitGameModal } from "../quit-game-modal/quit-game-modal"
 import { dispatchGameAction as dispatchGameActionMultiplayer } from "../multiplayer-session/multiplayer-session"
 import { GameAction, GameMode } from "../../enums"
 import "./sidebar.scss"
 
-import type { Component } from "solid-js"
-import type { gameStateProp } from "../../../types"
+import type { Accessor, Component } from "solid-js"
+import type { gameStateType } from "../../../types"
+import { setShowQuitGameModal } from "../quit-game-modal/quit-game-modal"
 
-const Sidebar: Component<gameStateProp> = props => {
+type props = {
+  gameState: Accessor<gameStateType>
+}
+
+const Sidebar: Component<props> = props => {
   const gameDeckHandler = () => {
     if (props.gameState().deckClickable) {
       if (props.gameState().gameMode === GameMode.SinglePlayer)

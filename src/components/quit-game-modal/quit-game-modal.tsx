@@ -1,4 +1,4 @@
-import { createSignal } from "solid-js"
+import { createSignal, type Component } from "solid-js"
 import Modal from "../modal/modal"
 import {
   setMultiplayerSessionStarted,
@@ -6,12 +6,16 @@ import {
 } from "../game-screen/game-screen"
 import "./quit-game-modal.scss"
 
-import type { Component } from "solid-js"
-import type { quitGameModalProps } from "../../../types"
+import type { Socket } from "socket.io-client"
 
 export const [showQuitGameModal, setShowQuitGameModal] = createSignal(false)
 
-const QuitGameModal: Component<quitGameModalProps> = props => (
+type props = {
+  multiplayer: boolean
+  socket: Socket | null
+}
+
+const QuitGameModal: Component<props> = props => (
   <Modal
     showModal={showQuitGameModal}
     setShowModal={setShowQuitGameModal}
@@ -28,7 +32,6 @@ const QuitGameModal: Component<quitGameModalProps> = props => (
           setMultiplayerSessionStarted(false)
           setShowQuitGameModal(false)
           if (props.multiplayer) props.socket?.disconnect()
-          // window.location.reload()
         }}>
         confirm
       </button>

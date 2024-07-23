@@ -1,5 +1,7 @@
 import { createEffect, createSignal } from "solid-js"
 import Hand from "../hand/hand"
+import GameActions from "../game-actions/game-actions"
+import GameOver from "../game-over/game-over"
 import { GameMode } from "../../enums"
 import "./game.scss"
 
@@ -26,38 +28,15 @@ const Game: Component<gameStateProp> = props => {
       <div class="game__console">
         {props.gameState().log}
         {props.gameState().gameOver && (
-          <div class="game__game-over">
-            <div class="game__outcome">
-              <h2 class="game__game-over-heading">GAME OVER</h2>
-              <p class="game__game-over-text">{props.gameState().outcome}</p>
-            </div>
-            <div class="game__stats">
-              <h2 class="game__game-over-heading">STATS</h2>
-              <p class="game__game-over-text">
-                Your Pairs: {props.gameState().player!.pairs.length}
-              </p>
-              <p class="game__game-over-text">
-                Opponent Pairs: {props.gameState().opponent!.pairs.length}
-              </p>
-              <p class="game__game-over-text">
-                Remaining cards in deck: {deck()!.length}
-              </p>
-            </div>
-          </div>
+          <GameOver
+            outcome={props.gameState().outcome}
+            playerPairsAmount={props.gameState().player!.pairs.length}
+            opponentPairsAmount={props.gameState().opponent!.pairs.length}
+            deckAmount={deck()!.length}
+          />
         )}
         {props.gameState().opponentTurn && (
-          <div class="game__actions">
-            <button
-              class="game__button"
-              onClick={() => playerResponseHandler(true)}>
-              Yes
-            </button>
-            <button
-              class="game__button"
-              onClick={() => playerResponseHandler(false)}>
-              No
-            </button>
-          </div>
+          <GameActions playerResponseHandler={playerResponseHandler} />
         )}
       </div>
       <Hand

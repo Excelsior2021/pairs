@@ -11,23 +11,6 @@ export type gameStateProp = {
   gameState: Accessor<gameStateType & gameStateMultiplayer>
 }
 
-export type handProp = {
-  heading: string
-  hand: Card[]
-  player?: boolean
-  playerTurnHandler?: (playerHandEvent: MouseEvent) => void
-  gameMode?: string
-}
-
-export type multiplayerSessionProps = {
-  socket: Socket | null
-}
-
-export type quitGameModalProps = {
-  multiplayer: boolean
-  socket: Socket | null
-}
-
 export type playerRequest = {
   card: Card
   clientPlayer: number

@@ -3,7 +3,9 @@
 
 .main-menu {
   @include menu;
-  position: relative;
+  & {
+    position: relative;
+  }
 
   &--no-animation {
     animation: none;

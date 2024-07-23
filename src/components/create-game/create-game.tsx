@@ -1,4 +1,4 @@
-import { sessionID } from "../game-screen/game-screen"
+import { createSessionID } from "../game-screen/game-screen"
 import "./create-game.scss"
 
 import type { Component } from "solid-js"
@@ -10,7 +10,7 @@ const CreateGame: Component = () => (
       Share the session ID with the user you want to play with
     </p>
     <p class="create-game__text">
-      session ID: <span class="create-game__id">{sessionID()}</span>
+      session ID: <span class="create-game__id">{createSessionID()}</span>
     </p>
     <p class="create-game__text">waiting for opponent to connect...</p>
   </div>

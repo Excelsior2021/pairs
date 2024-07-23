@@ -15,15 +15,17 @@ html {
 
 body {
   @include scrollbars;
-  font-size: 1.6rem;
-  font-family: Arial, Helvetica, sans-serif;
-  color: white;
-  background-color: rgb(0, 0, 80);
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  min-width: fit-content;
-  min-height: 70vh;
+  & {
+    font-size: 1.6rem;
+    font-family: Arial, Helvetica, sans-serif;
+    color: white;
+    background-color: rgb(0, 0, 80);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-width: fit-content;
+    min-height: 70vh;
+  }
 }
 
 .card {

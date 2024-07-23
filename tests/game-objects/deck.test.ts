@@ -1,26 +1,24 @@
 import { it, describe, expect, beforeEach, vi } from "vitest"
-import Card from "./card"
-import Deck from "./deck"
-import Game from "./game"
-import Player from "./player"
-import Opponent from "./opponent"
-import { dispatchGameAction } from "../components/session/session"
+import Card from "../../src/game-objects/card"
+import Deck from "../../src/game-objects/deck"
+import Game from "../../src/game-objects/game"
+import Player from "../../src/game-objects/player"
+import Opponent from "../../src/game-objects/opponent"
+import mockDeck from "../__mocks__/deck"
 
 describe("deck class", () => {
   let deck: Deck
-  let dispatchGameActionSpy = vi.fn(dispatchGameAction)
+  let dispatchGameActionSpy = vi.fn()
 
   beforeEach(() => {
-    dispatchGameActionSpy = vi.fn(dispatchGameAction)
+    dispatchGameActionSpy = vi.fn()
     deck = new Deck(Card, dispatchGameActionSpy)
   })
 
   describe(".create()", () => {
-    it("creates 52 cards of a standard deck", () => {
-      const newDeck = deck.create()
-      expect(newDeck).toHaveLength(52)
-      expect(newDeck[0].id).toBe("ace_of_clubs")
-      expect(newDeck[newDeck.length - 1].id).toBe("10_of_spades")
+    it("returns a standard deck of cards", () => {
+      const newDeck = deck.create(Card)
+      expect(JSON.stringify(newDeck)).toBe(JSON.stringify(mockDeck))
     })
   })
 
@@ -37,7 +35,7 @@ describe("deck class", () => {
   })
 
   describe(".dealCard()", () => {
-    it("deals a card from deck", () => {
+    it("returns a card from deck", () => {
       const dealtCard = deck.dealCard()
       expect(dealtCard).toHaveProperty("id")
       expect(dealtCard).toHaveProperty("suit")

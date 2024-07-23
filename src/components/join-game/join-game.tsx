@@ -14,7 +14,7 @@ import "./join-game.scss"
 import type { Component } from "solid-js"
 
 const JoinGame: Component = () => {
-  const [sessionID, setSessionID] = createSignal("")
+  const [joinSessionID, setJoinSessionID] = createSignal("")
   const [sessionIDNotValid, setSessionIDNotValid] = createSignal(false)
   const [noSessionExists, setNoSessionExists] = createSignal(false)
   const [loading, setLoading] = createSignal(false)
@@ -87,8 +87,8 @@ const JoinGame: Component = () => {
         type="text"
         placeholder="session ID"
         maxlength="4"
-        value={sessionID()}
-        onchange={event => setSessionID(event.currentTarget.value)}
+        value={joinSessionID()}
+        onchange={event => setJoinSessionID(event.currentTarget.value)}
         aria-label="session id"
       />
       {loading() && (
@@ -113,7 +113,7 @@ const JoinGame: Component = () => {
       <div class="join-game__actions">
         <button
           class="join-game__button"
-          onclick={() => joinGameHandler(sessionID())}
+          onclick={() => joinGameHandler(joinSessionID())}
           disabled={loading()}>
           join
         </button>

@@ -2,9 +2,17 @@ import { For } from "solid-js"
 import "./hand.scss"
 
 import type { Component } from "solid-js"
-import type { handProp } from "../../../types"
+import type Card from "../../game-objects/card"
 
-const Hand: Component<handProp> = props => {
+type prop = {
+  heading: string
+  hand: Card[]
+  player?: boolean
+  playerTurnHandler?: (playerHandEvent: MouseEvent) => void
+  gameMode?: string
+}
+
+const Hand: Component<prop> = props => {
   const handleCardClick = (e: MouseEvent) => {
     if (props.playerTurnHandler) props.playerTurnHandler(e)
   }

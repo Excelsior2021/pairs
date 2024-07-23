@@ -17,17 +17,21 @@
 
 @mixin menu-button {
   @include button;
-  font-size: 2rem;
-  margin: 1rem 0;
-  padding: 1rem 5rem;
-  max-width: 22.5rem;
-  cursor: pointer;
+  & {
+    font-size: 2rem;
+    margin: 1rem 0;
+    padding: 1rem 5rem;
+    max-width: 22.5rem;
+    cursor: pointer;
+  }
 }
 
 @mixin modal-button {
   @include button;
-  margin-top: 3rem;
-  padding: 1rem 5rem;
+  & {
+    margin-top: 3rem;
+    padding: 1rem 5rem;
+  }
 }
 
 @mixin button-red {

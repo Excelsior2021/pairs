@@ -10,7 +10,9 @@ const App: Component = () => (
       href="https://jonathankila.vercel.app"
       target="_blank"
       rel="noreferrer">
-      <h1 class="app__title">Pairs</h1>
+      <h1 class="app__title" aria-label="app name">
+        Pairs
+      </h1>
     </a>
     <a class="counter" href="https://www.free-website-hit-counter.com">
       <img

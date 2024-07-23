@@ -2,7 +2,9 @@
 
 .multiplayer-menu {
   @include menu;
-  animation: none;
+  & {
+    animation: none;
+  }
 
   &__text {
     font-size: 2rem;

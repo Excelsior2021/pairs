@@ -11,6 +11,8 @@
 
   &__button {
     @include modal-button;
-    @include button-red;
+    & {
+      @include button-red;
+    }
   }
 }

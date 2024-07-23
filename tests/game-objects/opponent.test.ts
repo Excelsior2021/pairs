@@ -1,10 +1,10 @@
 import { beforeEach, describe, it, test, expect, vi } from "vitest"
-import Opponent from "./opponent"
-import Deck from "./deck"
-import Game from "./game"
-import Player from "./player"
-import { OpponentOutput } from "../enums"
-import Card, { suit } from "./card"
+import Card, { suit } from "../../src/game-objects/card"
+import Opponent from "../../src/game-objects/opponent"
+import Deck from "../../src/game-objects/deck"
+import Game from "../../src/game-objects/game"
+import Player from "../../src/game-objects/player"
+import { OpponentOutput } from "../../src/enums"
 
 const hand = [
   {

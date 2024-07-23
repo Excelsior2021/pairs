@@ -15,8 +15,8 @@ export const [multiplayerMenu, setMultiplayerMenu] = createSignal(false)
 export const [joinGame, setJoinGame] = createSignal(false)
 export const [multiplayerSessionStarted, setMultiplayerSessionStarted] =
   createSignal(false)
-export const [sessionID, setSessionID] = createSignal("")
 export const [socket, setSocket] = createSignal<Socket | null>(null)
+export const [createSessionID, setCreateSessionID] = createSignal("")
 
 const GameScreen: Component = () => {
   return (

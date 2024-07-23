@@ -25,9 +25,11 @@
 
   &__button {
     @include button;
-    margin: 1rem auto;
-    width: 180px;
-    padding: 0.5rem;
+    & {
+      margin: 1rem auto;
+      width: 180px;
+      padding: 0.5rem;
+    }
 
     &--quit {
       @include button-red;

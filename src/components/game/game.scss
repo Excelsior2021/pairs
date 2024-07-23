@@ -28,8 +28,10 @@
 
   &__button {
     @include button;
-    padding: 0.5rem 4rem;
-    margin: 1.6rem;
+    & {
+      padding: 0.5rem 4rem;
+      margin: 1.6rem;
+    }
   }
 
   &__game-over {

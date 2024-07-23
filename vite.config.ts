@@ -9,4 +9,7 @@ export default defineConfig({
   build: {
     target: "esnext",
   },
+  test: {
+    environmentMatchGlobs: [["./tests/components", "jsdom"]],
+  },
 })
