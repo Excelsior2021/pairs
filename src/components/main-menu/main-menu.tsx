@@ -8,9 +8,10 @@ import "./main-menu.scss"
 
 import type { Component } from "solid-js"
 
-const MainMenu: Component = () => {
-  const [appLoaded, setAppLoaded] = createSignal(false)
+//global signal to prevent appLoaded from reinitializing
+const [appLoaded, setAppLoaded] = createSignal(false)
 
+const MainMenu: Component = () => {
   //delay for setTimeout set to 500ms because animation is 500ms
   createEffect(() => setTimeout(() => setAppLoaded(true), 500))
 
