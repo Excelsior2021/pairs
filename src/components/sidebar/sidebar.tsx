@@ -1,12 +1,12 @@
 import { setShowPairsModal } from "../pairs-modal/pairs-modal"
 import { setShowInstructions } from "../instructions/instructions"
 import { dispatchGameAction as dispatchGameActionMultiplayer } from "../multiplayer-session/multiplayer-session"
+import { setShowQuitGameModal } from "../quit-game-modal/quit-game-modal"
 import { GameAction, GameMode } from "../../enums"
 import "./sidebar.scss"
 
 import type { Accessor, Component } from "solid-js"
 import type { gameStateType } from "../../../types"
-import { setShowQuitGameModal } from "../quit-game-modal/quit-game-modal"
 
 type props = {
   gameState: Accessor<gameStateType>
@@ -27,7 +27,7 @@ const Sidebar: Component<props> = props => {
   return (
     <div class="sidebar">
       <div class="sidebar__deck">
-        <p class="sidebar__heading">deck</p>
+        <h3 class="sidebar__heading">deck</h3>
         <img
           class={
             props.gameState().deckClickable
@@ -40,7 +40,7 @@ const Sidebar: Component<props> = props => {
         />
       </div>
       <div class="sidebar__actions">
-        <p class="sidebar__heading">{props.gameState().gameMode}</p>
+        <h3 class="sidebar__heading">{props.gameState().gameMode}</h3>
         <button class="sidebar__button" onclick={() => setShowPairsModal(true)}>
           pairs
         </button>

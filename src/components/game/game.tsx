@@ -6,17 +6,18 @@ import { GameMode } from "../../enums"
 import "./game.scss"
 
 import type { Component } from "solid-js"
-import type Card from "../../game-objects/card"
 import type { gameStateProp } from "../../../types"
 
 const Game: Component<gameStateProp> = props => {
-  const [deck, setDeck] = createSignal([] as Card[])
+  const [deckCount, setDeckCount] = createSignal<null | number>(null)
 
   createEffect(() => {
-    if (props.gameState().gameMode === GameMode.SinglePlayer)
-      setDeck(props.gameState().deck!.deck)
-    if (props.gameState().gameMode === GameMode.Multiplayer)
-      setDeck(props.gameState().shuffledDeck!)
+    if (props.gameState().gameOver) {
+      if (props.gameState().gameMode === GameMode.SinglePlayer)
+        setDeckCount(props.gameState().deck!.deck.length)
+      if (props.gameState().gameMode === GameMode.Multiplayer)
+        setDeckCount(props.gameState().shuffledDeck!.length)
+    }
   })
 
   const playerResponseHandler = (hasCard: boolean) =>
@@ -32,7 +33,7 @@ const Game: Component<gameStateProp> = props => {
             outcome={props.gameState().outcome}
             playerPairsAmount={props.gameState().player!.pairs.length}
             opponentPairsAmount={props.gameState().opponent!.pairs.length}
-            deckAmount={deck()!.length}
+            deckAmount={deckCount()!}
           />
         )}
         {props.gameState().opponentTurn && (
@@ -44,7 +45,6 @@ const Game: Component<gameStateProp> = props => {
         hand={props.gameState().player!.hand}
         player={true}
         playerTurnHandler={props.gameState().playerTurnHandlerFactory!}
-        gameMode={props.gameState().gameMode}
       />
     </div>
   )

@@ -26,7 +26,7 @@ const JoinGame: Component = () => {
     setSessionIDNotValid(false)
     setNoSessionExists(false)
     setServerConnected(null)
-    const socketVar = setSocket(io(import.meta.env.VITE_SERVER_URL))
+    const socketVar = setSocket(io(import.meta.env.VITE_SERVER_DOMAIN))
 
     let timeoutCounter = 0
 

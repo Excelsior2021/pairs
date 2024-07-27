@@ -1,15 +1,15 @@
 import { describe, expect, it, vi } from "vitest"
-import { render, screen } from "@solidjs/testing-library"
+import { render } from "@solidjs/testing-library"
 import GameActions from "../../src/components/game-actions/game-actions"
 import user from "@testing-library/user-event"
 
 describe("GameActions component", async () => {
   const playerResponseHandlerMock = vi.fn()
-  render(() => (
+  const { getByRole } = render(() => (
     <GameActions playerResponseHandler={playerResponseHandlerMock} />
   ))
-  const yesButton = await screen.findByRole("button", { name: "Yes" })
-  const noButton = await screen.findByRole("button", { name: "No" })
+  const yesButton = getByRole("button", { name: "Yes" })
+  const noButton = getByRole("button", { name: "No" })
   user.setup()
 
   it("renders buttons", () => {

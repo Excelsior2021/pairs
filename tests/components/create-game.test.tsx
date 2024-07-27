@@ -1,11 +1,12 @@
-import { describe, expect, test } from "vitest"
-import { render, screen } from "@solidjs/testing-library"
+import { describe, expect, it } from "vitest"
+import { render } from "@solidjs/testing-library"
 import CreateGame from "../../src/components/create-game/create-game"
 
-describe("CreateGame component", async () => {
-  render(() => <CreateGame />)
-  const heading = await screen.findByText(/create game session/i)
-  test("heading in document", () => {
+describe("CreateGame component", () => {
+  const { getByText } = render(() => <CreateGame />)
+  const heading = getByText(/create game session/i)
+
+  it("renders heading", () => {
     expect(heading).toBeInTheDocument()
   })
 })

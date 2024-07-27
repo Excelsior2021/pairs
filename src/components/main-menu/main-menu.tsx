@@ -8,13 +8,16 @@ import "./main-menu.scss"
 
 import type { Component } from "solid-js"
 
-const [appLoaded, setAppLoaded] = createSignal(false)
-
 const MainMenu: Component = () => {
+  const [appLoaded, setAppLoaded] = createSignal(false)
+
+  //delay for setTimeout set to 500ms because animation is 500ms
   createEffect(() => setTimeout(() => setAppLoaded(true), 500))
+
   return (
     <div
-      class={appLoaded() ? "main-menu main-menu--no-animation" : "main-menu"}>
+      class={appLoaded() ? "main-menu main-menu--no-animation" : "main-menu"}
+      data-testid="main-menu">
       <h2 class="main-menu__heading">main menu</h2>
       <div class="main-menu__actions">
         <button

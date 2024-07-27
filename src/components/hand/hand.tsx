@@ -9,7 +9,6 @@ type prop = {
   hand: Card[]
   player?: boolean
   playerTurnHandler?: (playerHandEvent: MouseEvent) => void
-  gameMode?: string
 }
 
 const Hand: Component<prop> = props => {
@@ -18,7 +17,7 @@ const Hand: Component<prop> = props => {
   }
   return (
     <div class="hand">
-      <p class="hand__heading">{props.heading}</p>
+      <h3 class="hand__heading">{props.heading}</h3>
       <div class="hand__hand">
         <For each={props.hand}>
           {card => (

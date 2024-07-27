@@ -10,6 +10,9 @@ export default defineConfig({
     target: "esnext",
   },
   test: {
-    environmentMatchGlobs: [["./tests/components", "jsdom"]],
+    environmentMatchGlobs: [
+      ["./tests/components/**", "happy-dom"],
+      ["./tests/game-objects/**", "node"],
+    ],
   },
 })

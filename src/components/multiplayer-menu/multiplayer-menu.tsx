@@ -26,7 +26,7 @@ const MultiplayerMenu: Component = () => {
   const createGameHandler = () => {
     setServerTimeout(false)
     setServerConnected(null)
-    const socket = io(import.meta.env.VITE_SERVER_URL)
+    const socket = io(import.meta.env.VITE_SERVER_DOMAIN)
     const timerIntervalRef = setInterval(() => {
       if (timerInterval() > 0) setTimerInterval(prev => prev - 1)
       else clearInterval(timerIntervalRef)
