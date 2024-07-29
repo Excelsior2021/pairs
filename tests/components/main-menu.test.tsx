@@ -1,6 +1,12 @@
-import { describe, expect, it, test } from "vitest"
+import { afterEach, describe, expect, it, test, vi } from "vitest"
 import { render, waitFor } from "@solidjs/testing-library"
+import user from "@testing-library/user-event"
 import MainMenu from "../../src/components/main-menu/main-menu"
+import {
+  setMultiplayerMenu,
+  setSinglePlayerStarted,
+} from "../../src/components/game-screen/game-screen"
+import { setShowInstructions } from "../../src/components/instructions/instructions"
 
 describe("MainMenu Component", () => {
   const { getByRole, getByTestId } = render(() => <MainMenu />)
@@ -42,5 +48,30 @@ describe("MainMenu Component", () => {
         timeout: 500,
       }
     )
+  })
+
+  describe("actions", () => {
+    vi.mock("../../src/components/game-screen/game-screen")
+    vi.mock("../../src/components/instructions/instructions")
+    user.setup()
+
+    afterEach(() => {
+      vi.resetAllMocks()
+    })
+
+    test("single player button clicked", async () => {
+      await user.click(singlePlayerButton)
+      expect(setSinglePlayerStarted).toHaveBeenCalledWith(true)
+    })
+
+    test("multiplayer button clicked", async () => {
+      await user.click(multiplayerButton)
+      expect(setMultiplayerMenu).toHaveBeenCalledWith(true)
+    })
+
+    test("instructions button clicked", async () => {
+      await user.click(instructionsButton)
+      expect(setShowInstructions).toHaveBeenCalledWith(true)
+    })
   })
 })

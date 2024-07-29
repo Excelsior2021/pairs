@@ -18,26 +18,24 @@ export const [multiplayerSessionStarted, setMultiplayerSessionStarted] =
 export const [socket, setSocket] = createSignal<Socket | null>(null)
 export const [createSessionID, setCreateSessionID] = createSignal("")
 
-const GameScreen: Component = () => {
-  return (
-    <main class="game-screen">
-      <Switch fallback={<MainMenu />}>
-        <Match when={singlePlayerStarted()}>
-          <Session />
-        </Match>
-        <Match when={multiplayerMenu()}>
-          <MultiplayerMenu />
-        </Match>
-        <Match when={joinGame()}>
-          <JoinGame />
-        </Match>
-        <Match when={multiplayerSessionStarted()}>
-          <MultiplayerSession socket={socket()} />
-        </Match>
-      </Switch>
-      <Instructions />
-    </main>
-  )
-}
+const GameScreen: Component = () => (
+  <main class="game-screen">
+    <Switch fallback={<MainMenu />}>
+      <Match when={singlePlayerStarted()}>
+        <Session />
+      </Match>
+      <Match when={multiplayerMenu()}>
+        <MultiplayerMenu />
+      </Match>
+      <Match when={joinGame()}>
+        <JoinGame />
+      </Match>
+      <Match when={multiplayerSessionStarted()}>
+        <MultiplayerSession socket={socket()} />
+      </Match>
+    </Switch>
+    <Instructions />
+  </main>
+)
 
 export default GameScreen

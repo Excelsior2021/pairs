@@ -15,6 +15,7 @@ export const playerTurnHandler: playerTurnHandlerMultiplayerType = (
 ) => {
   let chosenCard: Card
   const eventTarget = playerHandEvent.target as HTMLImageElement
+
   if (player && eventTarget)
     for (const card of player.hand)
       if (card.id === eventTarget.id) {
@@ -42,7 +43,7 @@ export const playerResponseHandler: playerResponseHandlerMultiplayerType = (
   if (hasCard) {
     for (const card of player.hand) {
       if (card.value === opponentRequestCard.value) {
-        log = `It's your opponent's turn again.`
+        log = "It's your opponent's turn again."
         playerCard = { clientPlayer, card }
         dispatchGameAction({
           type: GameAction.PLAYER_MATCH,
