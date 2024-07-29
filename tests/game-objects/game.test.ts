@@ -1,12 +1,20 @@
-import { test, describe, expect, beforeEach, vi, afterEach } from "vitest"
+import {
+  test,
+  it,
+  describe,
+  expect,
+  beforeEach,
+  vi,
+  MockInstance,
+} from "vitest"
 import Card, { suit } from "../../src/game-objects/card"
 import Game from "../../src/game-objects/game"
 import Deck from "../../src/game-objects/deck"
 import Player from "../../src/game-objects/player"
 import Opponent from "../../src/game-objects/opponent"
-import { Outcome } from "../../src/enums"
+import { GameAction, Outcome } from "../../src/enums"
 
-const hand = [
+const handMock = [
   {
     id: "4_of_clubs",
     value: 4,
@@ -27,7 +35,7 @@ const hand = [
   },
 ]
 
-const pairs = [
+const pairsMock = [
   {
     id: "4_of_clubs",
     value: 4,
@@ -42,55 +50,86 @@ const pairs = [
   },
 ]
 
-describe("game class", () => {
-  const dispatchGameAction = vi.fn()
-  let game: Game
+describe("Game class", () => {
+  //mocks
+  const dispatchGameActionMock = vi.fn()
+
+  //game objects
   let deck: Deck
   let player: Player
   let opponent: Opponent
-  let updateUISpy: any
+  let game: Game
+
+  //spies
+  let updateUISpy: MockInstance
+  let initialPairsSpy: MockInstance
+  let shuffleSpy: MockInstance
+  let dealHandSpy: MockInstance
 
   beforeEach(() => {
-    deck = new Deck(Card, dispatchGameAction)
-    player = new Player(dispatchGameAction)
-    opponent = new Opponent(dispatchGameAction)
-    game = new Game(deck, player, opponent, dispatchGameAction)
+    deck = new Deck(Card, dispatchGameActionMock)
+    player = new Player(dispatchGameActionMock)
+    opponent = new Opponent(dispatchGameActionMock)
+    game = new Game(deck, player, opponent, dispatchGameActionMock)
+
     updateUISpy = vi.spyOn(game, "updateUI")
+    initialPairsSpy = vi.spyOn(game, "initialPairs")
+    shuffleSpy = vi.spyOn(deck, "shuffle")
+    dealHandSpy = vi.spyOn(deck, "dealHand")
+
+    vi.clearAllMocks()
   })
 
-  afterEach(() => {
-    vi.restoreAllMocks()
-  })
+  describe("start()", () => {
+    const log =
+      "The cards have been dealt. Any initial pair of cards have been added to your Pairs. Please select a card from your hand to request a match with your opponent."
 
-  describe(".start()", () => {
-    test("game starts", () => {
+    it("calls internal methods with correct arguments", () => {
       game.start()
-      expect(updateUISpy).toHaveBeenCalled()
-      expect(dispatchGameAction).toHaveBeenCalledTimes(2)
+      expect(shuffleSpy).toHaveBeenCalledOnce()
+      expect(dealHandSpy).toHaveBeenCalledTimes(2)
+      expect(initialPairsSpy).toHaveBeenCalledTimes(2)
+      expect(updateUISpy).toHaveBeenCalledWith(true)
+      expect(dispatchGameActionMock).toHaveBeenCalledTimes(2)
+      expect(dispatchGameActionMock.mock.calls[1][0]).toStrictEqual({
+        type: GameAction.GAME_LOG,
+        log,
+      })
     })
   })
 
-  test(".initialPairs()", () => {
-    const p = game.initialPairs(hand)
-    expect(p).toStrictEqual(pairs)
-    expect(p).not.toStrictEqual([])
+  describe("initialPairs()", () => {
+    it("returns initial pairs", () => {
+      const pairs = game.initialPairs(handMock)
+      expect(pairs).toStrictEqual(pairsMock)
+    })
   })
 
-  test(".updateUI()", () => {
-    game.updateUI()
-    expect(dispatchGameAction).toHaveBeenCalled()
+  describe("updateUI()", () => {
+    it("calls internal methods with correct arguments", () => {
+      game.updateUI()
+      expect(dispatchGameActionMock).toHaveBeenCalledOnce()
+    })
   })
 
-  describe(".end()", () => {
+  describe("end()", () => {
+    it("checks internal functions are called with correct arguments", () => {
+      const gameEnd = game.end()
+      expect(gameEnd).toBe(true)
+      expect(dispatchGameActionMock).toHaveBeenCalledTimes(2)
+      expect(updateUISpy).toHaveBeenCalledOnce()
+    })
+
     test("player wins", () => {
       player.pairs = new Array(10).fill(null)
       opponent.pairs = new Array(5).fill(null)
       game.end()
 
-      expect(game.end()).toBe(true)
-      expect(dispatchGameAction).toHaveBeenCalled()
-      expect(updateUISpy).toHaveBeenCalled()
-      expect(dispatchGameAction.mock.calls[1][0].outcome).toBe(Outcome.Player)
+      expect(dispatchGameActionMock.mock.calls[1][0]).toStrictEqual({
+        type: GameAction.GAME_OVER,
+        outcome: Outcome.Player,
+        gameOver: true,
+      })
     })
 
     test("oppponent wins", () => {
@@ -98,29 +137,32 @@ describe("game class", () => {
       opponent.pairs = new Array(10).fill(null)
       game.end()
 
-      expect(game.end()).toBe(true)
-      expect(dispatchGameAction).toHaveBeenCalled()
-      expect(updateUISpy).toHaveBeenCalled()
-      expect(dispatchGameAction.mock.calls[1][0].outcome).toBe(Outcome.Opponent)
+      expect(dispatchGameActionMock.mock.calls[1][0]).toStrictEqual({
+        type: GameAction.GAME_OVER,
+        outcome: Outcome.Opponent,
+        gameOver: true,
+      })
     })
 
     test("a draw", () => {
       player.pairs = new Array(10).fill(null)
       opponent.pairs = new Array(10).fill(null)
       game.end()
-
-      expect(game.end()).toBe(true)
-      expect(dispatchGameAction).toHaveBeenCalled()
-      expect(updateUISpy).toHaveBeenCalled()
-      expect(dispatchGameAction.mock.calls[1][0].outcome).toBe(Outcome.Draw)
+      expect(dispatchGameActionMock.mock.calls[1][0]).toStrictEqual({
+        type: GameAction.GAME_OVER,
+        outcome: Outcome.Draw,
+        gameOver: true,
+      })
     })
 
     test("game has not ended", () => {
+      //simulate ongoing game
       player.hand = new Array(10).fill(null)
       opponent.hand = new Array(10).fill(null)
-      game.end()
 
-      expect(game.end()).toBe(false)
+      const gameEnd = game.end()
+
+      expect(gameEnd).toBe(false)
     })
   })
 })

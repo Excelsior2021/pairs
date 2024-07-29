@@ -5,60 +5,74 @@ import Game from "../../src/game-objects/game"
 import Player from "../../src/game-objects/player"
 import Opponent from "../../src/game-objects/opponent"
 import mockDeck from "../__mocks__/deck"
+import { GameAction, PlayerOutput } from "../../src/enums"
 
-describe("deck class", () => {
+describe("Deck class", () => {
   let deck: Deck
-  let dispatchGameActionSpy = vi.fn()
+  let dispatchGameActionMock = vi.fn()
 
   beforeEach(() => {
-    dispatchGameActionSpy = vi.fn()
-    deck = new Deck(Card, dispatchGameActionSpy)
+    vi.resetAllMocks()
+    deck = new Deck(Card, dispatchGameActionMock)
   })
 
-  describe(".create()", () => {
+  describe("create()", () => {
     it("returns a standard deck of cards", () => {
       const newDeck = deck.create(Card)
       expect(JSON.stringify(newDeck)).toBe(JSON.stringify(mockDeck))
     })
   })
 
-  describe(".shuffle()", () => {
-    it("shuffles deck", () => {
-      const topCard = deck.deck[0]
-
+  describe("shuffle()", () => {
+    it("returns shuffled deck", () => {
       deck.shuffle()
-
-      const newTopCard = deck.deck[0]
-
-      expect(topCard).not.toEqual(newTopCard)
+      expect(JSON.stringify(deck.deck)).not.toBe(JSON.stringify(mockDeck))
     })
   })
 
-  describe(".dealCard()", () => {
+  describe("dealCard()", () => {
     it("returns a card from deck", () => {
       const dealtCard = deck.dealCard()
-      expect(dealtCard).toHaveProperty("id")
-      expect(dealtCard).toHaveProperty("suit")
-      expect(dealtCard).toHaveProperty("value")
-      expect(dealtCard).toHaveProperty("img")
+      expect(JSON.stringify(dealtCard)).toStrictEqual(
+        JSON.stringify(mockDeck[mockDeck.length - 1])
+      )
     })
   })
 
-  describe(".dealHand()", () => {
+  describe("dealHand()", () => {
     it("deals correct number of cards", () => {
       expect(deck.dealHand(7)).toHaveLength(7)
     })
   })
 
-  describe(".handler()", () => {
-    const player = new Player(dispatchGameActionSpy)
-    const opponent = new Opponent(dispatchGameActionSpy)
-    const game = new Game(deck, player, opponent, dispatchGameActionSpy)
-    const playerSpy = vi.spyOn(player, "dealt")
+  describe("handler()", () => {
+    const player = new Player(dispatchGameActionMock)
+    const opponent = new Opponent(dispatchGameActionMock)
+    const game = new Game(deck, player, opponent, dispatchGameActionMock)
 
-    it("checks if player.dealt was called", () => {
+    let opponentSpy = vi.spyOn(opponent, "turn")
+
+    let gameSpy = vi.spyOn(game, "end")
+
+    it("checks internal methods was called with the correct arguments", () => {
+      const playerSpy = vi
+        .spyOn(player, "dealt")
+        .mockReturnValueOnce(PlayerOutput.HandMatch)
+
       deck.handler(game, player, opponent)
-      expect(playerSpy).toHaveBeenCalled()
+      expect(playerSpy).toHaveBeenCalledWith(game, deck)
+      expect(deck.dispatchGameAction).toHaveBeenCalledWith({
+        type: GameAction.PLAYER_ACTION,
+        playerOutput: PlayerOutput.HandMatch,
+        player,
+      })
+      expect(opponentSpy).toHaveBeenCalledWith(game)
+      expect(gameSpy).toHaveBeenCalled()
+    })
+
+    it("checks opponent.turn not called", () => {
+      deck.handler(game, player, opponent)
+      expect(opponentSpy).not.toHaveBeenCalled()
     })
   })
 })
