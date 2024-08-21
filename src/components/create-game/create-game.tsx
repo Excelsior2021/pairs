@@ -1,4 +1,4 @@
-import { createSessionID } from "../game-screen/game-screen"
+import { createSessionID } from "@/components/game-screen/game-screen"
 import "./create-game.scss"
 
 import type { Component } from "solid-js"

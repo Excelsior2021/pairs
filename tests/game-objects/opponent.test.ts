@@ -1,4 +1,12 @@
-import { beforeEach, describe, it, test, expect, vi } from "vitest"
+import {
+  beforeEach,
+  describe,
+  it,
+  test,
+  expect,
+  vi,
+  type MockInstance,
+} from "vitest"
 import Card, { suit } from "../../src/game-objects/card"
 import Opponent from "../../src/game-objects/opponent"
 import Deck from "../../src/game-objects/deck"
@@ -27,7 +35,7 @@ const hand = [
   },
 ]
 
-describe("opponent class", () => {
+describe("Opponent class", () => {
   let deck: Deck
   let player: Player
   let opponent: Opponent
@@ -40,7 +48,7 @@ describe("opponent class", () => {
     game = new Game(deck, player, opponent, dispatchGameActionMock)
   })
 
-  describe(".ask()", () => {
+  describe("ask()", () => {
     test("opponent requests a card", () => {
       const chosenCard = opponent.ask()
       expect(opponent.request).not.toBeNull()
@@ -48,46 +56,48 @@ describe("opponent class", () => {
     })
   })
 
-  describe(".dealt()", () => {
+  describe("dealt()", () => {
+    let updateUISpy: MockInstance
+    let output: OpponentOutput
+
     beforeEach(() => {
       deck = new Deck(Card, dispatchGameActionMock)
+      updateUISpy = vi.spyOn(game, "updateUI")
     })
 
-    it("matches requested card", () => {
-      opponent.request = hand[0]
+    test("deck match", () => {
       vi.spyOn(deck, "dealCard").mockReturnValue(hand[0])
-      const updateUISpy = vi.spyOn(game, "updateUI")
-
-      expect(opponent.dealt(game, deck)).toBe(OpponentOutput.DeckMatch)
-      expect(updateUISpy).toHaveBeenCalled()
-      expect(opponent.pairs).toHaveLength(2)
-      expect(opponent.hand).toHaveLength(2)
-    })
-
-    it("matches card in hand", () => {
-      opponent.request = hand[1]
-
-      vi.spyOn(deck, "dealCard").mockReturnValue(hand[2])
-      const updateUISpy = vi.spyOn(game, "updateUI")
-
-      expect(opponent.dealt(game, deck)).toBe(OpponentOutput.HandMatch)
-      expect(updateUISpy).toHaveBeenCalled()
-      expect(opponent.pairs).toHaveLength(2)
-      expect(opponent.hand).toHaveLength(2)
-    })
-
-    it("has no matches", () => {
       opponent.request = hand[0]
+      output = opponent.dealt(game, deck)!
 
+      expect(output).toBe(OpponentOutput.DeckMatch)
+      expect(updateUISpy).toHaveBeenCalled()
+      expect(opponent.pairs).toHaveLength(2)
+      expect(opponent.hand).toHaveLength(2)
+    })
+
+    test("hand match", () => {
+      vi.spyOn(deck, "dealCard").mockReturnValue(hand[2])
+      opponent.request = hand[0]
+      output = opponent.dealt(game, deck)!
+
+      expect(output).toBe(OpponentOutput.HandMatch)
+      expect(updateUISpy).toHaveBeenCalled()
+      expect(opponent.pairs).toHaveLength(2)
+      expect(opponent.hand).toHaveLength(2)
+    })
+
+    test("no match", () => {
       vi.spyOn(deck, "dealCard").mockReturnValue({
         id: "7_of_diamonds",
         value: 7,
         suit: suit.diamonds,
         img: "./cards/7_of_diamonds.webp",
       })
-      const updateUISpy = vi.spyOn(game, "updateUI")
+      opponent.request = hand[0]
+      output = opponent.dealt(game, deck)!
 
-      expect(opponent.dealt(game, deck)).toBe(OpponentOutput.NoMatch)
+      expect(output).toBe(OpponentOutput.NoMatch)
       expect(updateUISpy).toHaveBeenCalled()
       expect(opponent.pairs).toHaveLength(0)
       expect(opponent.hand).toHaveLength(4)

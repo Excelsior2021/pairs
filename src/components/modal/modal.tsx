@@ -1,7 +1,10 @@
-import { Show } from "solid-js"
+import {
+  Show,
+  type ParentComponent,
+  type Accessor,
+  type Setter,
+} from "solid-js"
 import "./modal.scss"
-
-import type { ParentComponent, Accessor, Setter } from "solid-js"
 
 type contentProps = {
   heading: string | null

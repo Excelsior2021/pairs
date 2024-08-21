@@ -1,4 +1,10 @@
-import { createSignal } from "solid-js"
+import {
+  createSignal,
+  type Accessor,
+  type Component,
+  type Setter,
+} from "solid-js"
+import { io } from "socket.io-client"
 import {
   setMultiplayerMenu,
   setMultiplayerSessionStarted,
@@ -6,13 +12,58 @@ import {
   setSocket,
   setCreateSessionID,
   socket,
-} from "../game-screen/game-screen"
-import { dispatchGameAction } from "../multiplayer-session/multiplayer-session"
-import { io } from "socket.io-client"
-import { GameAction } from "../../enums"
+} from "@/components/game-screen/game-screen"
+import { dispatchGameAction } from "@/components/multiplayer-session/multiplayer-session"
+import { GameAction } from "@/enums"
 import "./multiplayer-menu.scss"
 
-import type { Component } from "solid-js"
+export const createGameHandler = (
+  setServerTimeout: Setter<boolean>,
+  setServerConnected: Setter<boolean | null>,
+  timerInterval: Accessor<number>,
+  setTimerInterval: Setter<number>,
+  setClearInterval: Setter<NodeJS.Timeout | null>
+) => {
+  setServerTimeout(false)
+  setServerConnected(null)
+  const socket = io(import.meta.env.VITE_SERVER_DOMAIN)
+  const timerIntervalRef = setInterval(() => {
+    if (timerInterval() > 0) setTimerInterval((prev: number) => prev - 1)
+    else clearInterval(timerIntervalRef)
+  }, 1000)
+
+  setSocket(socket)
+  let timeoutCounter = 0
+
+  const intervalRef = setInterval(() => {
+    timeoutCounter++
+    if (!socket.connected && timeoutCounter < 600) {
+      setServerConnected(socket.connected)
+    } else if (socket.connected && timeoutCounter < 3000) {
+      const sessionIDGenerator = () => Math.floor(Math.random() * 10 ** 4)
+      const sessionID = sessionIDGenerator().toString().padStart(4, "0")
+
+      setCreateSessionID(sessionID)
+
+      socket.emit("recieve_sessionID")
+
+      socket.on("recieved_sessionID", () => {
+        setMultiplayerMenu(false)
+        setMultiplayerSessionStarted(true)
+        dispatchGameAction({
+          type: GameAction.CREATE_SESSION,
+          sessionID,
+        })
+      })
+      clearInterval(intervalRef)
+    } else {
+      socket.disconnect()
+      setServerTimeout(true)
+      clearInterval(intervalRef)
+    }
+  }, 100)
+  setClearInterval(intervalRef)
+}
 
 const MultiplayerMenu: Component = () => {
   const [serverConnected, setServerConnected] = createSignal<boolean | null>(
@@ -23,55 +74,21 @@ const MultiplayerMenu: Component = () => {
     createSignal<NodeJS.Timeout | null>(null)
   const [timerInterval, setTimerInterval] = createSignal(60)
 
-  const createGameHandler = () => {
-    setServerTimeout(false)
-    setServerConnected(null)
-    const socket = io(import.meta.env.VITE_SERVER_DOMAIN)
-    const timerIntervalRef = setInterval(() => {
-      if (timerInterval() > 0) setTimerInterval(prev => prev - 1)
-      else clearInterval(timerIntervalRef)
-    }, 1000)
-
-    setSocket(socket)
-    let timeoutCounter = 0
-
-    const intervalRef = setInterval(() => {
-      timeoutCounter++
-      if (!socket.connected && timeoutCounter < 600) {
-        setServerConnected(socket.connected)
-      } else if (socket.connected && timeoutCounter < 3000) {
-        const sessionIDGenerator = () => Math.floor(Math.random() * 10 ** 4)
-        const sessionID = sessionIDGenerator().toString().padStart(4, "0")
-
-        setCreateSessionID(sessionID)
-
-        socket.emit("recieve_sessionID")
-
-        socket.on("recieved_sessionID", () => {
-          setMultiplayerMenu(false)
-          setMultiplayerSessionStarted(true)
-          dispatchGameAction({
-            type: GameAction.CREATE_SESSION,
-            sessionID,
-          })
-        })
-        clearInterval(intervalRef)
-      } else {
-        socket.disconnect()
-        setServerTimeout(true)
-        clearInterval(intervalRef)
-      }
-    }, 100)
-    setClearInterval(intervalRef)
-  }
-
   return (
     <div class="multiplayer-menu">
       <h2 class="multiplayer-menu__heading">multiplayer</h2>
       <div class="multiplayer-menu__actions">
         <button
           class="multiplayer-menu__button"
-          onclick={createGameHandler}
+          onclick={() =>
+            createGameHandler(
+              setServerTimeout,
+              setServerConnected,
+              timerInterval,
+              setTimerInterval,
+              setClearInterval
+            )
+          }
           disabled={serverConnected() === false}>
           create game
         </button>

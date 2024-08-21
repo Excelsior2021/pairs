@@ -1,17 +1,81 @@
-import { createSignal } from "solid-js"
+import {
+  createSignal,
+  type Accessor,
+  type Component,
+  type Setter,
+} from "solid-js"
+import { io } from "socket.io-client"
 import {
   setJoinGame,
   setMultiplayerSessionStarted,
   setMultiplayerMenu,
   setSocket,
   socket,
-} from "../game-screen/game-screen"
-import { dispatchGameAction } from "../multiplayer-session/multiplayer-session"
-import { io } from "socket.io-client"
-import { GameAction } from "../../enums"
+} from "@/components/game-screen/game-screen"
+import { dispatchGameAction } from "@/components/multiplayer-session/multiplayer-session"
+import { GameAction } from "@/enums"
 import "./join-game.scss"
 
-import type { Component } from "solid-js"
+export const joinGameHandler = async (
+  sessionID: string,
+  setSessionIDNotValid: Setter<boolean>,
+  setNoSessionExists: Setter<boolean>,
+  setServerConnected: Setter<boolean | null>,
+  loading: Accessor<boolean>,
+  setLoading: Setter<boolean>
+) => {
+  setSessionIDNotValid(false)
+  setNoSessionExists(false)
+  setServerConnected(null)
+  const socketVar = setSocket(io(import.meta.env.VITE_SERVER_DOMAIN))
+
+  let timeoutCounter = 0
+
+  const interval = setInterval(() => {
+    timeoutCounter++
+    if (socketVar) {
+      if (!socketVar.connected) {
+        if (timeoutCounter < 50 && !loading()) setLoading(true)
+        else if (timeoutCounter >= 50) {
+          setServerConnected(false)
+          setLoading(false)
+          socketVar.disconnect()
+          clearInterval(interval)
+          return
+        }
+      }
+      if (socketVar.connected) {
+        setLoading(false)
+        setSessionIDNotValid(false)
+        setNoSessionExists(false)
+        setServerConnected(true)
+
+        if (!sessionID) {
+          setSessionIDNotValid(true)
+          clearInterval(interval)
+          socketVar.disconnect()
+          return
+        }
+
+        socketVar.emit("join_session", sessionID)
+
+        socketVar.on("no-sessionID", () => {
+          setNoSessionExists(true)
+          socketVar.disconnect()
+        })
+
+        socketVar.on("sessionID-exists", () => {
+          dispatchGameAction({ type: GameAction.JOIN_SESSION, sessionID })
+          setJoinGame(false)
+          setMultiplayerSessionStarted(true)
+        })
+
+        clearInterval(interval)
+        return
+      }
+    }
+  }, 100)
+}
 
 const JoinGame: Component = () => {
   const [joinSessionID, setJoinSessionID] = createSignal("")
@@ -21,61 +85,6 @@ const JoinGame: Component = () => {
   const [serverConnected, setServerConnected] = createSignal<boolean | null>(
     null
   )
-
-  const joinGameHandler = async (sessionID: string) => {
-    setSessionIDNotValid(false)
-    setNoSessionExists(false)
-    setServerConnected(null)
-    const socketVar = setSocket(io(import.meta.env.VITE_SERVER_DOMAIN))
-
-    let timeoutCounter = 0
-
-    const interval = setInterval(() => {
-      timeoutCounter++
-      if (socketVar) {
-        if (!socketVar.connected) {
-          if (timeoutCounter < 50 && !loading()) setLoading(true)
-          else if (timeoutCounter >= 50) {
-            setServerConnected(false)
-            setLoading(false)
-            socketVar.disconnect()
-            clearInterval(interval)
-            return
-          }
-        }
-        if (socketVar.connected) {
-          setLoading(false)
-          setSessionIDNotValid(false)
-          setNoSessionExists(false)
-          setServerConnected(true)
-
-          if (!sessionID) {
-            setSessionIDNotValid(true)
-            clearInterval(interval)
-            socketVar.disconnect()
-            return
-          }
-
-          socketVar.emit("join_session", sessionID)
-
-          socketVar.on("no-sessionID", () => {
-            setNoSessionExists(true)
-            socketVar.disconnect()
-          })
-
-          socketVar.on("sessionID-exists", () => {
-            dispatchGameAction({ type: GameAction.JOIN_SESSION, sessionID })
-            setJoinGame(false)
-            setMultiplayerSessionStarted(true)
-          })
-
-          clearInterval(interval)
-          return
-        }
-      }
-    }, 100)
-  }
-
   return (
     <div class="join-game">
       <h2 class="join-game__heading">Join a Game Session</h2>
@@ -113,7 +122,16 @@ const JoinGame: Component = () => {
       <div class="join-game__actions">
         <button
           class="join-game__button"
-          onclick={() => joinGameHandler(joinSessionID())}
+          onclick={() =>
+            joinGameHandler(
+              joinSessionID(),
+              setSessionIDNotValid,
+              setNoSessionExists,
+              setServerConnected,
+              loading,
+              setLoading
+            )
+          }
           disabled={loading()}>
           join
         </button>

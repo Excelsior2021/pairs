@@ -1,8 +1,7 @@
-import { For } from "solid-js"
+import { For, type Component } from "solid-js"
 import "./hand.scss"
 
-import type { Component } from "solid-js"
-import type Card from "../../game-objects/card"
+import type Card from "@/game-objects/card"
 
 type prop = {
   heading: string
@@ -11,28 +10,30 @@ type prop = {
   playerTurnHandler?: (playerHandEvent: MouseEvent) => void
 }
 
-const Hand: Component<prop> = props => {
-  const handleCardClick = (e: MouseEvent) => {
-    if (props.playerTurnHandler) props.playerTurnHandler(e)
-  }
-  return (
-    <div class="hand">
-      <h3 class="hand__heading">{props.heading}</h3>
-      <div class="hand__hand">
-        <For each={props.hand}>
-          {card => (
-            <img
-              class={props.playerTurnHandler! ? "card card--player" : "card"}
-              id={props.player ? card.id : undefined}
-              src={props.player ? card.img : `./cards/back.webp`}
-              alt={props.player ? card.id : "opponent card"}
-              onclick={handleCardClick}
-            />
-          )}
-        </For>
-      </div>
-    </div>
-  )
+export const handleCardClick = (
+  e: MouseEvent,
+  playerTurnHandler: (playerHandEvent: MouseEvent) => void
+) => {
+  if (playerTurnHandler) playerTurnHandler(e)
 }
+
+const Hand: Component<prop> = props => (
+  <div class="hand">
+    <h3 class="hand__heading">{props.heading}</h3>
+    <div class="hand__hand">
+      <For each={props.hand}>
+        {card => (
+          <img
+            class={props.playerTurnHandler! ? "card card--player" : "card"}
+            id={props.player ? card.id : undefined}
+            src={props.player ? card.img : `./cards/back.webp`}
+            alt={props.player ? card.id : "opponent card"}
+            onclick={e => handleCardClick(e, props.playerTurnHandler!)}
+          />
+        )}
+      </For>
+    </div>
+  </div>
+)
 
 export default Hand

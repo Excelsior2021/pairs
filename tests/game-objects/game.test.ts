@@ -5,7 +5,7 @@ import {
   expect,
   beforeEach,
   vi,
-  MockInstance,
+  type MockInstance,
 } from "vitest"
 import Card, { suit } from "../../src/game-objects/card"
 import Game from "../../src/game-objects/game"

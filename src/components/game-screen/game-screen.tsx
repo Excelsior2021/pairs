@@ -1,13 +1,12 @@
-import { createSignal, Switch, Match } from "solid-js"
-import MainMenu from "../main-menu/main-menu"
-import Session from "../session/session"
-import Instructions from "../instructions/instructions"
-import MultiplayerMenu from "../multiplayer-menu/multiplayer-menu"
-import MultiplayerSession from "../multiplayer-session/multiplayer-session.jsx"
-import JoinGame from "../join-game/join-game"
+import { createSignal, Switch, Match, type Component } from "solid-js"
+import MainMenu from "@/components/main-menu/main-menu"
+import Session from "@/components/session/session"
+import Instructions from "@/components/instructions/instructions"
+import MultiplayerMenu from "@/components/multiplayer-menu/multiplayer-menu"
+import MultiplayerSession from "@/components/multiplayer-session/multiplayer-session.jsx"
+import JoinGame from "@/components/join-game/join-game"
 import "./game-screen.scss"
 
-import type { Component } from "solid-js"
 import type { Socket } from "socket.io-client"
 
 export const [singlePlayerStarted, setSinglePlayerStarted] = createSignal(false)

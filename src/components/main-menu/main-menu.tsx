@@ -1,12 +1,10 @@
-import { createEffect, createSignal } from "solid-js"
+import { createEffect, createSignal, type Component } from "solid-js"
 import {
   setSinglePlayerStarted,
   setMultiplayerMenu,
-} from "../game-screen/game-screen"
-import { setShowInstructions } from "../instructions/instructions"
+} from "@/components/game-screen/game-screen"
+import { setShowInstructions } from "@/components/instructions/instructions"
 import "./main-menu.scss"
-
-import type { Component } from "solid-js"
 
 //global signal to prevent appLoaded from reinitializing
 const [appLoaded, setAppLoaded] = createSignal(false)

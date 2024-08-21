@@ -1,9 +1,9 @@
 import { createSignal, type Component } from "solid-js"
-import Modal from "../modal/modal"
+import Modal from "@/components/modal/modal"
 import {
   setMultiplayerSessionStarted,
   setSinglePlayerStarted,
-} from "../game-screen/game-screen"
+} from "@/components/game-screen/game-screen"
 import "./quit-game-modal.scss"
 
 import type { Socket } from "socket.io-client"
