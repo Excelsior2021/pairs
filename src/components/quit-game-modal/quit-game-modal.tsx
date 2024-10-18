@@ -4,15 +4,18 @@ import {
   setMultiplayerSessionStarted,
   setSinglePlayerStarted,
 } from "@/components/game-screen/game-screen"
+import { dispatchGameAction } from "@/components/multiplayer-session/multiplayer-session"
 import "./quit-game-modal.scss"
 
 import type { Socket } from "socket.io-client"
+import { GameAction } from "@/enums"
 
 export const [showQuitGameModal, setShowQuitGameModal] = createSignal(false)
 
 type props = {
   multiplayer: boolean
   socket: Socket | null
+  sessionId: string
 }
 
 const QuitGameModal: Component<props> = props => (
@@ -31,7 +34,10 @@ const QuitGameModal: Component<props> = props => (
           setSinglePlayerStarted(false)
           setMultiplayerSessionStarted(false)
           setShowQuitGameModal(false)
-          if (props.multiplayer) props.socket?.disconnect()
+          if (props.multiplayer) {
+            dispatchGameAction({ type: GameAction.PLAYER_DISCONNECT })
+            props.socket?.disconnect()
+          }
         }}>
         confirm
       </button>

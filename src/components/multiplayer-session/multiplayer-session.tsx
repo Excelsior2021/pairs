@@ -37,7 +37,11 @@ const MultiplayerSession: Component<props> = props => {
         <PlayerModal gameState={gameState} />
         <PairsModal gameState={gameState} />
       </Show>
-      <QuitGameModal multiplayer={true} socket={props.socket} />
+      <QuitGameModal
+        multiplayer={true}
+        socket={props.socket}
+        sessionId={gameState().sessionID!}
+      />
       <Sidebar gameState={gameState} />
     </div>
   )

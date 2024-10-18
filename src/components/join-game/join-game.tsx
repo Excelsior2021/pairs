@@ -59,12 +59,12 @@ export const joinGameHandler = async (
 
         socketVar.emit("join_session", sessionID)
 
-        socketVar.on("no-sessionID", () => {
+        socketVar.on("no_sessionID", () => {
           setNoSessionExists(true)
           socketVar.disconnect()
         })
 
-        socketVar.on("sessionID-exists", () => {
+        socketVar.on("sessionID_exists", () => {
           dispatchGameAction({ type: GameAction.JOIN_SESSION, sessionID })
           setJoinGame(false)
           setMultiplayerSessionStarted(true)

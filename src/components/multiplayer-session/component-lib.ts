@@ -339,6 +339,9 @@ export const multiplayerReducer = (
         playerTurnHandlerFactory,
       }
     }
+    case GameAction.PLAYER_DISCONNECT: {
+      if (state.socket) state.socket.emit("player_disconnect", state.sessionID)
+    }
     case GameAction.PLAYER_DISCONNECTED: {
       const log = "Your opponent has disconnected. The game has ended."
 
@@ -384,7 +387,7 @@ export const startSession = (
   if (socket) {
     dispatchGameAction({ type: GameAction.START_SESSION, socket: socket })
 
-    socket.on("setPlayer", player => setPlayer(player))
+    socket.on("set_player", player => setPlayer(player))
 
     socket.on("start", (serverState, playerTurn, sessionID) => {
       const startPlayerLog =
