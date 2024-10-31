@@ -2,7 +2,7 @@ import { test, it, describe, expect, beforeEach, vi } from "vitest"
 import {
   playerResponseHandler,
   playerTurnHandler,
-} from "../../src/game-functions/multiplayer-event-functions"
+} from "../../src/multiplayer-event-functions"
 import { GameAction } from "../../src/enums"
 
 describe("multiplayer event functions", () => {

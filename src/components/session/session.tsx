@@ -4,11 +4,13 @@ import Sidebar from "@/components/sidebar/sidebar"
 import PlayerModal from "@/components/player-modal/player-modal"
 import PairsModal from "@/components/pairs-modal/pairs-modal"
 import QuitGameModal from "@/components/quit-game-modal/quit-game-modal"
-import GameObject from "@/game-objects/game"
-import Deck from "@/game-objects/deck"
-import Player from "@/game-objects/player"
-import Opponent from "@/game-objects/opponent"
-import Card from "@/game-objects/card"
+import {
+  Card,
+  Deck,
+  Game as GameObject,
+  Player,
+  Opponent,
+} from "@/game-objects"
 import { gameReducer, initialGameState } from "./component-lib"
 import "./session.scss"
 

@@ -15,7 +15,6 @@ export const [showQuitGameModal, setShowQuitGameModal] = createSignal(false)
 type props = {
   multiplayer: boolean
   socket: Socket | null
-  sessionId: string
 }
 
 const QuitGameModal: Component<props> = props => (

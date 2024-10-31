@@ -1,12 +1,9 @@
-import { GameAction, Outcome } from "../enums"
+import { GameAction, Outcome } from "@/enums"
 
-import type Card from "./card"
-import type Deck from "./deck"
-import type Player from "./player"
-import type Opponent from "./opponent"
-import type { dispatchGameActionType } from "../../types"
+import type { Card, Deck, Player, Opponent } from "@/game-objects"
+import type { dispatchGameActionType } from "@/types"
 
-export default class Game {
+export class Game {
   deck: Deck
   player: Player
   opponent: Opponent
@@ -91,15 +88,11 @@ export default class Game {
   }
 
   outcome() {
-    let outcome
-    if (this.player.pairs.length > this.opponent.pairs.length) {
-      outcome = Outcome.Player
-    } else if (this.player.pairs.length === this.opponent.pairs.length) {
-      outcome = Outcome.Draw
-    } else {
-      outcome = Outcome.Opponent
-    }
-    return outcome
+    if (this.player.pairs.length > this.opponent.pairs.length)
+      return Outcome.Player
+    else if (this.player.pairs.length === this.opponent.pairs.length)
+      return Outcome.Draw
+    else return Outcome.Opponent
   }
 
   end() {

@@ -13,7 +13,7 @@ import {
 } from "@/enums"
 import "./session.scss"
 
-import type { gameStateType, gameAction } from "../../../types"
+import type { gameStateType, gameAction } from "@/types"
 
 export const initialGameState = {
   gameMode: GameMode.SinglePlayer,

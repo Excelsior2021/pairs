@@ -1,3 +1,17 @@
+export enum suit {
+  clubs = "clubs",
+  diamonds = "diamonds",
+  hearts = "hearts",
+  spades = "spades",
+}
+
+export enum nonNumCardValue {
+  ace = "ace",
+  jack = "jack",
+  queen = "queen",
+  king = "king",
+}
+
 export enum PlayerOutput {
   OpponentMatch,
   DeckMatch,

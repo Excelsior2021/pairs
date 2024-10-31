@@ -1,9 +1,6 @@
-import { beforeEach, describe, it, test, expect, vi } from "vitest"
-import Player from "../../src/game-objects/player"
-import Deck from "../../src/game-objects/deck"
-import Opponent from "../../src/game-objects/opponent"
-import Game from "../../src/game-objects/game"
-import { suit } from "../../src/game-objects/card"
+import { beforeEach, describe, test, expect, vi } from "vitest"
+import { Deck, Game, Player, Opponent } from "../../src/game-objects"
+import { suit } from "../../src/enums"
 import { PlayerOutput } from "../../src/enums"
 
 describe("player class", () => {

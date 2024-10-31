@@ -1,11 +1,9 @@
-import { GameAction, OpponentOutput } from "../enums"
+import { GameAction, OpponentOutput } from "@/enums"
 
-import type Card from "./card"
-import type Deck from "./deck"
-import type Game from "./game"
-import type { dispatchGameActionType } from "../../types"
+import type { Card, Deck, Game } from "@/game-objects"
+import type { dispatchGameActionType } from "@/types"
 
-export default class Opponent {
+export class Opponent {
   hand: Card[]
   pairs: Card[]
   request: Card | null

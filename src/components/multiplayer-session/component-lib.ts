@@ -7,7 +7,7 @@ import {
 import {
   playerTurnHandler,
   playerResponseHandler,
-} from "@/game-functions/multiplayer-event-functions"
+} from "@/multiplayer-event-functions"
 import { PlayerOutput, Outcome, GameAction, GameMode } from "@/enums"
 import "../session/session.scss"
 
@@ -16,7 +16,7 @@ import type {
   clientStateMutiplayer,
   gameActionMultiplayer,
   gameStateMultiplayer,
-} from "../../../types"
+} from "@/types"
 import type { Socket } from "socket.io-client"
 import type { Accessor, Setter } from "solid-js"
 

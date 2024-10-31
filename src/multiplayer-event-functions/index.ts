@@ -1,11 +1,10 @@
-import { GameAction } from "../enums"
-
-import type Card from "../game-objects/card"
+import { GameAction } from "@/enums"
+import type { Card } from "@/game-objects"
 import type {
   playerRequest,
   playerResponseHandlerMultiplayerType,
   playerTurnHandlerMultiplayerType,
-} from "../../types"
+} from "@/types"
 
 export const playerTurnHandler: playerTurnHandlerMultiplayerType = (
   playerHandEvent,

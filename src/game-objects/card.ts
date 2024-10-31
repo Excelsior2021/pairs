@@ -1,26 +1,13 @@
-export enum suit {
-  clubs = "clubs",
-  diamonds = "diamonds",
-  hearts = "hearts",
-  spades = "spades",
-}
-
-export enum nonNumValue {
-  ace = "ace",
-  jack = "jack",
-  queen = "queen",
-  king = "king",
-}
-
-export default class Card {
+import type { suit, nonNumCardValue } from "@/enums"
+export class Card {
   id: string
-  value: nonNumValue | number
+  value: nonNumCardValue | number
   suit: suit
   img: string
 
   constructor(
     id: string,
-    value: nonNumValue | number,
+    value: nonNumCardValue | number,
     suit: suit,
     img: string
   ) {

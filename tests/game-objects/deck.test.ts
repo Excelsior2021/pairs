@@ -1,9 +1,5 @@
 import { it, describe, expect, beforeEach, vi } from "vitest"
-import Card from "../../src/game-objects/card"
-import Deck from "../../src/game-objects/deck"
-import Game from "../../src/game-objects/game"
-import Player from "../../src/game-objects/player"
-import Opponent from "../../src/game-objects/opponent"
+import { Card, Deck, Game, Player, Opponent } from "../../src/game-objects"
 import mockDeck from "../__mocks__/deck"
 import { GameAction, PlayerOutput } from "../../src/enums"
 

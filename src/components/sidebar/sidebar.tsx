@@ -6,7 +6,7 @@ import { GameAction, GameMode } from "@/enums"
 import "./sidebar.scss"
 
 import type { Accessor, Component } from "solid-js"
-import type { gameStateType, playerRequest } from "../../../types"
+import type { gameStateType, playerRequest } from "@/types"
 
 type props = {
   gameState: Accessor<gameStateType>

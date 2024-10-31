@@ -1,13 +1,10 @@
-import { nonNumValue, suit } from "./card"
-import { GameAction, PlayerOutput } from "../enums"
+import { nonNumCardValue, suit } from "@/enums"
+import { GameAction, PlayerOutput } from "@/enums"
 
-import type CardType from "./card"
-import type Game from "./game"
-import type Opponent from "./opponent"
-import type Player from "./player"
-import type { dispatchGameActionType } from "../../types"
+import type { Card as CardType, Game, Opponent, Player } from "@/game-objects"
+import type { dispatchGameActionType } from "@/types"
 
-export default class Deck {
+export class Deck {
   deck: CardType[]
   dispatchGameAction: dispatchGameActionType
 
@@ -22,15 +19,15 @@ export default class Deck {
   create(Card: typeof CardType) {
     const deck: CardType[] = new Array(52)
     const non_num_cards = [
-      nonNumValue.ace,
-      nonNumValue.jack,
-      nonNumValue.queen,
-      nonNumValue.king,
+      nonNumCardValue.ace,
+      nonNumCardValue.jack,
+      nonNumCardValue.queen,
+      nonNumCardValue.king,
     ]
     const suits = [suit.clubs, suit.diamonds, suit.hearts, suit.spades]
     let deckIndex = 0
 
-    const createSuits = (value: number | nonNumValue) => {
+    const createSuits = (value: number | nonNumCardValue) => {
       for (const suit of suits) {
         const id = `${value}_of_${suit}`
         const img = `./cards/${id}.webp`

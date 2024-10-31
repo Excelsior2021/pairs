@@ -1,18 +1,13 @@
 import {
   beforeEach,
   describe,
-  it,
   test,
   expect,
   vi,
   type MockInstance,
 } from "vitest"
-import Card, { suit } from "../../src/game-objects/card"
-import Opponent from "../../src/game-objects/opponent"
-import Deck from "../../src/game-objects/deck"
-import Game from "../../src/game-objects/game"
-import Player from "../../src/game-objects/player"
-import { OpponentOutput } from "../../src/enums"
+import { Card, Deck, Game, Player, Opponent } from "../../src/game-objects"
+import { suit, OpponentOutput } from "../../src/enums"
 
 const hand = [
   {

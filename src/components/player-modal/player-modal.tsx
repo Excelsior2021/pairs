@@ -3,7 +3,7 @@ import Modal from "@/components/modal/modal"
 import { PlayerOutput } from "@/enums"
 import "./player-modal.scss"
 
-import type { gameStateProp } from "../../../types"
+import type { gameStateProp } from "@/types"
 
 export const [showPlayerModal, setShowPlayerModal] = createSignal(false)
 export const [matchStatusHeading, setMatchStatusHeading] = createSignal("")

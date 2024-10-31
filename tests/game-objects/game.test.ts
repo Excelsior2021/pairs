@@ -7,12 +7,8 @@ import {
   vi,
   type MockInstance,
 } from "vitest"
-import Card, { suit } from "../../src/game-objects/card"
-import Game from "../../src/game-objects/game"
-import Deck from "../../src/game-objects/deck"
-import Player from "../../src/game-objects/player"
-import Opponent from "../../src/game-objects/opponent"
-import { GameAction, Outcome } from "../../src/enums"
+import { Card, Deck, Game, Player, Opponent } from "../../src/game-objects"
+import { suit, GameAction, Outcome } from "../../src/enums"
 
 const handMock = [
   {
@@ -109,6 +105,29 @@ describe("Game class", () => {
     it("calls internal methods with correct arguments", () => {
       game.updateUI()
       expect(dispatchGameActionMock).toHaveBeenCalledOnce()
+    })
+  })
+
+  describe("outcome()", () => {
+    test("player has more pairs", () => {
+      player.pairs = new Array(10).fill(null)
+      opponent.pairs = new Array(5).fill(null)
+
+      expect(game.outcome()).toBe(Outcome.Player)
+    })
+
+    test("player and opponent have equal amount of pairs", () => {
+      player.pairs = new Array(10).fill(null)
+      opponent.pairs = new Array(10).fill(null)
+
+      expect(game.outcome()).toBe(Outcome.Draw)
+    })
+
+    test("opponent has more pairs", () => {
+      player.pairs = new Array(5).fill(null)
+      opponent.pairs = new Array(10).fill(null)
+
+      expect(game.outcome()).toBe(Outcome.Opponent)
     })
   })
 
