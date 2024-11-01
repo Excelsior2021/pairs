@@ -1,4 +1,5 @@
 import { For, createSignal, type Component } from "solid-js"
+import Card from "@/components/card/card"
 import Modal from "@/components/modal/modal"
 import "./pairs-modal.scss"
 
@@ -17,9 +18,7 @@ const PairsModal: Component<gameStateProp> = props => (
       </p>
       <div class="pairs-modal__pairs" data-testid="player pairs">
         <For each={props.gameState().player!.pairs}>
-          {card => (
-            <img id={card.id} class="card" src={card.img} alt={card.id} />
-          )}
+          {card => <Card card={card} show={true} />}
         </For>
       </div>
       <p class="pairs-modal__heading">
@@ -27,9 +26,7 @@ const PairsModal: Component<gameStateProp> = props => (
       </p>
       <div class="pairs-modal__pairs" data-testid="comp pairs">
         <For each={props.gameState().opponent!.pairs}>
-          {card => (
-            <img id={card.id} class="card" src={card.img} alt={card.id} />
-          )}
+          {card => <Card card={card} show={true} />}
         </For>
       </div>
     </div>

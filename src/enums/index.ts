@@ -47,6 +47,7 @@ export enum Outcome {
   Player = "You won!",
   Opponent = "Your opponent won!",
   Draw = "It's a draw!",
+  Disconnect = "Your opponent has disconnected. The game has ended.",
 }
 
 export enum GameAction {

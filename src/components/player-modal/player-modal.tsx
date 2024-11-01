@@ -4,6 +4,7 @@ import { PlayerOutput } from "@/enums"
 import "./player-modal.scss"
 
 import type { gameStateProp } from "@/types"
+import Card from "../card/card"
 
 export const [showPlayerModal, setShowPlayerModal] = createSignal(false)
 export const [matchStatusHeading, setMatchStatusHeading] = createSignal("")
@@ -51,14 +52,7 @@ const PlayerModal: Component<gameStateProp> = props => (
             <For each={props.gameState().player!.pairs}>
               {(card, i) => {
                 if (i() >= props.gameState().player!.pairs.length - 2) {
-                  return (
-                    <img
-                      class={"card"}
-                      id={card.id}
-                      src={card.img}
-                      alt={card.id}
-                    />
-                  )
+                  return <Card card={card} show={true} />
                 }
               }}
             </For>
@@ -67,14 +61,7 @@ const PlayerModal: Component<gameStateProp> = props => (
             <For each={props.gameState().player!.hand}>
               {(card, i) => {
                 if (i() === props.gameState().player!.hand.length - 1) {
-                  return (
-                    <img
-                      class={"card"}
-                      id={card.id}
-                      src={card.img}
-                      alt={card.id}
-                    />
-                  )
+                  return <Card card={card} show={true} />
                 }
               }}
             </For>

@@ -9,7 +9,7 @@ import "./game-screen.scss"
 
 import type { Socket } from "socket.io-client"
 
-export const [singlePlayerStarted, setSinglePlayerStarted] = createSignal(false)
+export const [sessionStarted, setSessionStarted] = createSignal(false)
 export const [multiplayerMenu, setMultiplayerMenu] = createSignal(false)
 export const [joinGame, setJoinGame] = createSignal(false)
 export const [multiplayerSessionStarted, setMultiplayerSessionStarted] =
@@ -20,7 +20,7 @@ export const [createSessionID, setCreateSessionID] = createSignal("")
 const GameScreen: Component = () => (
   <main class="game-screen">
     <Switch fallback={<MainMenu />}>
-      <Match when={singlePlayerStarted()}>
+      <Match when={sessionStarted()}>
         <Session />
       </Match>
       <Match when={multiplayerMenu()}>

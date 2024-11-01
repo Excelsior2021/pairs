@@ -1,15 +1,16 @@
 .player-modal {
   &__output {
+    display: flex;
+    flex-direction: column;
+    gap: 24px;
     text-align: center;
   }
 
   &__text {
+    font-size: 1.8rem;
     font-weight: bold;
+    margin: auto;
     margin-bottom: 24px;
-  }
-
-  &__cards {
-    margin: 24px;
-    height: fit-content;
+    max-width: 800px;
   }
 }

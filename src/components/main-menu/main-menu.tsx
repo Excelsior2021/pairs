@@ -1,6 +1,6 @@
 import { createEffect, createSignal, type Component } from "solid-js"
 import {
-  setSinglePlayerStarted,
+  setSessionStarted,
   setMultiplayerMenu,
 } from "@/components/game-screen/game-screen"
 import { setShowInstructions } from "@/components/instructions/instructions"
@@ -21,7 +21,7 @@ const MainMenu: Component = () => {
       <div class="main-menu__actions">
         <button
           class="main-menu__button"
-          onclick={() => setSinglePlayerStarted(true)}>
+          onclick={() => setSessionStarted(true)}>
           single player
         </button>
         <button

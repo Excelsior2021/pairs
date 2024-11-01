@@ -1,13 +1,13 @@
-@use "../../styles/partials/variables" as *;
-@use "../../styles/partials/mixins" as *;
+@use "../../styles/variables" as *;
+@use "../../styles/mixins" as *;
 
 .game {
   flex: 4;
   display: flex;
   flex-direction: column;
-  justify-content: space-between;
-  padding: 10px;
-  height: inherit;
+  padding: 32px;
+  gap: 32px;
+  width: 1000px;
 
   &__heading {
     text-align: center;
@@ -16,8 +16,11 @@
   }
 
   &__console {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
     text-align: center;
-    max-width: 800px;
+    height: 100px;
     margin: auto;
     font-weight: bold;
   }
@@ -35,16 +38,12 @@
   }
 
   &__game-over {
-    &-heading {
-      margin-bottom: 0.4rem;
-    }
-
+    display: flex;
+    align-items: center;
+    gap: 40px;
+    &-heading,
     &-text {
       margin-bottom: 0.4rem;
     }
-  }
-
-  &__outcome {
-    margin-bottom: 3.2rem;
   }
 }

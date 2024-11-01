@@ -26,24 +26,27 @@ const Backdrop: ParentComponent = props => (
 
 const Content: ParentComponent<contentProps> = props => (
   <div class="modal__container">
-    <h2
-      class={
-        props.playerOutput !== undefined
-          ? props.playerOutput < 3
-            ? "modal__heading modal__heading--match"
-            : "modal__heading modal__heading--no-match"
-          : "modal__heading"
-      }>
-      {props.heading}
-    </h2>
-    <h3
-      class={
-        props.playerOutput! < 3
-          ? "modal__sub-heading modal__sub-heading--match"
-          : "modal__sub-heading modal__sub-heading--no-match"
-      }>
-      {props.subHeading}
-    </h3>
+    <div class="modal__heading-container">
+      <h2
+        class={
+          props.playerOutput !== undefined
+            ? props.playerOutput < 3
+              ? "modal__heading modal__heading--match"
+              : "modal__heading modal__heading--no-match"
+            : "modal__heading"
+        }>
+        {props.heading}
+      </h2>
+      <h3
+        class={
+          props.playerOutput! < 3
+            ? "modal__sub-heading modal__sub-heading--match"
+            : "modal__sub-heading modal__sub-heading--no-match"
+        }>
+        {props.subHeading}
+      </h3>
+    </div>
+
     <div class="modal__content">{props.children}</div>
   </div>
 )

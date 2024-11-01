@@ -2,7 +2,7 @@ import { createSignal, type Component } from "solid-js"
 import Modal from "@/components/modal/modal"
 import {
   setMultiplayerSessionStarted,
-  setSinglePlayerStarted,
+  setSessionStarted,
 } from "@/components/game-screen/game-screen"
 import { dispatchGameAction } from "@/components/multiplayer-session/multiplayer-session"
 import "./quit-game-modal.scss"
@@ -30,7 +30,7 @@ const QuitGameModal: Component<props> = props => (
       <button
         class="quit-game-modal__button"
         onclick={() => {
-          setSinglePlayerStarted(false)
+          setSessionStarted(false)
           setMultiplayerSessionStarted(false)
           setShowQuitGameModal(false)
           if (props.multiplayer)

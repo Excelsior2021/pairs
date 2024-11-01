@@ -1,5 +1,5 @@
-@use "../../styles/partials/variables" as *;
-@use "../../styles/partials/mixins" as *;
+@use "../../styles/variables" as *;
+@use "../../styles/mixins" as *;
 
 .modal {
   &__backdrop {
@@ -8,28 +8,34 @@
     align-items: center;
     position: absolute;
     top: 0;
-    right: 0;
     left: 0;
-    bottom: 0;
+    width: 100%;
+    height: 100%;
     background-color: rgba(0, 0, 0, 0.9);
     border-radius: inherit;
+    padding: 64px;
     z-index: 10;
   }
 
   &__container {
     display: flex;
     flex-direction: column;
-    width: 65%;
-    height: 80%;
+    justify-content: center;
+    width: 1000px;
+    height: 100%;
+    min-height: 80%;
+  }
+
+  &__heading-container {
+    margin-bottom: 20px;
   }
 
   &__heading,
   &__sub-heading {
     text-align: center;
     text-transform: capitalize;
-    font-size: 3.5rem;
-    margin-top: 1.6rem;
-    margin-bottom: 0;
+    font-size: 4rem;
+    margin: 0.5rem;
 
     &--match {
       color: green;
@@ -47,8 +53,8 @@
   }
 
   &__content {
-    padding: 16px;
     overflow: auto;
+    // max-height: 500px;
   }
 
   &__button {

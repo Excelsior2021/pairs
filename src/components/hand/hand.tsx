@@ -1,11 +1,12 @@
 import { For, type Component } from "solid-js"
+import Card from "@/components/card/card"
 import "./hand.scss"
 
-import type Card from "@/game-objects/card"
+import type { Card as CardType } from "@/game-objects"
 
-type prop = {
+type props = {
   heading: string
-  hand: Card[]
+  hand: CardType[]
   player?: boolean
   playerTurnHandler?: (playerHandEvent: MouseEvent) => void
 }
@@ -17,18 +18,19 @@ export const handleCardClick = (
   if (playerTurnHandler) playerTurnHandler(e)
 }
 
-const Hand: Component<prop> = props => (
+const Hand: Component<props> = props => (
   <div class="hand">
     <h3 class="hand__heading">{props.heading}</h3>
     <div class="hand__hand">
       <For each={props.hand}>
         {card => (
-          <img
-            class={props.playerTurnHandler! ? "card card--player" : "card"}
-            id={props.player ? card.id : undefined}
-            src={props.player ? card.img : `./cards/back.webp`}
-            alt={props.player ? card.id : "opponent card"}
-            onclick={e => handleCardClick(e, props.playerTurnHandler!)}
+          <Card
+            card={card}
+            show={props.player}
+            playerTurnHandler={props.playerTurnHandler}
+            handleClick={(e: MouseEvent) =>
+              handleCardClick(e, props.playerTurnHandler!)
+            }
           />
         )}
       </For>

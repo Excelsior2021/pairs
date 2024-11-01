@@ -29,7 +29,7 @@
 @mixin modal-button {
   @include button;
   & {
-    margin-top: 3rem;
+    margin-top: 5rem;
     padding: 1rem 5rem;
   }
 }

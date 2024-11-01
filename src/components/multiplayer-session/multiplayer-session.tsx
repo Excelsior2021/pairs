@@ -21,14 +21,14 @@ export const [gameState, dispatchGameAction] = createReducer(
 )
 
 type props = {
-  socket: Socket
+  socket: Socket | null
 }
 
 const MultiplayerSession: Component<props> = props => {
   const [player, setPlayer] = createSignal(0)
   const [startGame, setStartGame] = createSignal(false)
 
-  startSession(props.socket, player, setPlayer, setStartGame)
+  startSession(props.socket as Socket, player, setPlayer, setStartGame)
 
   return (
     <div class="session">

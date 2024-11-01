@@ -4,7 +4,7 @@ import user from "@testing-library/user-event"
 import MainMenu from "../../src/components/main-menu/main-menu"
 import {
   setMultiplayerMenu,
-  setSinglePlayerStarted,
+  setSessionStarted,
 } from "../../src/components/game-screen/game-screen"
 import { setShowInstructions } from "../../src/components/instructions/instructions"
 
@@ -61,7 +61,7 @@ describe("MainMenu Component", () => {
 
     test("single player button clicked", async () => {
       await user.click(singlePlayerButton)
-      expect(setSinglePlayerStarted).toHaveBeenCalledWith(true)
+      expect(setSessionStarted).toHaveBeenCalledWith(true)
     })
 
     test("multiplayer button clicked", async () => {

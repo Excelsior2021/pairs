@@ -9,9 +9,9 @@ import {
   playerResponseHandler,
 } from "@/multiplayer-event-functions"
 import { PlayerOutput, Outcome, GameAction, GameMode } from "@/enums"
-import "../session/session.scss"
+import "@/components/session/session.scss"
 
-import type Player from "@/game-objects/player"
+import type { Player } from "@/game-objects"
 import type {
   clientStateMutiplayer,
   gameActionMultiplayer,
@@ -48,6 +48,7 @@ export const multiplayerReducer = (
       return {
         ...state,
         socket: action.socket!,
+        gameOver: false,
       }
     }
     case GameAction.CREATE_SESSION: {
@@ -343,12 +344,11 @@ export const multiplayerReducer = (
       if (state.socket) state.socket.emit("player_disconnect", state.sessionID)
     }
     case GameAction.PLAYER_DISCONNECTED: {
-      const log = "Your opponent has disconnected. The game has ended."
-
       return {
         ...state,
-        log,
-        gameOver: false,
+        log: "",
+        outcome: Outcome.Disconnect,
+        gameOver: true,
       }
     }
     case GameAction.GAME_OVER: {
