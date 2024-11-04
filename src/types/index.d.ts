@@ -1,11 +1,53 @@
-import type { Accessor } from "solid-js"
+import type { Accessor, Setter } from "solid-js"
 import type { Socket } from "socket.io-client"
-import type Card from "../game-objects/card"
-import type Player from "../game-objects/player"
-import type Opponent from "../game-objects/opponent"
-import type Deck from "../game-objects/deck"
-import type Game from "../game-objects/game"
-import type { GameMode } from "../enums"
+import type { Card, Deck, Game, Player, Opponent } from "@/game-objects"
+import type {
+  GameAction as GameActionType,
+  GameMode as GameModeType,
+} from "@/enums"
+
+export type io = (serverDomain: string) => Socket
+
+export type connectToServer = (
+  io: io,
+  tTimeout: number,
+  tInterval: number
+) => Promise<Socket>
+
+export type createGameHandler = (
+  io: io,
+  connectToServer: connectToServer,
+  setSocket: Setter<Socket | null>,
+  setCreateSessionID: Setter<string>,
+  setMultiplayerMenu: Setter<boolean>,
+  setMultiplayerSessionStarted: Setter<boolean>,
+  setServerTimeout: Setter<boolean>,
+  setServerConnected: Setter<boolean | null>,
+  UITimer: Accessor<number>,
+  setUITimer: Setter<number>,
+  dispatchGameAction: dispatchGameActionType,
+  GameAction: typeof GameActionType
+) => void
+
+export type joinGameHandler = (
+  sessionID: string,
+  io: io,
+  connectToServer: connectToServer,
+  setSocket: Setter<Socket | null>,
+  setJoinGame: Setter<boolean>,
+  setMultiplayerSessionStarted: Setter<boolean>,
+  setSessionIDNotValid: Setter<boolean>,
+  setNoSessionExists: Setter<boolean>,
+  setServerConnected: Setter<boolean | null>,
+  setLoading: Setter<boolean>,
+  dispatchGameAction: dispatchGameActionType,
+  GameAction: typeof GameActionType
+) => void
+
+export type terminateCreateSession = (
+  socket: Socket | null,
+  setMultiplayerMenu: Setter<boolean>
+) => void
 
 export type gameStateProp = {
   gameState: Accessor<gameStateType & gameStateMultiplayer>
@@ -17,7 +59,7 @@ export type playerRequest = {
 }
 
 export type gameStateType = {
-  gameMode: GameMode.SinglePlayer | GameMode.Multiplayer
+  gameMode: typeof GameModeType
   game?: Game | null
   deck?: Deck | null
   player?: Player | null

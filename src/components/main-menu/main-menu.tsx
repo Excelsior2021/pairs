@@ -1,4 +1,4 @@
-import { createEffect, createSignal, type Component } from "solid-js"
+import { createEffect, createSignal, For, type Component } from "solid-js"
 import {
   setSessionStarted,
   setMultiplayerMenu,
@@ -10,8 +10,23 @@ import "./main-menu.scss"
 const [appLoaded, setAppLoaded] = createSignal(false)
 
 const MainMenu: Component = () => {
-  //delay for setTimeout set to 500ms because animation is 500ms
+  //delay for setTimeout, set to 500ms because animation is 500ms
   createEffect(() => setTimeout(() => setAppLoaded(true), 500))
+
+  const actions = [
+    {
+      name: "single player",
+      onclick: () => setSessionStarted(true),
+    },
+    {
+      name: "multiplayer",
+      onclick: () => setMultiplayerMenu(true),
+    },
+    {
+      name: "instructions",
+      onclick: () => setShowInstructions(true),
+    },
+  ]
 
   return (
     <div
@@ -19,21 +34,13 @@ const MainMenu: Component = () => {
       data-testid="main-menu">
       <h2 class="main-menu__heading">main menu</h2>
       <div class="main-menu__actions">
-        <button
-          class="main-menu__button"
-          onclick={() => setSessionStarted(true)}>
-          single player
-        </button>
-        <button
-          class="main-menu__button"
-          onclick={() => setMultiplayerMenu(true)}>
-          multiplayer
-        </button>
-        <button
-          class="main-menu__button"
-          onclick={() => setShowInstructions(true)}>
-          instructions
-        </button>
+        <For each={actions}>
+          {action => (
+            <button class="main-menu__button" onclick={action.onclick}>
+              {action.name}
+            </button>
+          )}
+        </For>
       </div>
     </div>
   )

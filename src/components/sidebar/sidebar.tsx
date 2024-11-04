@@ -5,7 +5,7 @@ import { setShowQuitGameModal } from "@/components/quit-game-modal/quit-game-mod
 import { GameAction, GameMode } from "@/enums"
 import "./sidebar.scss"
 
-import type { Accessor, Component } from "solid-js"
+import { For, type Accessor, type Component } from "solid-js"
 import type { gameStateType, playerRequest } from "@/types"
 
 type props = {
@@ -28,43 +28,59 @@ export const gameDeckHandler = (
   }
 }
 
-const Sidebar: Component<props> = props => (
-  <div class="sidebar">
-    <div class="sidebar__deck">
-      <h3 class="sidebar__heading">deck</h3>
-      <img
-        class={
-          props.gameState().deckClickable
-            ? "card card--deck card--deck--active"
-            : "card card--deck"
-        }
-        src="./cards/back.webp"
-        alt="game deck"
-        onclick={() =>
-          gameDeckHandler(
-            props.gameState().deckClickable,
-            props.gameState().gameMode,
-            props.gameState().deckHandlerFactory!,
-            props.gameState().playerRequest!
-          )
-        }
-      />
+const Sidebar: Component<props> = props => {
+  const actions = [
+    {
+      name: "pairs",
+      onclick: () => setShowPairsModal(true),
+    },
+    {
+      name: "instructions",
+      onclick: () => setShowInstructions(true),
+    },
+    {
+      name: "quit",
+      onclick: () => setShowQuitGameModal(true),
+      class: "sidebar__button--quit",
+    },
+  ]
+
+  return (
+    <div class="sidebar">
+      <div class="sidebar__deck">
+        <h3 class="sidebar__heading">deck</h3>
+        <img
+          class={
+            props.gameState().deckClickable
+              ? "card card--deck card--deck--active"
+              : "card card--deck"
+          }
+          src="./cards/back.webp"
+          alt="game deck"
+          onclick={() =>
+            gameDeckHandler(
+              props.gameState().deckClickable,
+              props.gameState().gameMode,
+              props.gameState().deckHandlerFactory!,
+              props.gameState().playerRequest!
+            )
+          }
+        />
+      </div>
+      <div class="sidebar__actions">
+        <h3 class="sidebar__heading">{props.gameState().gameMode}</h3>
+        <For each={actions}>
+          {action => (
+            <button
+              class={`sidebar__button ${action.class}`}
+              onclick={action.onclick}>
+              {action.name}
+            </button>
+          )}
+        </For>
+      </div>
     </div>
-    <div class="sidebar__actions">
-      <h3 class="sidebar__heading">{props.gameState().gameMode}</h3>
-      <button class="sidebar__button" onclick={() => setShowPairsModal(true)}>
-        pairs
-      </button>
-      <button class="sidebar__button" onclick={() => setShowInstructions(true)}>
-        instructions
-      </button>
-      <button
-        class="sidebar__button sidebar__button--quit"
-        onclick={() => setShowQuitGameModal(true)}>
-        quit
-      </button>
-    </div>
-  </div>
-)
+  )
+}
 
 export default Sidebar
