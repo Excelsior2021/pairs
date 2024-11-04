@@ -341,7 +341,7 @@ export const multiplayerReducer = (
       }
     }
     case GameAction.PLAYER_DISCONNECT: {
-      if (state.socket) state.socket.emit("player_disconnect", state.sessionID)
+      if (state.socket) state.socket.disconnect()
     }
     case GameAction.PLAYER_DISCONNECTED: {
       return {

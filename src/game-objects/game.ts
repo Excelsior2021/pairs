@@ -8,6 +8,7 @@ export class Game {
   player: Player
   opponent: Opponent
   dispatchGameAction: dispatchGameActionType
+  initialHandSize: number
 
   constructor(
     Deck: Deck,
@@ -19,13 +20,14 @@ export class Game {
     this.player = Player
     this.opponent = Opponent
     this.dispatchGameAction = dispatchGameAction
+    this.initialHandSize = 7
   }
 
   start() {
     this.deck.shuffle()
 
-    this.player.hand = this.deck.dealHand(7)
-    this.opponent.hand = this.deck.dealHand(7)
+    this.player.hand = this.deck.dealHand(this.initialHandSize)
+    this.opponent.hand = this.deck.dealHand(this.initialHandSize)
 
     this.player.pairs = this.initialPairs(this.player.hand)
     this.opponent.pairs = this.initialPairs(this.opponent.hand)

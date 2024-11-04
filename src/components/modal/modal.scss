@@ -5,6 +5,7 @@
   &__backdrop {
     display: flex;
     flex-direction: column;
+    justify-content: center;
     align-items: center;
     position: absolute;
     top: 0;
@@ -17,13 +18,17 @@
     z-index: 10;
   }
 
+  &__title {
+    font-size: 5rem;
+    font-weight: 700;
+  }
+
   &__container {
     display: flex;
     flex-direction: column;
     justify-content: center;
     width: 1000px;
-    height: 100%;
-    min-height: 80%;
+    overflow: auto;
   }
 
   &__heading-container {
@@ -35,9 +40,7 @@
     text-align: center;
     text-transform: capitalize;
     font-size: 4rem;
-    margin: 0.5rem;
-
-    &--match {
+    margin: 0.5rem &--match {
       color: green;
     }
 
@@ -54,7 +57,6 @@
 
   &__content {
     overflow: auto;
-    // max-height: 500px;
   }
 
   &__button {

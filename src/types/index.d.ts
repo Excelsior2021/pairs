@@ -59,7 +59,7 @@ export type playerRequest = {
 }
 
 export type gameStateType = {
-  gameMode: typeof GameModeType
+  gameMode: GameModeType
   game?: Game | null
   deck?: Deck | null
   player?: Player | null
