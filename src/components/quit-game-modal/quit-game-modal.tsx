@@ -4,7 +4,7 @@ import {
   setMultiplayerSessionStarted,
   setSessionStarted,
 } from "@/components/game-screen/game-screen"
-import { GameAction } from "@/enums"
+import { GameAction, PlayerOutput } from "@/enums"
 import "./quit-game-modal.scss"
 
 import type { dispatchGameActionType } from "@/types"
@@ -12,8 +12,8 @@ import type { dispatchGameActionType } from "@/types"
 export const [showQuitGameModal, setShowQuitGameModal] = createSignal(false)
 
 type props = {
-  multiplayer: boolean
-  dispatchGameAction: dispatchGameActionType
+  multiplayer?: true
+  dispatchGameAction?: dispatchGameActionType
 }
 
 const QuitGameModal: Component<props> = props => (
@@ -21,7 +21,7 @@ const QuitGameModal: Component<props> = props => (
     showModal={showQuitGameModal}
     setShowModal={setShowQuitGameModal}
     heading="quit game"
-    playerOutput={3}
+    playerOutput={PlayerOutput.NoMatch} //for styling purposes
     hideTitle={true}>
     <div class="quit-game-modal">
       <p class="quit-game-modal__text">
@@ -33,7 +33,7 @@ const QuitGameModal: Component<props> = props => (
           setSessionStarted(false)
           setMultiplayerSessionStarted(false)
           setShowQuitGameModal(false)
-          if (props.multiplayer)
+          if (props.multiplayer && props.dispatchGameAction)
             props.dispatchGameAction({ type: GameAction.PLAYER_DISCONNECT })
         }}>
         confirm

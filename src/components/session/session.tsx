@@ -35,7 +35,7 @@ const Session: Component = () => {
       <Sidebar gameState={gameState} />
       <PlayerModal gameState={gameState} />
       <PairsModal gameState={gameState} />
-      <QuitGameModal multiplayer={false} socket={null} />
+      <QuitGameModal />
     </div>
   )
 }

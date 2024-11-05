@@ -5,6 +5,7 @@ import {
   type Setter,
 } from "solid-js"
 import "./modal.scss"
+import { PlayerOutput } from "@/enums"
 
 type contentProps = {
   heading: string | null
@@ -18,7 +19,7 @@ type modalProps = {
   showModal: Accessor<boolean>
   setShowModal: Setter<boolean>
   playerOutput?: number
-  hideTitle?: boolean
+  hideTitle?: true
 }
 
 const Backdrop: ParentComponent = props => (
@@ -31,7 +32,7 @@ const Content: ParentComponent<contentProps> = props => (
       <h2
         class={
           props.playerOutput !== undefined
-            ? props.playerOutput < 3
+            ? props.playerOutput! < PlayerOutput.NoMatch
               ? "modal__heading modal__heading--match"
               : "modal__heading modal__heading--no-match"
             : "modal__heading"
@@ -40,7 +41,7 @@ const Content: ParentComponent<contentProps> = props => (
       </h2>
       <h3
         class={
-          props.playerOutput! < 3
+          props.playerOutput! < PlayerOutput.NoMatch
             ? "modal__sub-heading modal__sub-heading--match"
             : "modal__sub-heading modal__sub-heading--no-match"
         }>

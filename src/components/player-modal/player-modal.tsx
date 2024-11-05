@@ -17,7 +17,8 @@ const PlayerModal: Component<gameStateProp> = props => (
     setShowModal={setShowPlayerModal}
     heading={matchStatusHeading()}
     subHeading={matchStatusSubHeading()}
-    playerOutput={props.gameState().playerOutput!}>
+    playerOutput={props.gameState().playerOutput!}
+    hideTitle={true}>
     <div class="player-modal__output">
       <p class="player-modal__text">
         <Switch>

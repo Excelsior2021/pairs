@@ -12,6 +12,11 @@ export enum nonNumCardValue {
   king = "king",
 }
 
+export enum Player {
+  Player1 = 1,
+  Player2,
+}
+
 export enum PlayerOutput {
   OpponentMatch,
   DeckMatch,

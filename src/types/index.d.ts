@@ -122,7 +122,7 @@ export type gameActionMultiplayer = gameAction & {
   player1Log?: string
   player2Log?: string
   playerRequest?: playerRequest
-  requestPlayer?: number
+  activePlayer?: number
   dealtCard?: Card
 }
 

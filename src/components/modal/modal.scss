@@ -40,7 +40,8 @@
     text-align: center;
     text-transform: capitalize;
     font-size: 4rem;
-    margin: 0.5rem &--match {
+    margin: 0.5rem;
+    &--match {
       color: green;
     }
 

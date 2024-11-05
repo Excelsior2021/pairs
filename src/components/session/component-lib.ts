@@ -11,7 +11,6 @@ import {
   GameMode,
   GameAction,
 } from "@/enums"
-import "./session.scss"
 
 import type { gameStateType, gameAction } from "@/types"
 
