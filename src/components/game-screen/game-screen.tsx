@@ -11,7 +11,7 @@ import type { Socket } from "socket.io-client"
 
 export const [sessionStarted, setSessionStarted] = createSignal(false)
 export const [multiplayerMenu, setMultiplayerMenu] = createSignal(false)
-export const [joinGame, setJoinGame] = createSignal(false)
+export const [joinGameMenu, setJoinGameMenu] = createSignal(false)
 export const [multiplayerSessionStarted, setMultiplayerSessionStarted] =
   createSignal(false)
 export const [socket, setSocket] = createSignal<Socket | null>(null)
@@ -26,7 +26,7 @@ const GameScreen: Component = () => (
       <Match when={multiplayerMenu()}>
         <MultiplayerMenu />
       </Match>
-      <Match when={joinGame()}>
+      <Match when={joinGameMenu()}>
         <JoinGame />
       </Match>
       <Match when={multiplayerSessionStarted()}>

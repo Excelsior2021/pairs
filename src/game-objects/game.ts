@@ -9,6 +9,9 @@ export class Game {
   opponent: Opponent
   dispatchGameAction: dispatchGameActionType
   initialHandSize: number
+  playerTurnHandlerFactory
+  playerResponseHandlerFactory
+  deckHandlerFactory
 
   constructor(
     Deck: Deck,
@@ -21,6 +24,12 @@ export class Game {
     this.opponent = Opponent
     this.dispatchGameAction = dispatchGameAction
     this.initialHandSize = 7
+    this.playerTurnHandlerFactory = (playerHandEvent: MouseEvent) =>
+      this.player.turn(playerHandEvent, this, this.opponent)
+    this.playerResponseHandlerFactory = (hasCard: boolean) =>
+      this.player.response(hasCard, this, this.deck, this.opponent)
+    this.deckHandlerFactory = () =>
+      this.deck.handler(this, this.player, this.opponent)
   }
 
   start() {
@@ -66,24 +75,15 @@ export class Game {
     opponentTurn = false,
     deckClickable = false
   ) {
-    const playerTurnHandlerFactory = (playerHandEvent: MouseEvent) =>
-      this.player.turn(playerHandEvent, this, this.opponent)
-
-    const playerResponseHandlerFactory = (hasCard: boolean) =>
-      this.player.response(hasCard, this, this.deck, this.opponent)
-
-    const deckHandlerFactory = () =>
-      this.deck.handler(this, this.player, this.opponent)
-
     this.dispatchGameAction({
       type: GameAction.UPDATE,
       deck: this.deck,
       player: this.player,
       opponent: this.opponent,
-      playerTurnHandlerFactory,
+      playerTurnHandlerFactory: this.playerTurnHandlerFactory,
       playerHandClickable,
-      playerResponseHandlerFactory,
-      deckHandlerFactory,
+      playerResponseHandlerFactory: this.playerResponseHandlerFactory,
+      deckHandlerFactory: this.deckHandlerFactory,
       deckClickable,
       opponentTurn,
     })

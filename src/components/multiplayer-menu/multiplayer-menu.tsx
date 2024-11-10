@@ -3,7 +3,7 @@ import { io } from "socket.io-client"
 import {
   setMultiplayerMenu,
   setMultiplayerSessionStarted,
-  setJoinGame,
+  setJoinGameMenu,
   setSocket,
   setCreateSessionID,
   socket,
@@ -45,7 +45,7 @@ const MultiplayerMenu: Component = () => {
       name: "join game",
       onclick: () => {
         terminateCreateSession(socket(), setMultiplayerMenu)
-        setJoinGame(true)
+        setJoinGameMenu(true)
       },
     },
     {

@@ -7,7 +7,7 @@ import type { Card as CardType } from "@/game-objects"
 type props = {
   heading: string
   hand: CardType[]
-  player?: boolean
+  player?: true
   playerTurnHandler?: (playerHandEvent: MouseEvent) => void
 }
 

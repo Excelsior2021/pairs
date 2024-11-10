@@ -21,7 +21,7 @@ const QuitGameModal: Component<props> = props => (
     showModal={showQuitGameModal}
     setShowModal={setShowQuitGameModal}
     heading="quit game"
-    playerOutput={PlayerOutput.NoMatch} //for styling purposes
+    playerOutput={PlayerOutput.Quit} //for styling purposes
     hideTitle={true}>
     <div class="quit-game-modal">
       <p class="quit-game-modal__text">

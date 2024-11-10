@@ -22,6 +22,7 @@ export enum PlayerOutput {
   DeckMatch,
   HandMatch,
   NoMatch,
+  Quit = 3,
   NoOpponentMatch,
 }
 

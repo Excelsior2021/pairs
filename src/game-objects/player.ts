@@ -117,7 +117,7 @@ export class Player {
             game.updateUI()
 
             log = "It's your opponent's turn again."
-            this.dispatchGameAction({ type: "GAME_LOG", log })
+            this.dispatchGameAction({ type: GameAction.GAME_LOG, log })
             setTimeout(opponentTurn, 2000)
             return
           }
@@ -125,7 +125,7 @@ export class Player {
         log = `Are you sure? Do you have a ${opponent.request.value}?`
 
         this.dispatchGameAction({
-          type: "GAME_LOG",
+          type: GameAction.GAME_LOG,
           log,
         })
         return
@@ -137,7 +137,7 @@ export class Player {
             log = `Are you sure? Do you have a ${opponent.request.value}?`
 
             this.dispatchGameAction({
-              type: "GAME_LOG",
+              type: GameAction.GAME_LOG,
               log,
             })
             return
@@ -151,7 +151,7 @@ export class Player {
           log =
             "Your opponent has dealt a card from the deck and matched with the dealt card. It's your opponent's turn again."
 
-          this.dispatchGameAction({ type: "GAME_LOG", log })
+          this.dispatchGameAction({ type: GameAction.GAME_LOG, log })
           setTimeout(opponentTurn, 2000)
         }
         if (opponentOutput === OpponentOutput.HandMatch) {
@@ -166,6 +166,6 @@ export class Player {
     }
 
     game.updateUI(true, false)
-    this.dispatchGameAction({ type: "GAME_LOG", log })
+    this.dispatchGameAction({ type: GameAction.GAME_LOG, log })
   }
 }

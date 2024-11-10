@@ -7,11 +7,11 @@ type props = {
 const GameActions: Component<props> = props => {
   const actions = [
     {
-      name: "Yes",
+      name: "yes",
       onclick: () => props.playerResponseHandler(true),
     },
     {
-      name: "No",
+      name: "no",
       onclick: () => props.playerResponseHandler(false),
     },
   ]

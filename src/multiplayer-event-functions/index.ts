@@ -1,5 +1,4 @@
 import { GameAction } from "@/enums"
-import type { Card } from "@/game-objects"
 import type {
   playerRequest,
   playerResponseHandlerMultiplayerType,
@@ -12,20 +11,17 @@ export const playerTurnHandler: playerTurnHandlerMultiplayerType = (
   clientPlayer,
   dispatchGameAction
 ) => {
-  let chosenCard: Card
   const eventTarget = playerHandEvent.target as HTMLImageElement
 
   if (player && eventTarget)
     for (const card of player.hand)
       if (card.id === eventTarget.id) {
-        chosenCard = card
+        dispatchGameAction({
+          type: GameAction.PLAYER_REQUEST,
+          playerRequest: { card, clientPlayer },
+        })
         break
       }
-
-  dispatchGameAction({
-    type: GameAction.PLAYER_REQUEST,
-    playerRequest: { card: chosenCard!, clientPlayer },
-  })
 }
 
 export const playerResponseHandler: playerResponseHandlerMultiplayerType = (

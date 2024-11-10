@@ -1,10 +1,10 @@
-import { createSignal, Switch, Match, For, type Component } from "solid-js"
+import { createSignal, Switch, Match, type Component } from "solid-js"
+import Card from "@/components/card/card"
 import Modal from "@/components/modal/modal"
 import { PlayerOutput } from "@/enums"
 import "./player-modal.scss"
 
 import type { gameStateProp } from "@/types"
-import Card from "../card/card"
 
 export const [showPlayerModal, setShowPlayerModal] = createSignal(false)
 export const [matchStatusHeading, setMatchStatusHeading] = createSignal("")
@@ -50,22 +50,32 @@ const PlayerModal: Component<gameStateProp> = props => (
       <div class="player-modal__cards">
         <Switch>
           <Match when={props.gameState().playerOutput !== PlayerOutput.NoMatch}>
-            <For each={props.gameState().player!.pairs}>
-              {(card, i) => {
-                if (i() >= props.gameState().player!.pairs.length - 2) {
-                  return <Card card={card} show={true} />
-                }
-              }}
-            </For>
+            <Card
+              card={
+                props.gameState().player!.pairs[
+                  props.gameState().player!.pairs.length - 2
+                ]
+              }
+              show={true}
+            />
+            <Card
+              card={
+                props.gameState().player!.pairs[
+                  props.gameState().player!.pairs.length - 1
+                ]
+              }
+              show={true}
+            />
           </Match>
           <Match when={props.gameState().playerOutput === PlayerOutput.NoMatch}>
-            <For each={props.gameState().player!.hand}>
-              {(card, i) => {
-                if (i() === props.gameState().player!.hand.length - 1) {
-                  return <Card card={card} show={true} />
-                }
-              }}
-            </For>
+            <Card
+              card={
+                props.gameState().player!.hand[
+                  props.gameState().player!.hand.length - 1
+                ]
+              }
+              show={true}
+            />
           </Match>
         </Switch>
       </div>

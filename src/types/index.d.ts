@@ -34,7 +34,7 @@ export type joinGameHandler = (
   io: io,
   connectToServer: connectToServer,
   setSocket: Setter<Socket | null>,
-  setJoinGame: Setter<boolean>,
+  setJoinGameMenu: Setter<boolean>,
   setMultiplayerSessionStarted: Setter<boolean>,
   setSessionIDNotValid: Setter<boolean>,
   setNoSessionExists: Setter<boolean>,

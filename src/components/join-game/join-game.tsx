@@ -1,7 +1,7 @@
 import { createSignal, For, type Component } from "solid-js"
 import { io } from "socket.io-client"
 import {
-  setJoinGame,
+  setJoinGameMenu,
   setMultiplayerSessionStarted,
   setMultiplayerMenu,
   socket,
@@ -31,7 +31,7 @@ const JoinGame: Component = () => {
           io,
           connectToServer,
           setSocket,
-          setJoinGame,
+          setJoinGameMenu,
           setMultiplayerSessionStarted,
           setSessionIDNotValid,
           setNoSessionExists,
@@ -45,7 +45,7 @@ const JoinGame: Component = () => {
     {
       name: "←",
       onclick: () => {
-        setJoinGame(false)
+        setJoinGameMenu(false)
         setMultiplayerMenu(true)
         setSessionIDNotValid(false)
         setNoSessionExists(false)
