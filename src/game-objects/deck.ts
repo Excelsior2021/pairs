@@ -55,8 +55,7 @@ export class Deck {
   dealCard = () => this.deck.pop()
 
   dealHand(handSize: number) {
-    const hand: CardType[] = new Array(handSize)
-    for (let i = 0; i < handSize; i++) hand[i] = this.dealCard()!
+    const hand: CardType[] = this.deck.splice(0, handSize)
     return hand
   }
 
