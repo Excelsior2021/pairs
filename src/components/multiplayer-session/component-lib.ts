@@ -48,21 +48,8 @@ export const multiplayerReducer = (
     case GameAction.START_SESSION: {
       return {
         ...state,
-        socket: action.socket!,
+        socket: action.socket,
         gameOver: false,
-      }
-    }
-    case GameAction.CREATE_SESSION: {
-      if (state.socket) state.socket.emit("create_session", action.sessionID)
-      return {
-        ...state,
-        sessionID: action.sessionID,
-      }
-    }
-    case GameAction.JOIN_SESSION: {
-      return {
-        ...state,
-        sessionID: action.sessionID,
       }
     }
     case GameAction.UPDATE: {
@@ -127,6 +114,7 @@ export const multiplayerReducer = (
         gameState,
         clientPlayer: action.clientPlayer!,
         playerTurnHandlerFactory,
+        sessionID: action.sessionID ? action.sessionID : state.sessionID,
       }
     }
     case GameAction.PLAYER_REQUEST: {

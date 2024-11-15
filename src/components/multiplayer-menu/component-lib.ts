@@ -13,48 +13,35 @@ export const terminateCreateSession: terminateCreateSessionType = (
 
 export const createGameHandler: createGameHandlerType = async (
   io,
-  connectToServer,
   setSocket,
   setCreateSessionID,
   setMultiplayerMenu,
   setMultiplayerSessionStarted,
-  setServerTimeout,
-  setServerConnected,
-  UITimer,
-  setUITimer,
-  dispatchGameAction,
-  GameAction
+  setConnectError,
+  setServerConnected
 ) => {
-  setServerTimeout(false)
+  setConnectError(false)
   setServerConnected(false)
 
-  const UITimerIntervalRef = setInterval(() => {
-    if (UITimer() > 0) setUITimer((prev: number) => prev - 1)
-    else clearInterval(UITimerIntervalRef)
-  }, 1000)
+  const socket = io(import.meta.env.VITE_SERVER_DOMAIN)
 
-  const socket = await connectToServer(io, 60000, 200)
-
-  if (socket.connected) {
+  socket.on("connect", () => {
     setSocket(socket)
     setServerConnected(true)
-    const sessionIDGenerator = () => Math.floor(Math.random() * 10 ** 4)
-    const sessionID = sessionIDGenerator().toString().padStart(4, "0")
+    const sessionID = Math.floor(Math.random() * 10 ** 4)
+      .toString()
+      .padStart(4, "0")
 
     setCreateSessionID(sessionID)
 
-    socket.emit("recieve_sessionID")
+    socket.emit("create_session", sessionID)
 
-    socket.on("recieved_sessionID", () => {
-      setMultiplayerMenu(false)
-      setMultiplayerSessionStarted(true)
-      dispatchGameAction({
-        type: GameAction.CREATE_SESSION,
-        sessionID,
-      })
-    })
-  } else {
-    setServerTimeout(true)
-    socket.disconnect()
-  }
+    setMultiplayerMenu(false)
+    setMultiplayerSessionStarted(true)
+  })
+
+  socket.on("connect_error", error => {
+    /* handle reconnection attempts */
+    setConnectError(true)
+  })
 }

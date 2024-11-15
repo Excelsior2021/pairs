@@ -3,16 +3,13 @@ import { joinGameHandler as joinGameHandlerType } from "@/types"
 export const joinGameHandler: joinGameHandlerType = async (
   sessionID,
   io,
-  connectToServer,
   setSocket,
   setJoinGameMenu,
   setMultiplayerSessionStarted,
   setSessionIDNotValid,
   setNoSessionExists,
   setServerConnected,
-  setLoading,
-  dispatchGameAction,
-  GameAction
+  setLoading
 ) => {
   setSessionIDNotValid(false)
   setNoSessionExists(false)
@@ -25,9 +22,9 @@ export const joinGameHandler: joinGameHandlerType = async (
 
   setLoading(true)
 
-  const socket = await connectToServer(io, 5000, 200)
+  const socket = io(import.meta.env.VITE_SERVER_DOMAIN)
 
-  if (socket.connected) {
+  socket.on("connect", () => {
     setSocket(socket)
     setLoading(false)
     setSessionIDNotValid(false)
@@ -35,22 +32,22 @@ export const joinGameHandler: joinGameHandlerType = async (
     setServerConnected(true)
 
     socket.emit("join_session", sessionID)
+  })
 
-    socket.on("no_sessionID", () => {
-      setNoSessionExists(true)
-      socket.disconnect()
-    })
-
-    socket.on("sessionID_exists", () => {
-      dispatchGameAction({ type: GameAction.JOIN_SESSION, sessionID })
-      setJoinGameMenu(false)
-      setMultiplayerSessionStarted(true)
-    })
-
-    return
-  } else {
+  socket.on("connect_error", error => {
+    /* handle reconnection attempts */
     setServerConnected(false)
     setLoading(false)
+    // socket.disconnect()
+  })
+
+  socket.on("no_sessionID", () => {
+    setNoSessionExists(true)
     socket.disconnect()
-  }
+  })
+
+  socket.on("sessionID_exists", () => {
+    setJoinGameMenu(false)
+    setMultiplayerSessionStarted(true)
+  })
 }

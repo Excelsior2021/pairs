@@ -1,47 +1,28 @@
 import type { Accessor, Setter } from "solid-js"
-import type { Socket } from "socket.io-client"
+import type { Socket, io as ioType } from "socket.io-client"
 import type { Card, Deck, Game, Player, Opponent } from "@/game-objects"
-import type {
-  GameAction as GameActionType,
-  GameMode as GameModeType,
-} from "@/enums"
-
-export type io = (serverDomain: string) => Socket
-
-export type connectToServer = (
-  io: io,
-  tTimeout: number,
-  tInterval: number
-) => Promise<Socket>
+import type { GameMode as GameModeType } from "@/enums"
 
 export type createGameHandler = (
-  io: io,
-  connectToServer: connectToServer,
+  io: typeof ioType,
   setSocket: Setter<Socket | null>,
   setCreateSessionID: Setter<string>,
   setMultiplayerMenu: Setter<boolean>,
   setMultiplayerSessionStarted: Setter<boolean>,
-  setServerTimeout: Setter<boolean>,
-  setServerConnected: Setter<boolean | null>,
-  UITimer: Accessor<number>,
-  setUITimer: Setter<number>,
-  dispatchGameAction: dispatchGameActionType,
-  GameAction: typeof GameActionType
+  setConnectError: Setter<boolean>,
+  setServerConnected: Setter<boolean | null>
 ) => void
 
 export type joinGameHandler = (
   sessionID: string,
-  io: io,
-  connectToServer: connectToServer,
+  io: typeof ioType,
   setSocket: Setter<Socket | null>,
   setJoinGameMenu: Setter<boolean>,
   setMultiplayerSessionStarted: Setter<boolean>,
   setSessionIDNotValid: Setter<boolean>,
   setNoSessionExists: Setter<boolean>,
   setServerConnected: Setter<boolean | null>,
-  setLoading: Setter<boolean>,
-  dispatchGameAction: dispatchGameActionType,
-  GameAction: typeof GameActionType
+  setLoading: Setter<boolean>
 ) => void
 
 export type terminateCreateSession = (

@@ -8,9 +8,6 @@ import {
   setCreateSessionID,
   socket,
 } from "@/components/game-screen/game-screen"
-import { dispatchGameAction } from "@/components/multiplayer-session/multiplayer-session"
-import { GameAction } from "@/enums"
-import { connectToServer } from "@/utils"
 import { createGameHandler, terminateCreateSession } from "./component-lib"
 
 import "./multiplayer-menu.scss"
@@ -19,8 +16,7 @@ const MultiplayerMenu: Component = () => {
   const [serverConnected, setServerConnected] = createSignal<boolean | null>(
     null
   )
-  const [serverTimeout, setServerTimeout] = createSignal(false)
-  const [UITimer, setUITimer] = createSignal(60)
+  const [connectError, setConnectError] = createSignal(false)
 
   const actions = [
     {
@@ -28,17 +24,12 @@ const MultiplayerMenu: Component = () => {
       onclick: () =>
         createGameHandler(
           io,
-          connectToServer,
           setSocket,
           setCreateSessionID,
           setMultiplayerMenu,
           setMultiplayerSessionStarted,
-          setServerTimeout,
-          setServerConnected,
-          UITimer,
-          setUITimer,
-          dispatchGameAction,
-          GameAction
+          setConnectError,
+          setServerConnected
         ),
     },
     {
@@ -66,16 +57,12 @@ const MultiplayerMenu: Component = () => {
           )}
         </For>
       </div>
-      {serverConnected() === false && !serverTimeout() && (
-        <p class="multiplayer-menu__text">
-          Please wait a few moments, the server may be initializing. (
-          {UITimer()})
-        </p>
+      {serverConnected() === false && !connectError() && (
+        <p class="multiplayer-menu__text">Creating session...</p>
       )}
-      {serverTimeout() && (
+      {connectError() && (
         <p class="multiplayer-menu__text">
-          There seems to be an issue connecting to the server. Please try again
-          later.
+          There seems to be an issue connecting to the server. Please try again.
         </p>
       )}
     </div>

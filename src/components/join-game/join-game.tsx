@@ -7,9 +7,6 @@ import {
   socket,
   setSocket,
 } from "@/components/game-screen/game-screen"
-import { dispatchGameAction } from "@/components/multiplayer-session/multiplayer-session"
-import { GameAction } from "@/enums"
-import { connectToServer } from "@/utils"
 import { joinGameHandler } from "./component-lib"
 import "./join-game.scss"
 
@@ -29,16 +26,13 @@ const JoinGame: Component = () => {
         joinGameHandler(
           joinSessionID(),
           io,
-          connectToServer,
           setSocket,
           setJoinGameMenu,
           setMultiplayerSessionStarted,
           setSessionIDNotValid,
           setNoSessionExists,
           setServerConnected,
-          setLoading,
-          dispatchGameAction,
-          GameAction
+          setLoading
         ),
       disabled: loading(),
     },
