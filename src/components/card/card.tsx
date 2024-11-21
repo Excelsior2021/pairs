@@ -1,9 +1,9 @@
 import type { Component } from "solid-js"
-import type { Card as CardType } from "@/game-objects"
+import type { Card } from "@/types"
 import "./card.scss"
 
 type props = {
-  card: CardType
+  card: Card
   show?: true
   playerTurnHandler?: (playerHandEvent: MouseEvent) => void
   handleClick?: (e: MouseEvent) => void

@@ -1,23 +1,20 @@
 import { nonNumCardValue, suit } from "@/enums"
 import { GameAction, PlayerOutput } from "@/enums"
 
-import type { Card as CardType, Game, Opponent, Player } from "@/game-objects"
-import type { dispatchGameActionType } from "@/types"
+import type { Game, Opponent, Player } from "@/game-objects"
+import type { Card, dispatchGameActionType } from "@/types"
 
 export class Deck {
-  deck: CardType[]
+  deck: Card[]
   dispatchGameAction: dispatchGameActionType
 
-  constructor(
-    Card: typeof CardType,
-    dispatchGameAction: dispatchGameActionType
-  ) {
-    this.deck = this.create(Card)
+  constructor(dispatchGameAction: dispatchGameActionType) {
+    this.deck = this.create()
     this.dispatchGameAction = dispatchGameAction
   }
 
-  create(Card: typeof CardType) {
-    const deck: CardType[] = new Array(52)
+  create() {
+    const deck: Card[] = new Array(52)
     const non_num_cards = [
       nonNumCardValue.ace,
       nonNumCardValue.jack,
@@ -30,8 +27,16 @@ export class Deck {
     const createSuits = (value: number | nonNumCardValue) => {
       for (const suit of suits) {
         const id = `${value}_of_${suit}`
-        const img = `./cards/${id}.webp`
-        deck[deckIndex] = new Card(id, value, suit, img)
+
+        const card = {
+          id,
+          value,
+          suit,
+          img: `./cards/${id}.webp`,
+        }
+
+        deck[deckIndex] = card
+
         deckIndex++
       }
     }
@@ -55,7 +60,7 @@ export class Deck {
   dealCard = () => this.deck.pop()
 
   dealHand(handSize: number) {
-    const hand: CardType[] = this.deck.splice(0, handSize)
+    const hand: Card[] = this.deck.splice(0, handSize)
     return hand
   }
 

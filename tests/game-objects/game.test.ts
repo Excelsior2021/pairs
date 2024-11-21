@@ -7,8 +7,8 @@ import {
   vi,
   type MockInstance,
 } from "vitest"
-import { Card, Deck, Game, Player, Opponent } from "../../src/game-objects"
-import { suit, GameAction, Outcome } from "../../src/enums"
+import { Deck, Game, Player, Opponent } from "@/game-objects"
+import { suit, GameAction, Outcome } from "@/enums"
 
 const handMock = [
   {
@@ -63,7 +63,7 @@ describe("Game class", () => {
   let dealHandSpy: MockInstance
 
   beforeEach(() => {
-    deck = new Deck(Card, dispatchGameActionMock)
+    deck = new Deck(dispatchGameActionMock)
     player = new Player(dispatchGameActionMock)
     opponent = new Opponent(dispatchGameActionMock)
     game = new Game(deck, player, opponent, dispatchGameActionMock)

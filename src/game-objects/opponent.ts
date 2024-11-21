@@ -1,7 +1,7 @@
 import { GameAction, OpponentOutput } from "@/enums"
 
-import type { Card, Deck, Game } from "@/game-objects"
-import type { dispatchGameActionType } from "@/types"
+import type { Deck, Game } from "@/game-objects"
+import type { Card, dispatchGameActionType } from "@/types"
 
 export class Opponent {
   hand: Card[]

@@ -1,12 +1,12 @@
 import { afterEach, describe, expect, it, test, vi } from "vitest"
 import { render, waitFor } from "@solidjs/testing-library"
 import user from "@testing-library/user-event"
-import MainMenu from "../../src/components/main-menu/main-menu"
+import MainMenu from "@/components/main-menu/main-menu"
 import {
   setMultiplayerMenu,
   setSessionStarted,
-} from "../../src/components/game-screen/game-screen"
-import { setShowInstructions } from "../../src/components/instructions/instructions"
+} from "@/components/game-screen/game-screen"
+import { setShowInstructions } from "@/components/instructions/instructions"
 
 describe("MainMenu Component", () => {
   const { getByRole, getByTestId } = render(() => <MainMenu />)
@@ -51,8 +51,8 @@ describe("MainMenu Component", () => {
   })
 
   describe("actions", () => {
-    vi.mock("../../src/components/game-screen/game-screen")
-    vi.mock("../../src/components/instructions/instructions")
+    vi.mock("@/components/game-screen/game-screen")
+    vi.mock("@/components/instructions/instructions")
     user.setup()
 
     afterEach(() => {

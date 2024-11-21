@@ -2,7 +2,7 @@ import { For, type Component } from "solid-js"
 import Card from "@/components/card/card"
 import "./hand.scss"
 
-import type { Card as CardType } from "@/game-objects"
+import type { Card as CardType } from "@/types"
 
 type props = {
   heading: string

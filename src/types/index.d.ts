@@ -1,7 +1,14 @@
 import type { Accessor, Setter } from "solid-js"
 import type { Socket, io as ioType } from "socket.io-client"
-import type { Card, Deck, Game, Player, Opponent } from "@/game-objects"
-import type { GameMode as GameModeType } from "@/enums"
+import type { Deck, Game, Player, Opponent } from "@/game-objects"
+import type { GameMode as GameModeType, nonNumCardValue, suit } from "@/enums"
+
+type Card = {
+  id: string
+  value: nonNumCardValue | number | null
+  suit: suit | ""
+  img: string
+}
 
 export type createGameHandler = (
   io: typeof ioType,

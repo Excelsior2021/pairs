@@ -2,8 +2,8 @@ import { test, it, describe, expect, beforeEach, vi } from "vitest"
 import {
   playerResponseHandler,
   playerTurnHandler,
-} from "../../src/multiplayer-event-functions"
-import { GameAction } from "../../src/enums"
+} from "@/multiplayer-event-functions"
+import { GameAction } from "@/enums"
 
 describe("multiplayer event functions", () => {
   const clientPlayer = 1

@@ -1,7 +1,7 @@
 import { it, describe, expect, beforeEach, vi } from "vitest"
-import { Card, Deck, Game, Player, Opponent } from "../../src/game-objects"
+import { Deck, Game, Player, Opponent } from "@/game-objects"
 import mockDeck from "../__mocks__/deck"
-import { GameAction, PlayerOutput } from "../../src/enums"
+import { GameAction, PlayerOutput } from "@/enums"
 
 describe("Deck class", () => {
   let deck: Deck
@@ -9,12 +9,12 @@ describe("Deck class", () => {
 
   beforeEach(() => {
     vi.resetAllMocks()
-    deck = new Deck(Card, dispatchGameActionMock)
+    deck = new Deck(dispatchGameActionMock)
   })
 
   describe("create()", () => {
     it("returns a standard deck of cards", () => {
-      const newDeck = deck.create(Card)
+      const newDeck = deck.create()
       expect(JSON.stringify(newDeck)).toBe(JSON.stringify(mockDeck))
     })
   })

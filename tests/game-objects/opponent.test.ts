@@ -6,8 +6,8 @@ import {
   vi,
   type MockInstance,
 } from "vitest"
-import { Card, Deck, Game, Player, Opponent } from "../../src/game-objects"
-import { suit, OpponentOutput } from "../../src/enums"
+import { Deck, Game, Player, Opponent } from "@/game-objects"
+import { suit, OpponentOutput } from "@/enums"
 
 const hand = [
   {
@@ -56,7 +56,7 @@ describe("Opponent class", () => {
     let output: OpponentOutput
 
     beforeEach(() => {
-      deck = new Deck(Card, dispatchGameActionMock)
+      deck = new Deck(dispatchGameActionMock)
       updateUISpy = vi.spyOn(game, "updateUI")
     })
 
