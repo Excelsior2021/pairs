@@ -1,4 +1,4 @@
-import { createSignal, Switch, Match, type Component } from "solid-js"
+import { createSignal, Switch, Match, type Component, For } from "solid-js"
 import Card from "@/components/card/card"
 import Modal from "@/components/modal/modal"
 import { PlayerOutput } from "@/enums"
@@ -50,32 +50,21 @@ const PlayerModal: Component<gameStateProp> = props => (
       <div class="player-modal__cards">
         <Switch>
           <Match when={props.gameState().playerOutput !== PlayerOutput.NoMatch}>
-            <Card
-              card={
-                props.gameState().player!.pairs[
-                  props.gameState().player!.pairs.length - 2
-                ]
-              }
-              show={true}
-            />
-            <Card
-              card={
-                props.gameState().player!.pairs[
-                  props.gameState().player!.pairs.length - 1
-                ]
-              }
-              show={true}
-            />
+            <For each={props.gameState().player!.pairs.slice(-2)}>
+              {card => <Card card={card} show={true} />}
+            </For>
           </Match>
           <Match when={props.gameState().playerOutput === PlayerOutput.NoMatch}>
-            <Card
-              card={
-                props.gameState().player!.hand[
-                  props.gameState().player!.hand.length - 1
-                ]
-              }
-              show={true}
-            />
+            {props.gameState().player!.hand.length > 0 && (
+              <Card
+                card={
+                  props.gameState().player!.hand[
+                    props.gameState().player!.hand.length - 1
+                  ]
+                }
+                show={true}
+              />
+            )}
           </Match>
         </Switch>
       </div>

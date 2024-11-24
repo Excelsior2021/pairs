@@ -428,37 +428,43 @@ export const startSession = (
       }
     )
 
+    //helper function for player_match and player_dealt
+    const handlePlayerResult = (
+      serverState: serverStateMultiplayer,
+      playerOutput: number,
+      activePlayer: number,
+      playerTurn: number
+    ) => {
+      dispatchGameAction({
+        type: GameAction.UPDATE,
+        serverState,
+        clientPlayer: player(),
+        playerTurn,
+      })
+      dispatchGameAction({
+        type: GameAction.PLAYER_RESULT,
+        playerOutput,
+        activePlayer,
+        serverState,
+      })
+      dispatchGameAction({ type: GameAction.GAME_OVER })
+    }
+
+    //playerTurn is activePlayer
     socket.on(
       "player_match",
       (
         serverState: serverStateMultiplayer,
         playerOutput: number,
         activePlayer: number
-      ) => {
-        dispatchGameAction({
-          type: GameAction.UPDATE,
+      ) =>
+        handlePlayerResult(
           serverState,
-          clientPlayer: player(),
-          playerTurn: activePlayer,
-        })
-        dispatchGameAction({
-          type: GameAction.PLAYER_RESULT,
           playerOutput,
           activePlayer,
-          serverState,
-        })
-        dispatchGameAction({ type: GameAction.GAME_OVER })
-      }
+          activePlayer
+        )
     )
-
-    socket.on("player_to_deal", (playerRequest: playerRequest) => {
-      dispatchGameAction({
-        type: GameAction.PLAYER_DEALS,
-        playerRequest,
-      })
-      dispatchGameAction({ type: GameAction.GAME_OVER })
-    })
-
     socket.on(
       "player_dealt",
       (
@@ -471,21 +477,17 @@ export const startSession = (
         else
           playerTurn =
             activePlayer === Player.Player1 ? Player.Player2 : Player.Player1
-        dispatchGameAction({
-          type: GameAction.UPDATE,
-          serverState,
-          clientPlayer: player(),
-          playerTurn,
-        })
-        dispatchGameAction({
-          type: GameAction.PLAYER_RESULT,
-          playerOutput,
-          activePlayer,
-          serverState,
-        })
-        dispatchGameAction({ type: GameAction.GAME_OVER })
+        handlePlayerResult(serverState, playerOutput, activePlayer, playerTurn)
       }
     )
+
+    socket.on("player_to_deal", (playerRequest: playerRequest) => {
+      dispatchGameAction({
+        type: GameAction.PLAYER_DEALS,
+        playerRequest,
+      })
+      dispatchGameAction({ type: GameAction.GAME_OVER })
+    })
 
     socket.on("player_response_message", (playerOutput: number) => {
       dispatchGameAction({
