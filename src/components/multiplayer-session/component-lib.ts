@@ -121,8 +121,7 @@ export const multiplayerReducer = (
       if (state.socket)
         state.socket.emit(
           "player_request",
-          state.clientPlayer,
-          action.playerRequest!.card,
+          action.playerRequest,
           state.sessionID
         )
       const log = "Waiting for you opponent to respond..."
