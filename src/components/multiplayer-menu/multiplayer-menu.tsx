@@ -13,10 +13,8 @@ import { createGameHandler, terminateCreateSession } from "./component-lib"
 import "./multiplayer-menu.scss"
 
 const MultiplayerMenu: Component = () => {
-  const [serverConnected, setServerConnected] = createSignal<boolean | null>(
-    null
-  )
-  const [connectError, setConnectError] = createSignal(false)
+  const [serverConnected, setServerConnected] = createSignal<false | null>(null)
+  const [connecting, setConnecting] = createSignal(false)
 
   const actions = [
     {
@@ -28,9 +26,10 @@ const MultiplayerMenu: Component = () => {
           setCreateSessionID,
           setMultiplayerMenu,
           setMultiplayerSessionStarted,
-          setConnectError,
+          setConnecting,
           setServerConnected
         ),
+      disabled: () => connecting(),
     },
     {
       name: "join game",
@@ -51,16 +50,19 @@ const MultiplayerMenu: Component = () => {
       <div class="multiplayer-menu__actions">
         <For each={actions}>
           {action => (
-            <button class="multiplayer-menu__button" onclick={action.onclick}>
+            <button
+              class="multiplayer-menu__button"
+              onclick={action.onclick}
+              disabled={action.disabled && action.disabled()}>
               {action.name}
             </button>
           )}
         </For>
       </div>
-      {serverConnected() === false && !connectError() && (
+      {connecting() && (
         <p class="multiplayer-menu__text">Creating session...</p>
       )}
-      {connectError() && (
+      {serverConnected() === false && (
         <p class="multiplayer-menu__text">
           There seems to be an issue connecting to the server. Please try again.
         </p>

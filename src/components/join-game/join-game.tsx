@@ -14,7 +14,7 @@ const JoinGame: Component = () => {
   const [joinSessionID, setJoinSessionID] = createSignal("")
   const [sessionIDNotValid, setSessionIDNotValid] = createSignal(false)
   const [noSessionExists, setNoSessionExists] = createSignal(false)
-  const [loading, setLoading] = createSignal(false)
+  const [connecting, setConnecting] = createSignal(false)
   const [serverConnected, setServerConnected] = createSignal<boolean | null>(
     null
   )
@@ -32,9 +32,9 @@ const JoinGame: Component = () => {
           setSessionIDNotValid,
           setNoSessionExists,
           setServerConnected,
-          setLoading
+          setConnecting
         ),
-      disabled: loading(),
+      disabled: () => connecting(),
     },
     {
       name: "←",
@@ -63,8 +63,10 @@ const JoinGame: Component = () => {
         onchange={event => setJoinSessionID(event.currentTarget.value)}
         aria-label="session id"
       />
-      {loading() && (
-        <p class="join-game__text join-game__text--info">Please wait...</p>
+      {connecting() && (
+        <p class="join-game__text join-game__text--info">
+          Attempting to join session...
+        </p>
       )}
       {sessionIDNotValid() && (
         <p class="join-game__text join-game__text--info">
@@ -88,7 +90,7 @@ const JoinGame: Component = () => {
             <button
               class="join-game__button"
               onclick={action.onclick}
-              disabled={action.disabled}>
+              disabled={action.disabled && action.disabled()}>
               {action.name}
             </button>
           )}

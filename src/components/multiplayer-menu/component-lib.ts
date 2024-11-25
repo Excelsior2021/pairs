@@ -17,17 +17,20 @@ export const createGameHandler: createGameHandlerType = async (
   setCreateSessionID,
   setMultiplayerMenu,
   setMultiplayerSessionStarted,
-  setConnectError,
+  setConnecting,
   setServerConnected
 ) => {
-  setConnectError(false)
-  setServerConnected(false)
+  setConnecting(true)
 
-  const socket = io(import.meta.env.VITE_SERVER_DOMAIN)
+  const socket = io(import.meta.env.VITE_SERVER_DOMAIN, {
+    reconnectionAttempts: 4,
+  })
+
+  setSocket(socket)
 
   socket.on("connect", () => {
-    setSocket(socket)
-    setServerConnected(true)
+    setServerConnected(null)
+    setConnecting(false)
     const sessionID = Math.floor(Math.random() * 10 ** 4)
       .toString()
       .padStart(4, "0")
@@ -40,8 +43,8 @@ export const createGameHandler: createGameHandlerType = async (
     setMultiplayerSessionStarted(true)
   })
 
-  socket.on("connect_error", error => {
-    /* handle reconnection attempts */
-    setConnectError(true)
+  socket.io.on("reconnect_failed", () => {
+    setConnecting(false)
+    setServerConnected(false)
   })
 }

@@ -9,7 +9,7 @@ export const joinGameHandler: joinGameHandlerType = async (
   setSessionIDNotValid,
   setNoSessionExists,
   setServerConnected,
-  setLoading
+  setConnecting
 ) => {
   setSessionIDNotValid(false)
   setNoSessionExists(false)
@@ -20,13 +20,16 @@ export const joinGameHandler: joinGameHandlerType = async (
     return
   }
 
-  setLoading(true)
+  setConnecting(true)
 
-  const socket = io(import.meta.env.VITE_SERVER_DOMAIN)
+  const socket = io(import.meta.env.VITE_SERVER_DOMAIN, {
+    reconnectionAttempts: 4,
+  })
+
+  setSocket(socket)
 
   socket.on("connect", () => {
-    setSocket(socket)
-    setLoading(false)
+    setConnecting(false)
     setSessionIDNotValid(false)
     setNoSessionExists(false)
     setServerConnected(true)
@@ -34,11 +37,9 @@ export const joinGameHandler: joinGameHandlerType = async (
     socket.emit("join_session", sessionID)
   })
 
-  socket.on("connect_error", error => {
-    /* handle reconnection attempts */
+  socket.io.on("reconnect_failed", () => {
     setServerConnected(false)
-    setLoading(false)
-    // socket.disconnect()
+    setConnecting(false)
   })
 
   socket.on("no_sessionID", () => {

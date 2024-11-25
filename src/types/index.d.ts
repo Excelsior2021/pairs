@@ -16,8 +16,8 @@ export type createGameHandler = (
   setCreateSessionID: Setter<string>,
   setMultiplayerMenu: Setter<boolean>,
   setMultiplayerSessionStarted: Setter<boolean>,
-  setConnectError: Setter<boolean>,
-  setServerConnected: Setter<boolean | null>
+  setConnecting: Setter<boolean>,
+  setServerConnected: Setter<false | null>
 ) => void
 
 export type joinGameHandler = (
