@@ -1,7 +1,7 @@
 import { createSignal, Switch, Match, type Component, For } from "solid-js"
 import Card from "@/components/card/card"
 import Modal from "@/components/modal/modal"
-import { PlayerOutput } from "@/enums"
+import { ModalHeadingColor, PlayerOutput } from "@/enums"
 import "./player-modal.scss"
 
 import type { gameStateProp } from "@/types"
@@ -17,7 +17,11 @@ const PlayerModal: Component<gameStateProp> = props => (
     setShowModal={setShowPlayerModal}
     heading={matchStatusHeading()}
     subHeading={matchStatusSubHeading()}
-    playerOutput={props.gameState().playerOutput!}
+    headingColor={
+      props.gameState().playerOutput! < 3
+        ? ModalHeadingColor.green
+        : ModalHeadingColor.red
+    }
     hideTitle={true}>
     <div class="player-modal__output">
       <p class="player-modal__text">

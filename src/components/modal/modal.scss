@@ -41,12 +41,11 @@
     text-transform: capitalize;
     font-size: 4rem;
     margin: 0.5rem;
-    &--match {
+    &--green {
       color: green;
     }
 
-    &--no-match,
-    &--quit-game {
+    &--red {
       color: red;
     }
   }

@@ -4,21 +4,21 @@ import {
   type Accessor,
   type Setter,
 } from "solid-js"
+import { ModalHeadingColor } from "@/enums"
 import "./modal.scss"
-import { PlayerOutput } from "@/enums"
 
 type contentProps = {
-  heading: string | null
-  subHeading?: string | null
-  playerOutput?: number
+  heading?: string
+  subHeading?: string
+  headingColor?: ModalHeadingColor
 }
 
 type modalProps = {
-  heading: string | null
-  subHeading?: string | null
   showModal: Accessor<boolean>
   setShowModal: Setter<boolean>
-  playerOutput?: number
+  heading?: string
+  subHeading?: string
+  headingColor?: ModalHeadingColor
   hideTitle?: true
 }
 
@@ -31,19 +31,17 @@ const Content: ParentComponent<contentProps> = props => (
     <div class="modal__heading-container">
       <h2
         class={
-          props.playerOutput !== undefined
-            ? props.playerOutput! < PlayerOutput.NoMatch
-              ? "modal__heading modal__heading--match"
-              : "modal__heading modal__heading--no-match"
+          props.headingColor
+            ? `modal__heading modal__heading--${props.headingColor}`
             : "modal__heading"
         }>
         {props.heading}
       </h2>
       <h3
         class={
-          props.playerOutput! < PlayerOutput.NoMatch
-            ? "modal__sub-heading modal__sub-heading--match"
-            : "modal__sub-heading modal__sub-heading--no-match"
+          props.headingColor
+            ? `modal__heading modal__heading--${props.headingColor}`
+            : "modal__heading"
         }>
         {props.subHeading}
       </h3>
@@ -61,7 +59,7 @@ const Modal: ParentComponent<modalProps> = props => (
         children={props.children}
         heading={props.heading}
         subHeading={props.subHeading}
-        playerOutput={props.playerOutput}
+        headingColor={props.headingColor}
       />
       <button class="modal__button" onclick={() => props.setShowModal(false)}>
         close

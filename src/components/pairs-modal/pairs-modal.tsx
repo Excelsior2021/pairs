@@ -8,10 +8,7 @@ import type { gameStateProp } from "@/types"
 export const [showPairsModal, setShowPairsModal] = createSignal(false)
 
 const PairsModal: Component<gameStateProp> = props => (
-  <Modal
-    showModal={showPairsModal}
-    setShowModal={setShowPairsModal}
-    heading={null}>
+  <Modal showModal={showPairsModal} setShowModal={setShowPairsModal}>
     <div class="pairs-modal">
       <div class="pairs-modal__pairs-container">
         <p class="pairs-modal__heading">{`Your Pairs (${

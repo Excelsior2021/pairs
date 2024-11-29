@@ -22,7 +22,6 @@ export enum PlayerOutput {
   DeckMatch,
   HandMatch,
   NoMatch,
-  Quit = 3,
   NoOpponentMatch,
 }
 
@@ -73,4 +72,9 @@ export enum GameAction {
   GAME_LOG = "GAME_LOG",
   GAME_OVER = "GAME_OVER",
   START_SESSION = "START_SESSION",
+}
+
+export enum ModalHeadingColor {
+  green = "green",
+  red = "red",
 }

@@ -1,15 +1,14 @@
 .instructions {
+  font-size: 1.8rem;
+
   &__text {
+    font-size: 2.2rem;
     text-align: center;
     font-weight: bold;
-
-    &--em {
-      font-size: 2rem;
-    }
   }
 
   &__item {
-    margin: 1.6rem;
+    margin: 3rem;
     margin-left: 2.4rem;
     @for $i from 1 through 9 {
       @if $i == 1 or $i == 5 or $i == 9 {

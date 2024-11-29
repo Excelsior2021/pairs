@@ -4,7 +4,7 @@ import {
   setMultiplayerSessionStarted,
   setSessionStarted,
 } from "@/components/game-screen/game-screen"
-import { GameAction, PlayerOutput } from "@/enums"
+import { GameAction, ModalHeadingColor } from "@/enums"
 import "./quit-game-modal.scss"
 
 import type { dispatchGameActionType } from "@/types"
@@ -21,7 +21,7 @@ const QuitGameModal: Component<props> = props => (
     showModal={showQuitGameModal}
     setShowModal={setShowQuitGameModal}
     heading="quit game"
-    playerOutput={PlayerOutput.Quit} //for styling purposes
+    headingColor={ModalHeadingColor.red}
     hideTitle={true}>
     <div class="quit-game-modal">
       <p class="quit-game-modal__text">
