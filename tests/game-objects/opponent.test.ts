@@ -8,6 +8,7 @@ import {
 } from "vitest"
 import { Deck, Game, Player, Opponent } from "@/game-objects"
 import { suit, OpponentOutput } from "@/enums"
+import mockDeck from "../__mocks__/deck"
 
 const hand = [
   {
@@ -56,7 +57,7 @@ describe("Opponent class", () => {
     let output: OpponentOutput
 
     beforeEach(() => {
-      deck = new Deck(dispatchGameActionMock)
+      deck = new Deck(mockDeck, dispatchGameActionMock)
       updateUISpy = vi.spyOn(game, "updateUI")
     })
 

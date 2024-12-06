@@ -9,6 +9,7 @@ import {
 } from "vitest"
 import { Deck, Game, Player, Opponent } from "@/game-objects"
 import { suit, GameAction, Outcome } from "@/enums"
+import mockDeck from "../__mocks__/deck"
 
 const handMock = [
   {
@@ -63,7 +64,7 @@ describe("Game class", () => {
   let dealHandSpy: MockInstance
 
   beforeEach(() => {
-    deck = new Deck(dispatchGameActionMock)
+    deck = new Deck(mockDeck, dispatchGameActionMock)
     player = new Player(dispatchGameActionMock)
     opponent = new Opponent(dispatchGameActionMock)
     game = new Game(deck, player, opponent, dispatchGameActionMock)
