@@ -4,7 +4,13 @@ import Sidebar from "@/components/sidebar/sidebar"
 import PlayerModal from "@/components/player-modal/player-modal"
 import PairsModal from "@/components/pairs-modal/pairs-modal"
 import QuitGameModal from "@/components/quit-game-modal/quit-game-modal"
-import { Deck, Game as GameObject, Player, Opponent } from "@/game-objects"
+import {
+  deckObj,
+  Deck,
+  Game as GameObject,
+  Player,
+  Opponent,
+} from "@/game-objects"
 import { gameReducer, initialGameState } from "./component-lib"
 import "./session.scss"
 
@@ -16,7 +22,7 @@ const Session: Component = () => {
     initialGameState
   )
 
-  const deck = new Deck(dispatchGameAction)
+  const deck = new Deck(deckObj, dispatchGameAction)
   const player = new Player(dispatchGameAction)
   const opponent = new Opponent(dispatchGameAction)
   const game = new GameObject(deck, player, opponent, dispatchGameAction)

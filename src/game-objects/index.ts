@@ -1,3 +1,4 @@
+export * from "@/game-objects/deckObj"
 export * from "@/game-objects/deck"
 export * from "@/game-objects/game"
 export * from "@/game-objects/player"

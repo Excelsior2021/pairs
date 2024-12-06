@@ -1,6 +1,6 @@
 import type { Card } from "@/types"
 
-export default [
+export const deckObj = [
   {
     id: "ace_of_clubs",
     value: "ace",

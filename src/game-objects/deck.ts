@@ -1,4 +1,3 @@
-import { nonNumCardValue, suit } from "@/enums"
 import { GameAction, PlayerOutput } from "@/enums"
 
 import type { Game, Opponent, Player } from "@/game-objects"
@@ -8,44 +7,9 @@ export class Deck {
   deck: Card[]
   dispatchGameAction: dispatchGameActionType
 
-  constructor(dispatchGameAction: dispatchGameActionType) {
-    this.deck = this.create()
+  constructor(deck: Card[], dispatchGameAction: dispatchGameActionType) {
+    this.deck = structuredClone(deck)
     this.dispatchGameAction = dispatchGameAction
-  }
-
-  create() {
-    const deck: Card[] = new Array(52)
-    const non_num_cards = [
-      nonNumCardValue.ace,
-      nonNumCardValue.jack,
-      nonNumCardValue.queen,
-      nonNumCardValue.king,
-    ]
-    const suits = [suit.clubs, suit.diamonds, suit.hearts, suit.spades]
-    let deckIndex = 0
-
-    const createSuits = (value: number | nonNumCardValue) => {
-      for (const suit of suits) {
-        const id = `${value}_of_${suit}`
-
-        const card = {
-          id,
-          value,
-          suit,
-          img: `./cards/${id}.webp`,
-        }
-
-        deck[deckIndex] = card
-
-        deckIndex++
-      }
-    }
-
-    for (const value of non_num_cards) createSuits(value)
-
-    for (let value = 2; value < 11; value++) createSuits(value)
-
-    return deck
   }
 
   shuffle() {

@@ -9,14 +9,7 @@ describe("Deck class", () => {
 
   beforeEach(() => {
     vi.resetAllMocks()
-    deck = new Deck(dispatchGameActionMock)
-  })
-
-  describe("create()", () => {
-    it("returns a standard deck of cards", () => {
-      const newDeck = deck.create()
-      expect(JSON.stringify(newDeck)).toBe(JSON.stringify(mockDeck))
-    })
+    deck = new Deck(mockDeck, dispatchGameActionMock)
   })
 
   describe("shuffle()", () => {
