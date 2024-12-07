@@ -7,8 +7,8 @@ import {
   vi,
   type MockInstance,
 } from "vitest"
-import { Deck, Game, Player, Opponent } from "@/game-objects"
-import { suit, GameAction, Outcome } from "@/enums"
+import { Deck, Game, Player, Opponent } from "@game-objects"
+import { suit, GameAction, Outcome } from "@enums"
 import mockDeck from "../__mocks__/deck"
 
 const handMock = [

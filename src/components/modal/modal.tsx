@@ -4,7 +4,7 @@ import {
   type Accessor,
   type Setter,
 } from "solid-js"
-import { ModalHeadingColor } from "@/enums"
+import { ModalHeadingColor } from "@enums"
 import "./modal.scss"
 
 type contentProps = {

@@ -1,4 +1,4 @@
-import type { Card } from "@/types"
+import type { card } from "@types"
 
 export default [
   {
@@ -313,4 +313,4 @@ export default [
     suit: "spades",
     img: "./cards/10_of_spades.webp",
   },
-] as Card[]
+] as card[]

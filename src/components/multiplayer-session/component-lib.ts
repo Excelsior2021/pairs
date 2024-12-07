@@ -3,21 +3,21 @@ import {
   setShowPlayerModal,
   setMatchStatusHeading,
   setMatchStatusSubHeading,
-} from "@/components/player-modal/player-modal"
+} from "@components/player-modal/player-modal"
 import {
   playerTurnHandler,
   playerResponseHandler,
-} from "@/multiplayer-event-functions"
-import { PlayerOutput, Outcome, GameAction, GameMode, Player } from "@/enums"
+} from "@multiplayer-event-functions"
+import { PlayerOutput, Outcome, GameAction, GameMode, Player } from "@enums"
 
-import type { Player as PlayerType } from "@/game-objects"
+import type { Player as PlayerType } from "@game-objects"
 import type {
   clientStateMutiplayer,
   gameActionMultiplayer,
   gameStateMultiplayer,
   playerRequest,
   serverStateMultiplayer,
-} from "@/types"
+} from "@types"
 import type { Socket } from "socket.io-client"
 import type { Accessor, Setter } from "solid-js"
 

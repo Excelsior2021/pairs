@@ -1,7 +1,7 @@
-import { GameAction, Outcome } from "@/enums"
+import { GameAction, Outcome } from "@enums"
 
-import type { Deck, Player, Opponent } from "@/game-objects"
-import type { Card, dispatchGameActionType } from "@/types"
+import type { Deck, Player, Opponent } from "@game-objects"
+import type { card, dispatchGameActionType } from "@types"
 
 export class Game {
   deck: Deck
@@ -48,8 +48,8 @@ export class Game {
     this.dispatchGameAction({ type: GameAction.GAME_LOG, log })
   }
 
-  initialPairs(hand: Card[]) {
-    const pairs: Card[] = []
+  initialPairs(hand: card[]) {
+    const pairs: card[] = []
     hand.forEach(cardX =>
       hand.some(cardY => {
         if (

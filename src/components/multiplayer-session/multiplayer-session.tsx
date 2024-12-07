@@ -1,17 +1,17 @@
 import { createSignal, Show, type Component } from "solid-js"
 import { createReducer } from "@solid-primitives/memo"
-import Game from "@/components/game/game"
-import Sidebar from "@/components/sidebar/sidebar"
-import CreateGame from "@/components/create-game/create-game"
-import PairsModal from "@/components/pairs-modal/pairs-modal"
-import QuitGameModal from "@/components/quit-game-modal/quit-game-modal"
-import PlayerModal from "@/components/player-modal/player-modal"
+import Game from "@components/game/game"
+import Sidebar from "@components/sidebar/sidebar"
+import CreateGame from "@components/create-game/create-game"
+import PairsModal from "@components/pairs-modal/pairs-modal"
+import QuitGameModal from "@components/quit-game-modal/quit-game-modal"
+import PlayerModal from "@components/player-modal/player-modal"
 import {
   initialGameState,
   multiplayerReducer,
   startSession,
 } from "./component-lib"
-import "@/components/session/session.scss"
+import "@components/session/session.scss"
 
 import type { Socket } from "socket.io-client"
 

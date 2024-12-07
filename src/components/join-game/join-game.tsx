@@ -6,7 +6,7 @@ import {
   setMultiplayerMenu,
   socket,
   setSocket,
-} from "@/components/game-screen/game-screen"
+} from "@components/game-screen/game-screen"
 import { joinGameHandler } from "./component-lib"
 import "./join-game.scss"
 

@@ -1,4 +1,4 @@
-import { joinGameHandler as joinGameHandlerType } from "@/types"
+import { joinGameHandler as joinGameHandlerType } from "@types"
 
 export const joinGameHandler: joinGameHandlerType = async (
   sessionID,

@@ -1,6 +1,6 @@
 import { describe, expect, it, vi } from "vitest"
 import { render } from "@solidjs/testing-library"
-import GameActions from "@/components/game-actions/game-actions"
+import GameActions from "@components/game-actions/game-actions"
 import user from "@testing-library/user-event"
 
 describe("GameActions component", async () => {

@@ -1,7 +1,7 @@
 import type {
   createGameHandler as createGameHandlerType,
   terminateCreateSession as terminateCreateSessionType,
-} from "@/types"
+} from "@types"
 
 export const terminateCreateSession: terminateCreateSessionType = (
   socket,

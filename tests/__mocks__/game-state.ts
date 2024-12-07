@@ -1,4 +1,4 @@
-import { GameMode } from "@/enums"
+import { GameMode } from "@enums"
 
 export const singlePlayerGamestate = {
   gameMode: GameMode.SinglePlayer,

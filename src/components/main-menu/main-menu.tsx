@@ -2,8 +2,8 @@ import { createEffect, createSignal, For, type Component } from "solid-js"
 import {
   setSessionStarted,
   setMultiplayerMenu,
-} from "@/components/game-screen/game-screen"
-import { setShowInstructions } from "@/components/instructions/instructions"
+} from "@components/game-screen/game-screen"
+import { setShowInstructions } from "@components/instructions/instructions"
 import "./main-menu.scss"
 
 //global signal to prevent appLoaded from reinitializing

@@ -1,13 +1,13 @@
 import { createSignal, type Component } from "solid-js"
-import Modal from "@/components/modal/modal"
+import Modal from "@components/modal/modal"
 import {
   setMultiplayerSessionStarted,
   setSessionStarted,
-} from "@/components/game-screen/game-screen"
-import { GameAction, ModalHeadingColor } from "@/enums"
+} from "@components/game-screen/game-screen"
+import { GameAction, ModalHeadingColor } from "@enums"
 import "./quit-game-modal.scss"
 
-import type { dispatchGameActionType } from "@/types"
+import type { dispatchGameActionType } from "@types"
 
 export const [showQuitGameModal, setShowQuitGameModal] = createSignal(false)
 

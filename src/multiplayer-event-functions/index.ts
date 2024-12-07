@@ -1,9 +1,9 @@
-import { GameAction } from "@/enums"
+import { GameAction } from "@enums"
 import type {
   playerRequest,
   playerResponseHandlerMultiplayerType,
   playerTurnHandlerMultiplayerType,
-} from "@/types"
+} from "@types"
 
 export const playerTurnHandler: playerTurnHandlerMultiplayerType = (
   playerHandEvent,

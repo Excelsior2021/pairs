@@ -1,12 +1,12 @@
 import { For, type Component } from "solid-js"
-import Card from "@/components/card/card"
+import Card from "@components/card/card"
 import "./hand.scss"
 
-import type { Card as CardType } from "@/types"
+import type { card as cardType } from "@types"
 
 type props = {
   heading: string
-  hand: CardType[]
+  hand: cardType[]
   player?: true
   playerTurnHandler?: (playerHandEvent: MouseEvent) => void
 }

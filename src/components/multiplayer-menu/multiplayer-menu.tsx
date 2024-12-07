@@ -7,7 +7,7 @@ import {
   setSocket,
   setCreateSessionID,
   socket,
-} from "@/components/game-screen/game-screen"
+} from "@components/game-screen/game-screen"
 import { createGameHandler, terminateCreateSession } from "./component-lib"
 
 import "./multiplayer-menu.scss"

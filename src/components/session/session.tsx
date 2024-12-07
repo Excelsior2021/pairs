@@ -1,16 +1,16 @@
 import { createReducer } from "@solid-primitives/memo"
-import Game from "@/components/game/game"
-import Sidebar from "@/components/sidebar/sidebar"
-import PlayerModal from "@/components/player-modal/player-modal"
-import PairsModal from "@/components/pairs-modal/pairs-modal"
-import QuitGameModal from "@/components/quit-game-modal/quit-game-modal"
+import Game from "@components/game/game"
+import Sidebar from "@components/sidebar/sidebar"
+import PlayerModal from "@components/player-modal/player-modal"
+import PairsModal from "@components/pairs-modal/pairs-modal"
+import QuitGameModal from "@components/quit-game-modal/quit-game-modal"
 import {
   deckObj,
   Deck,
   Game as GameObject,
   Player,
   Opponent,
-} from "@/game-objects"
+} from "@game-objects"
 import { gameReducer, initialGameState } from "./component-lib"
 import "./session.scss"
 

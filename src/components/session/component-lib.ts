@@ -2,7 +2,7 @@ import {
   setShowPlayerModal,
   setMatchStatusHeading,
   setMatchStatusSubHeading,
-} from "@/components/player-modal/player-modal"
+} from "@components/player-modal/player-modal"
 
 import {
   PlayerMatchHeading,
@@ -10,9 +10,9 @@ import {
   PlayerOutput,
   GameMode,
   GameAction,
-} from "@/enums"
+} from "@enums"
 
-import type { gameStateType, gameAction } from "@/types"
+import type { gameStateType, gameAction } from "@types"
 
 export const initialGameState = {
   gameMode: GameMode.SinglePlayer,

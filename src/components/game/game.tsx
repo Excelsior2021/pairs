@@ -1,11 +1,11 @@
 import { createEffect, createSignal, type Component } from "solid-js"
-import Hand from "@/components/hand/hand"
-import GameActions from "@/components/game-actions/game-actions"
-import GameOver from "@/components/game-over/game-over"
-import { GameMode } from "@/enums"
+import Hand from "@components/hand/hand"
+import GameActions from "@components/game-actions/game-actions"
+import GameOver from "@components/game-over/game-over"
+import { GameMode } from "@enums"
 import "./game.scss"
 
-import type { gameStateProp } from "@/types"
+import type { gameStateProp } from "@types"
 
 const Game: Component<gameStateProp> = props => {
   const [deckCount, setDeckCount] = createSignal<null | number>(null)

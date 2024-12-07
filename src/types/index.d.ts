@@ -1,9 +1,9 @@
 import type { Accessor, Setter } from "solid-js"
 import type { Socket, io as ioType } from "socket.io-client"
-import type { Deck, Game, Player, Opponent } from "@/game-objects"
-import type { GameMode as GameModeType, nonNumCardValue, suit } from "@/enums"
+import type { Deck, Game, Player, Opponent } from "@game-objects"
+import type { GameMode as GameModeType, nonNumCardValue, suit } from "@enums"
 
-type Card = {
+type card = {
   id: string
   value: nonNumCardValue | number | null
   suit: suit | ""
@@ -42,7 +42,7 @@ export type gameStateProp = {
 }
 
 export type playerRequest = {
-  card: Card
+  card: card
   clientPlayer: number
 }
 
@@ -59,7 +59,7 @@ export type gameStateType = {
   deckClickable: boolean
   playerOutput: number | null
   opponentTurn: boolean
-  opponentRequest?: Card | null
+  opponentRequest?: card | null
   playerRequest?: playerRequest
   log: string
   outcome: string
@@ -67,7 +67,7 @@ export type gameStateType = {
 }
 
 export type gameStateMultiplayer = gameStateType & {
-  shuffledDeck?: Card[] | null
+  shuffledDeck?: card[] | null
   socket?: Socket | null
   clientPlayer?: number
   sessionID?: string | undefined
@@ -89,16 +89,16 @@ export type gameAction = {
   deckClickable?: boolean
   playerOutput?: number | boolean
   opponentTurn?: boolean
-  opponentRequest?: Card | null
+  opponentRequest?: card | null
   log?: string
-  chosenCard?: Card
-  opponentAsked?: Card
+  chosenCard?: card
+  opponentAsked?: card
   outcome?: string
   gameOver?: boolean
 }
 
 export type gameActionMultiplayer = gameAction & {
-  shuffledDeck?: Card[]
+  shuffledDeck?: card[]
   playerTurnHandler?: (playerHandEvent: MouseEvent) => void
   playerCard?: playerRequest
   opponentRequestMultiplayer?: playerRequest | null
@@ -111,7 +111,7 @@ export type gameActionMultiplayer = gameAction & {
   player2Log?: string
   playerRequest?: playerRequest
   activePlayer?: number
-  dealtCard?: Card
+  dealtCard?: card
 }
 
 export type dispatchGameActionType = (
@@ -119,7 +119,7 @@ export type dispatchGameActionType = (
 ) => void
 
 type serverState = {
-  shuffledDeck: Card[]
+  shuffledDeck: card[]
 }
 
 export type serverStateMultiplayer = serverState & {

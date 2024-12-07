@@ -1,5 +1,5 @@
 import { For, createSignal, type Component } from "solid-js"
-import Modal from "@/components/modal/modal"
+import Modal from "@components/modal/modal"
 import "./instructions.scss"
 
 export const [showInstructions, setShowInstructions] = createSignal(false)

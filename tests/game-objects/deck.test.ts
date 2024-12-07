@@ -1,7 +1,7 @@
 import { it, describe, expect, beforeEach, vi } from "vitest"
-import { Deck, Game, Player, Opponent } from "@/game-objects"
+import { Deck, Game, Player, Opponent } from "@game-objects"
 import mockDeck from "../__mocks__/deck"
-import { GameAction, PlayerOutput } from "@/enums"
+import { GameAction, PlayerOutput } from "@enums"
 
 describe("Deck class", () => {
   let deck: Deck
