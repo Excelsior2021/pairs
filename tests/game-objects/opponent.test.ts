@@ -7,29 +7,62 @@ import {
   type MockInstance,
 } from "vitest"
 import { Deck, Game, Player, Opponent } from "@game-objects"
-import { suit, OpponentOutput } from "@enums"
-import mockDeck from "../__mocks__/deck"
+import { OpponentOutput } from "@enums"
+import { card } from "@types"
 
-const hand = [
+const deckMock = [
   {
     id: "4_of_clubs",
     value: 4,
-    suit: suit.clubs,
+    suit: "clubs",
     img: "./cards/4_of_clubs.webp",
   },
   {
     id: "4_of_diamonds",
     value: 4,
-    suit: suit.diamonds,
+    suit: "diamonds",
     img: "./cards/4_of_diamonds.webp",
+  },
+  {
+    id: "king_of_diamonds",
+    value: "king",
+    suit: "diamonds",
+    img: "./cards/king_of_diamonds.webp",
+  },
+  {
+    id: "6_of_hearts",
+    value: 6,
+    suit: "hearts",
+    img: "./cards/6_of_hearts.webp",
+  },
+  {
+    id: "8_of_spades",
+    value: 8,
+    suit: "spades",
+    img: "./cards/8_of_spades.webp",
+  },
+] as card[]
+
+const handMock = [
+  {
+    id: "4_of_spades",
+    value: 4,
+    suit: "spades",
+    img: "./cards/4_of_spades.webp",
+  },
+  {
+    id: "7_of_spades",
+    value: 7,
+    suit: "spades",
+    img: "./cards/7_of_spades.webp",
   },
   {
     id: "8_of_diamonds",
     value: 8,
-    suit: suit.diamonds,
+    suit: "diamonds",
     img: "./cards/8_of_diamonds.webp",
   },
-]
+] as card[]
 
 describe("Opponent class", () => {
   let deck: Deck
@@ -40,7 +73,7 @@ describe("Opponent class", () => {
 
   beforeEach(() => {
     opponent = new Opponent(dispatchGameActionMock)
-    opponent.hand = [...hand]
+    opponent.hand = [...handMock]
     game = new Game(deck, player, opponent, dispatchGameActionMock)
   })
 
@@ -57,13 +90,12 @@ describe("Opponent class", () => {
     let output: OpponentOutput
 
     beforeEach(() => {
-      deck = new Deck(mockDeck, dispatchGameActionMock)
+      deck = new Deck(deckMock, dispatchGameActionMock)
       updateUISpy = vi.spyOn(game, "updateUI")
     })
 
     test("deck match", () => {
-      vi.spyOn(deck, "dealCard").mockReturnValue(hand[0])
-      opponent.request = hand[0]
+      opponent.request = handMock[handMock.length - 1]
       output = opponent.dealt(game, deck)!
 
       expect(output).toBe(OpponentOutput.DeckMatch)
@@ -73,8 +105,7 @@ describe("Opponent class", () => {
     })
 
     test("hand match", () => {
-      vi.spyOn(deck, "dealCard").mockReturnValue(hand[2])
-      opponent.request = hand[0]
+      opponent.request = handMock[0]
       output = opponent.dealt(game, deck)!
 
       expect(output).toBe(OpponentOutput.HandMatch)
@@ -84,13 +115,13 @@ describe("Opponent class", () => {
     })
 
     test("no match", () => {
-      vi.spyOn(deck, "dealCard").mockReturnValue({
-        id: "7_of_diamonds",
-        value: 7,
-        suit: suit.diamonds,
-        img: "./cards/7_of_diamonds.webp",
-      })
-      opponent.request = hand[0]
+      opponent.request = handMock[0]
+      deck.deck[deck.deck.length - 1] = {
+        id: "3_of_clubs",
+        value: 3,
+        suit: "clubs",
+        img: "./cards/3_of_clubs.webp",
+      } as card
       output = opponent.dealt(game, deck)!
 
       expect(output).toBe(OpponentOutput.NoMatch)

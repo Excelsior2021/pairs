@@ -72,7 +72,6 @@ describe("Game class", () => {
     updateUISpy = vi.spyOn(game, "updateUI")
     initialPairsSpy = vi.spyOn(game, "initialPairs")
     shuffleSpy = vi.spyOn(deck, "shuffle")
-    dealHandSpy = vi.spyOn(deck, "dealHand")
 
     vi.clearAllMocks()
   })
@@ -84,7 +83,6 @@ describe("Game class", () => {
     it("calls internal methods with correct arguments", () => {
       game.start()
       expect(shuffleSpy).toHaveBeenCalledOnce()
-      expect(dealHandSpy).toHaveBeenCalledTimes(2)
       expect(initialPairsSpy).toHaveBeenCalledTimes(2)
       expect(updateUISpy).toHaveBeenCalledWith(true)
       expect(dispatchGameActionMock).toHaveBeenCalledTimes(2)

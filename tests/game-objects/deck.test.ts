@@ -19,21 +19,6 @@ describe("Deck class", () => {
     })
   })
 
-  describe("dealCard()", () => {
-    it("returns a card from deck", () => {
-      const dealtCard = deck.dealCard()
-      expect(JSON.stringify(dealtCard)).toStrictEqual(
-        JSON.stringify(mockDeck[mockDeck.length - 1])
-      )
-    })
-  })
-
-  describe("dealHand()", () => {
-    it("deals correct number of cards", () => {
-      expect(deck.dealHand(7)).toHaveLength(7)
-    })
-  })
-
   describe("handler()", () => {
     const player = new Player(dispatchGameActionMock)
     const opponent = new Opponent(dispatchGameActionMock)

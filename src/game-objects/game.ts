@@ -35,8 +35,8 @@ export class Game {
   start() {
     this.deck.shuffle()
 
-    this.player.hand = this.deck.dealHand(this.initialHandSize)
-    this.opponent.hand = this.deck.dealHand(this.initialHandSize)
+    this.player.hand = this.deck.deck.splice(0, this.initialHandSize)
+    this.opponent.hand = this.deck.deck.splice(0, this.initialHandSize)
 
     this.player.pairs = this.initialPairs(this.player.hand)
     this.opponent.pairs = this.initialPairs(this.opponent.hand)

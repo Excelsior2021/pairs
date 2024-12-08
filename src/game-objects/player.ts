@@ -40,7 +40,7 @@ export class Player {
   }
 
   dealt(game: Game, deck: Deck) {
-    const dealtCard = deck.dealCard()
+    const dealtCard = deck.deck.pop()
 
     if (this.chosenCard && dealtCard) {
       if (this.chosenCard.value === dealtCard.value) {

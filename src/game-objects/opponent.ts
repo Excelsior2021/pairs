@@ -22,7 +22,7 @@ export class Opponent {
   }
 
   dealt(game: Game, deck: Deck) {
-    const dealtCard = deck.dealCard()
+    const dealtCard = deck.deck.pop()
 
     if (dealtCard && this.request) {
       if (dealtCard.value === this.request.value) {

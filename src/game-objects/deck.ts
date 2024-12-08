@@ -21,13 +21,6 @@ export class Deck {
     }
   }
 
-  dealCard = () => this.deck.pop()
-
-  dealHand(handSize: number) {
-    const hand: card[] = this.deck.splice(0, handSize)
-    return hand
-  }
-
   handler(game: Game, player: Player, opponent: Opponent) {
     const playerOutput = player.dealt(game, this)
 
