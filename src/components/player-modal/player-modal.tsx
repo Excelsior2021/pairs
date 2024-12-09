@@ -11,7 +11,11 @@ export const [matchStatusHeading, setMatchStatusHeading] = createSignal("")
 export const [matchStatusSubHeading, setMatchStatusSubHeading] =
   createSignal("")
 
-const PlayerModal: Component<gameStateProp> = props => (
+type props = {
+  gameState: gameStateProp
+}
+
+const PlayerModal: Component<props> = props => (
   <Modal
     showModal={showPlayerModal}
     setShowModal={setShowPlayerModal}

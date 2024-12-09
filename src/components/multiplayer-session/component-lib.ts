@@ -25,7 +25,7 @@ export const initialGameState = {
   gameMode: GameMode.Multiplayer,
   player: null,
   opponent: null,
-  shuffledDeck: null,
+  deck: null,
   playerTurnHandlerFactory: null,
   playerOutput: null,
   log: "",
@@ -54,7 +54,7 @@ export const multiplayerReducer = (
     }
     case GameAction.UPDATE: {
       if (state.opponentTurn) state.opponentTurn = false
-      const { player1, player2, shuffledDeck } = action.serverState!
+      const { player1, player2, deck } = action.serverState!
 
       let player: PlayerType | null = null
       let opponent: PlayerType | null = null
@@ -73,7 +73,7 @@ export const multiplayerReducer = (
           gameState = {
             player,
             opponent,
-            shuffledDeck,
+            deck,
           }
 
           log = action.player1Log || state.log
@@ -87,7 +87,7 @@ export const multiplayerReducer = (
           gameState = {
             player,
             opponent,
-            shuffledDeck,
+            deck,
           }
 
           log = action.player2Log || state.log
@@ -109,7 +109,7 @@ export const multiplayerReducer = (
         ...state,
         player,
         opponent,
-        shuffledDeck,
+        deck,
         log,
         gameState,
         clientPlayer: action.clientPlayer!,
@@ -346,11 +346,11 @@ export const multiplayerReducer = (
       }
     }
     case GameAction.GAME_OVER: {
-      if (state.player && state.opponent && state.shuffledDeck)
+      if (state.player && state.opponent && state.deck)
         if (
           state.player.hand.length === 0 ||
           state.opponent.hand.length === 0 ||
-          state.shuffledDeck.length === 0
+          state.deck.length === 0
         ) {
           let outcome
           if (state.player.pairs.length > state.opponent.pairs.length)

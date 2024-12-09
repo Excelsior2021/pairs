@@ -24,7 +24,7 @@ export const multiplayerGameState = {
   gameMode: GameMode.Multiplayer,
   player: null,
   opponent: null,
-  shuffledDeck: null,
+  deck: null,
   playerTurnHandlerFactory: null,
   playerOutput: null,
   log: "",

@@ -37,10 +37,6 @@ export type terminateCreateSession = (
   setMultiplayerMenu: Setter<boolean>
 ) => void
 
-export type gameStateProp = {
-  gameState: Accessor<gameStateType & gameStateMultiplayer>
-}
-
 export type playerRequest = {
   card: card
   clientPlayer: number
@@ -66,8 +62,8 @@ export type gameStateType = {
   gameOver: boolean
 }
 
-export type gameStateMultiplayer = gameStateType & {
-  shuffledDeck?: card[] | null
+export type gameStateMultiplayer = Omit<gameStateType, "deck"> & {
+  deck?: card[] | null
   socket?: Socket | null
   clientPlayer?: number
   sessionID?: string | undefined
@@ -75,6 +71,8 @@ export type gameStateMultiplayer = gameStateType & {
   playerTurn?: number | null
   opponentRequestMultiplayer?: playerRequest | null
 }
+
+export type gameStateProp = Accessor<gameStateType | gameStateMultiplayer>
 
 export type gameAction = {
   type: string
@@ -97,8 +95,8 @@ export type gameAction = {
   gameOver?: boolean
 }
 
-export type gameActionMultiplayer = gameAction & {
-  shuffledDeck?: card[]
+export type gameActionMultiplayer = Omit<gameAction, "deck"> & {
+  deck?: card[]
   playerTurnHandler?: (playerHandEvent: MouseEvent) => void
   playerCard?: playerRequest
   opponentRequestMultiplayer?: playerRequest | null
@@ -114,22 +112,22 @@ export type gameActionMultiplayer = gameAction & {
   dealtCard?: card
 }
 
-export type dispatchGameActionType = (
-  action: gameAction | gameActionMultiplayer
+export type dispatchGameActionType = (action: gameAction) => void
+
+export type dispatchGameActionMultiplayerType = (
+  action: gameActionMultiplayer
 ) => void
 
-type serverState = {
-  shuffledDeck: card[]
-}
-
-export type serverStateMultiplayer = serverState & {
+export type serverStateMultiplayer = {
   player1: Player
   player2: Player
+  deck: card[]
 }
 
-export type clientStateMutiplayer = serverState & {
+export type clientStateMutiplayer = {
   player: Player
   opponent: Player
+  deck: card[]
 }
 
 //PLAYER FUNCTIONS
@@ -137,7 +135,7 @@ export type playerTurnHandlerMultiplayerType = (
   playerHandEvent: MouseEvent,
   player: Player | null,
   clientPlayer: number,
-  dispatchGAmeAction: dispatchGameActionType
+  dispatchGAmeAction: dispatchGameActionMultiplayerType
 ) => void
 
 export type playerResponseHandlerMultiplayerType = (
@@ -145,5 +143,5 @@ export type playerResponseHandlerMultiplayerType = (
   oppenentRequest: playerRequest,
   player: Player,
   clientPlayer: number,
-  dispatchGAmeAction: dispatchGameActionType
+  dispatchGAmeAction: dispatchGameActionMultiplayerType
 ) => void

@@ -7,13 +7,13 @@ import {
 import { GameAction, ModalHeadingColor } from "@enums"
 import "./quit-game-modal.scss"
 
-import type { dispatchGameActionType } from "@types"
+import type { dispatchGameActionMultiplayerType } from "@types"
 
 export const [showQuitGameModal, setShowQuitGameModal] = createSignal(false)
 
 type props = {
   multiplayer?: true
-  dispatchGameAction?: dispatchGameActionType
+  dispatchGameAction?: dispatchGameActionMultiplayerType
 }
 
 const QuitGameModal: Component<props> = props => (

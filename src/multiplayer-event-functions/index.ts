@@ -54,13 +54,10 @@ export const playerResponseHandler: playerResponseHandlerMultiplayerType = (
       type: GameAction.PLAYER_MATCH,
       log,
     })
-    return
-  }
-
-  if (!hasCard) {
+  } else {
     for (const card of player.hand) {
       if (card.value === opponentRequestCard.value) {
-        const log = `Are you sure? Do you have a ${opponentRequestCard.value}?`
+        log = `Are you sure? Do you have a ${opponentRequestCard.value}?`
         dispatchGameAction({
           type: GameAction.PLAYER_MATCH,
           log,
@@ -68,7 +65,7 @@ export const playerResponseHandler: playerResponseHandlerMultiplayerType = (
         return
       }
     }
-    const log = "Your opponent must now deal a card from the deck."
+    log = "Your opponent must now deal a card from the deck."
     dispatchGameAction({
       type: GameAction.NO_PLAYER_MATCH,
       opponentRequestMultiplayer,

@@ -1,4 +1,4 @@
-import { For, type Accessor, type Component } from "solid-js"
+import { For, type Component } from "solid-js"
 import { setShowPairsModal } from "@components/pairs-modal/pairs-modal"
 import { setShowInstructions } from "@components/instructions/instructions"
 import { dispatchGameAction as dispatchGameActionMultiplayer } from "@components/multiplayer-session/multiplayer-session"
@@ -6,10 +6,10 @@ import { setShowQuitGameModal } from "@components/quit-game-modal/quit-game-moda
 import { GameAction, GameMode } from "@enums"
 import "./sidebar.scss"
 
-import type { gameStateType, playerRequest } from "@types"
+import type { gameStateProp, playerRequest } from "@types"
 
 type props = {
-  gameState: Accessor<gameStateType>
+  gameState: gameStateProp
 }
 
 export const gameDeckHandler = (

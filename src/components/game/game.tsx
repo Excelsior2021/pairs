@@ -7,7 +7,11 @@ import "./game.scss"
 
 import type { gameStateProp } from "@types"
 
-const Game: Component<gameStateProp> = props => {
+type props = {
+  gameState: gameStateProp
+}
+
+const Game: Component<props> = props => {
   const [deckCount, setDeckCount] = createSignal<null | number>(null)
 
   createEffect(() => {
@@ -15,7 +19,7 @@ const Game: Component<gameStateProp> = props => {
       if (props.gameState().gameMode === GameMode.SinglePlayer)
         setDeckCount(props.gameState().deck!.deck.length)
       if (props.gameState().gameMode === GameMode.Multiplayer)
-        setDeckCount(props.gameState().shuffledDeck!.length)
+        setDeckCount(props.gameState().deck!.length)
     }
   })
 
