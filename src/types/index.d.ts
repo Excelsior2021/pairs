@@ -1,7 +1,7 @@
 import type { Accessor, Setter } from "solid-js"
 import type { Socket, io as ioType } from "socket.io-client"
 import type { Deck, Game, Player, Opponent } from "@game-objects"
-import type { GameMode as GameModeType, nonNumCardValue, suit } from "@enums"
+import type { GameAction, GameMode, nonNumCardValue, suit } from "@enums"
 
 type card = {
   id: string
@@ -43,7 +43,7 @@ export type playerRequest = {
 }
 
 export type gameStateType = {
-  gameMode: GameModeType
+  gameMode: GameMode
   game?: Game | null
   deck?: Deck | null
   player?: Player | null
@@ -75,7 +75,7 @@ export type gameStateMultiplayer = Omit<gameStateType, "deck"> & {
 export type gameStateProp = Accessor<gameStateType | gameStateMultiplayer>
 
 export type gameAction = {
-  type: string
+  action: GameAction
   game?: Game
   deck?: Deck
   player?: Player

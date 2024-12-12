@@ -44,7 +44,7 @@ export const multiplayerReducer = (
   state: gameStateMultiplayer,
   action: gameActionMultiplayer
 ): gameStateMultiplayer => {
-  switch (action.type) {
+  switch (action.action) {
     case GameAction.START_SESSION: {
       return {
         ...state,
@@ -379,7 +379,7 @@ export const startSession = (
   setStartGame: Setter<boolean>
 ) => {
   if (socket) {
-    dispatchGameAction({ type: GameAction.START_SESSION, socket: socket })
+    dispatchGameAction({ action: GameAction.START_SESSION, socket: socket })
 
     socket.on("set_player", (player: number) => setPlayer(player))
 
@@ -404,7 +404,7 @@ export const startSession = (
           playerTurn === Player.Player2 ? startPlayerLog : nonStartPlayerLog
 
         dispatchGameAction({
-          type: GameAction.UPDATE,
+          action: GameAction.UPDATE,
           serverState,
           clientPlayer: player(),
           player1Log,
@@ -413,7 +413,7 @@ export const startSession = (
           sessionID,
         })
         setStartGame(true)
-        dispatchGameAction({ type: GameAction.GAME_OVER })
+        dispatchGameAction({ action: GameAction.GAME_OVER })
       }
     )
 
@@ -421,10 +421,10 @@ export const startSession = (
       "player_requested",
       (opponentRequestMultiplayer: playerRequest) => {
         dispatchGameAction({
-          type: GameAction.PLAYER_RESPONSE,
+          action: GameAction.PLAYER_RESPONSE,
           opponentRequestMultiplayer,
         })
-        dispatchGameAction({ type: GameAction.GAME_OVER })
+        dispatchGameAction({ action: GameAction.GAME_OVER })
       }
     )
 
@@ -436,18 +436,18 @@ export const startSession = (
       playerTurn: number
     ) => {
       dispatchGameAction({
-        type: GameAction.UPDATE,
+        action: GameAction.UPDATE,
         serverState,
         clientPlayer: player(),
         playerTurn,
       })
       dispatchGameAction({
-        type: GameAction.PLAYER_RESULT,
+        action: GameAction.PLAYER_RESULT,
         playerOutput,
         activePlayer,
         serverState,
       })
-      dispatchGameAction({ type: GameAction.GAME_OVER })
+      dispatchGameAction({ action: GameAction.GAME_OVER })
     }
 
     //playerTurn is activePlayer
@@ -483,30 +483,30 @@ export const startSession = (
 
     socket.on("player_to_deal", (playerRequest: playerRequest) => {
       dispatchGameAction({
-        type: GameAction.PLAYER_DEALS,
+        action: GameAction.PLAYER_DEALS,
         playerRequest,
       })
-      dispatchGameAction({ type: GameAction.GAME_OVER })
+      dispatchGameAction({ action: GameAction.GAME_OVER })
     })
 
     socket.on("player_response_message", (playerOutput: number) => {
       dispatchGameAction({
-        type: GameAction.PLAYER_RESPONSE_MESSAGE,
+        action: GameAction.PLAYER_RESPONSE_MESSAGE,
         playerOutput,
       })
-      dispatchGameAction({ type: GameAction.GAME_OVER })
+      dispatchGameAction({ action: GameAction.GAME_OVER })
     })
 
     socket.on("player_turn_switch", (playerTurn: number) => {
       dispatchGameAction({
-        type: GameAction.PLAYER_TURN_SWITCH,
+        action: GameAction.PLAYER_TURN_SWITCH,
         playerTurn,
       })
-      dispatchGameAction({ type: GameAction.GAME_OVER })
+      dispatchGameAction({ action: GameAction.GAME_OVER })
     })
 
     socket.on("player_disconnected", () =>
-      dispatchGameAction({ type: GameAction.PLAYER_DISCONNECTED })
+      dispatchGameAction({ action: GameAction.PLAYER_DISCONNECTED })
     )
   }
 }

@@ -36,7 +36,7 @@ describe("Deck class", () => {
       deck.handler(game, player, opponent)
       expect(playerSpy).toHaveBeenCalledWith(game, deck)
       expect(deck.dispatchGameAction).toHaveBeenCalledWith({
-        type: GameAction.PLAYER_ACTION,
+        action: GameAction.PLAYER_ACTION,
         playerOutput: PlayerOutput.HandMatch,
         player,
       })

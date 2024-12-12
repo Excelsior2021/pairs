@@ -38,7 +38,7 @@ export const gameReducer = (
   state: gameStateType,
   action: gameAction
 ): gameStateType => {
-  switch (action.type) {
+  switch (action.action) {
     case GameAction.UPDATE: {
       if (action.playerHandClickable)
         state.playerTurnHandlerFactory = action.playerTurnHandlerFactory

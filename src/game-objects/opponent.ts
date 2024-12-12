@@ -59,7 +59,7 @@ export class Opponent {
       if (this.request) {
         const log = `Do you have a ${this.request.value}?`
         this.dispatchGameAction({
-          type: GameAction.GAME_LOG,
+          action: GameAction.GAME_LOG,
           log,
         })
 

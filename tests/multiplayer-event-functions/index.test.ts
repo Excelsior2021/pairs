@@ -33,7 +33,7 @@ describe("multiplayer event functions", () => {
       )
 
       expect(dispatchGameActionMock).toBeCalledWith({
-        type: GameAction.PLAYER_REQUEST,
+        action: GameAction.PLAYER_REQUEST,
         playerRequest: {
           card,
           clientPlayer,
@@ -65,7 +65,7 @@ describe("multiplayer event functions", () => {
         )
 
         expect(dispatchGameActionMock).toBeCalledWith({
-          type: GameAction.PLAYER_MATCH,
+          action: GameAction.PLAYER_MATCH,
           playerCard: { clientPlayer, card },
           opponentRequestMultiplayer,
           log,
@@ -87,7 +87,7 @@ describe("multiplayer event functions", () => {
         )
 
         expect(dispatchGameActionMock).toBeCalledWith({
-          type: GameAction.PLAYER_MATCH,
+          action: GameAction.PLAYER_MATCH,
           log,
         })
       })
@@ -114,7 +114,7 @@ describe("multiplayer event functions", () => {
         )
 
         expect(dispatchGameActionMock).toBeCalledWith({
-          type: GameAction.PLAYER_MATCH,
+          action: GameAction.PLAYER_MATCH,
           log,
         })
       })
@@ -134,7 +134,7 @@ describe("multiplayer event functions", () => {
         )
 
         expect(dispatchGameActionMock).toBeCalledWith({
-          type: GameAction.NO_PLAYER_MATCH,
+          action: GameAction.NO_PLAYER_MATCH,
           opponentRequestMultiplayer,
           log,
         })

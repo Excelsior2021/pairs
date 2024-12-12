@@ -28,7 +28,7 @@ export class Player {
               this.pairs.push(card)
               this.hand.splice(this.hand.indexOf(card), 1)
               game.updateUI(true)
-              this.dispatchGameAction({ type: GameAction.GAME_LOG, log: "" })
+              this.dispatchGameAction({ action: GameAction.GAME_LOG, log: "" })
               this.chosenCard = null
               return PlayerOutput.OpponentMatch
             }
@@ -50,7 +50,7 @@ export class Player {
             this.pairs.push(card)
             this.hand.splice(this.hand.indexOf(card), 1)
             game.updateUI(true)
-            this.dispatchGameAction({ type: GameAction.GAME_LOG, log: "" })
+            this.dispatchGameAction({ action: GameAction.GAME_LOG, log: "" })
             return PlayerOutput.DeckMatch
           }
         }
@@ -82,7 +82,7 @@ export class Player {
     const playerOutput = this.match(game, opponent)
 
     this.dispatchGameAction({
-      type: GameAction.PLAYER_ACTION,
+      action: GameAction.PLAYER_ACTION,
       playerOutput,
       player: this,
     })
@@ -94,7 +94,7 @@ export class Player {
         const log =
           "You didn't match with any card in your opponent's hand. Please deal a card from the deck."
         game.updateUI(false, false, true)
-        this.dispatchGameAction({ type: GameAction.GAME_LOG, log })
+        this.dispatchGameAction({ action: GameAction.GAME_LOG, log })
       }
     }
   }
@@ -117,7 +117,7 @@ export class Player {
             game.updateUI()
 
             log = "It's your opponent's turn again."
-            this.dispatchGameAction({ type: GameAction.GAME_LOG, log })
+            this.dispatchGameAction({ action: GameAction.GAME_LOG, log })
             setTimeout(opponentTurn, 2000)
             return
           }
@@ -125,7 +125,7 @@ export class Player {
         log = `Are you sure? Do you have a ${opponent.request.value}?`
 
         this.dispatchGameAction({
-          type: GameAction.GAME_LOG,
+          action: GameAction.GAME_LOG,
           log,
         })
         return
@@ -137,7 +137,7 @@ export class Player {
             log = `Are you sure? Do you have a ${opponent.request.value}?`
 
             this.dispatchGameAction({
-              type: GameAction.GAME_LOG,
+              action: GameAction.GAME_LOG,
               log,
             })
             return
@@ -151,7 +151,7 @@ export class Player {
           log =
             "Your opponent has dealt a card from the deck and matched with the dealt card. It's your opponent's turn again."
 
-          this.dispatchGameAction({ type: GameAction.GAME_LOG, log })
+          this.dispatchGameAction({ action: GameAction.GAME_LOG, log })
           setTimeout(opponentTurn, 2000)
         }
         if (opponentOutput === OpponentOutput.HandMatch) {
@@ -166,6 +166,6 @@ export class Player {
     }
 
     game.updateUI(true, false)
-    this.dispatchGameAction({ type: GameAction.GAME_LOG, log })
+    this.dispatchGameAction({ action: GameAction.GAME_LOG, log })
   }
 }

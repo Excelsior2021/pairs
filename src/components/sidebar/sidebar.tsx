@@ -22,7 +22,7 @@ export const gameDeckHandler = (
     if (gameMode === GameMode.SinglePlayer) deckHandlerFactory()
     if (gameMode === GameMode.Multiplayer)
       dispatchGameActionMultiplayer({
-        type: GameAction.PLAYER_DEALT,
+        action: GameAction.PLAYER_DEALT,
         playerRequest,
       })
   }

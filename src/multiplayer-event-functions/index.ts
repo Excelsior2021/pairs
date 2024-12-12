@@ -17,7 +17,7 @@ export const playerTurnHandler: playerTurnHandlerMultiplayerType = (
     for (const card of player.hand)
       if (card.id === eventTarget.id) {
         dispatchGameAction({
-          type: GameAction.PLAYER_REQUEST,
+          action: GameAction.PLAYER_REQUEST,
           playerRequest: { card, clientPlayer },
         })
         break
@@ -41,7 +41,7 @@ export const playerResponseHandler: playerResponseHandlerMultiplayerType = (
         log = "It's your opponent's turn again."
         playerCard = { clientPlayer, card }
         dispatchGameAction({
-          type: GameAction.PLAYER_MATCH,
+          action: GameAction.PLAYER_MATCH,
           playerCard,
           opponentRequestMultiplayer,
           log,
@@ -51,7 +51,7 @@ export const playerResponseHandler: playerResponseHandlerMultiplayerType = (
     }
     log = `Are you sure? Do you have a ${opponentRequestCard.value}?`
     dispatchGameAction({
-      type: GameAction.PLAYER_MATCH,
+      action: GameAction.PLAYER_MATCH,
       log,
     })
   } else {
@@ -59,7 +59,7 @@ export const playerResponseHandler: playerResponseHandlerMultiplayerType = (
       if (card.value === opponentRequestCard.value) {
         log = `Are you sure? Do you have a ${opponentRequestCard.value}?`
         dispatchGameAction({
-          type: GameAction.PLAYER_MATCH,
+          action: GameAction.PLAYER_MATCH,
           log,
         })
         return
@@ -67,7 +67,7 @@ export const playerResponseHandler: playerResponseHandlerMultiplayerType = (
     }
     log = "Your opponent must now deal a card from the deck."
     dispatchGameAction({
-      type: GameAction.NO_PLAYER_MATCH,
+      action: GameAction.NO_PLAYER_MATCH,
       opponentRequestMultiplayer,
       log,
     })

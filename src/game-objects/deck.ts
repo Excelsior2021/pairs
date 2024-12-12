@@ -25,7 +25,7 @@ export class Deck {
     const playerOutput = player.dealt(game, this)
 
     this.dispatchGameAction({
-      type: GameAction.PLAYER_ACTION,
+      action: GameAction.PLAYER_ACTION,
       playerOutput,
       player,
     })

@@ -34,7 +34,7 @@ const QuitGameModal: Component<props> = props => (
           setMultiplayerSessionStarted(false)
           setShowQuitGameModal(false)
           if (props.multiplayer && props.dispatchGameAction)
-            props.dispatchGameAction({ type: GameAction.PLAYER_DISCONNECT })
+            props.dispatchGameAction({ action: GameAction.PLAYER_DISCONNECT })
         }}>
         confirm
       </button>

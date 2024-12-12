@@ -87,7 +87,7 @@ describe("Game class", () => {
       expect(updateUISpy).toHaveBeenCalledWith(true)
       expect(dispatchGameActionMock).toHaveBeenCalledTimes(2)
       expect(dispatchGameActionMock.mock.calls[1][0]).toStrictEqual({
-        type: GameAction.GAME_LOG,
+        action: GameAction.GAME_LOG,
         log,
       })
     })
@@ -144,7 +144,7 @@ describe("Game class", () => {
       game.end()
 
       expect(dispatchGameActionMock.mock.calls[1][0]).toStrictEqual({
-        type: GameAction.GAME_OVER,
+        action: GameAction.GAME_OVER,
         outcome: Outcome.Player,
         gameOver: true,
       })
@@ -156,7 +156,7 @@ describe("Game class", () => {
       game.end()
 
       expect(dispatchGameActionMock.mock.calls[1][0]).toStrictEqual({
-        type: GameAction.GAME_OVER,
+        action: GameAction.GAME_OVER,
         outcome: Outcome.Opponent,
         gameOver: true,
       })
@@ -167,7 +167,7 @@ describe("Game class", () => {
       opponent.pairs = new Array(10).fill(null)
       game.end()
       expect(dispatchGameActionMock.mock.calls[1][0]).toStrictEqual({
-        type: GameAction.GAME_OVER,
+        action: GameAction.GAME_OVER,
         outcome: Outcome.Draw,
         gameOver: true,
       })
