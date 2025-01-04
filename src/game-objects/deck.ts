@@ -1,13 +1,13 @@
 import { GameAction, PlayerOutput } from "@enums"
 
 import type { Game, Opponent, Player } from "@game-objects"
-import type { card, dispatchActionType } from "@types"
+import type { card, dispatchAction } from "@types"
 
 export class Deck {
   deck: card[]
-  dispatchAction: dispatchActionType
+  dispatchAction: dispatchAction
 
-  constructor(deck: card[], dispatchAction: dispatchActionType) {
+  constructor(deck: card[], dispatchAction: dispatchAction) {
     this.deck = structuredClone(deck)
     this.dispatchAction = dispatchAction
   }
