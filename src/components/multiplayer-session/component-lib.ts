@@ -43,7 +43,7 @@ export const multiplayerReducer = (
   switch (action.action) {
     case GameAction.START_SESSION: {
       return {
-        ...state,
+        ...initialSessionState,
         socket: action.socket,
         playerID: action.playerID,
         gameOver: false,
