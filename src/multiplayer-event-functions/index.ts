@@ -1,37 +1,40 @@
-import { GameAction } from "@enums"
 import type {
   playerRequest,
-  playerResponseHandlerMultiplayerType,
-  playerTurnHandlerMultiplayerType,
+  playerDeals as playerDealsType,
+  playerDisconnects as playerDisconnects,
+  playerResponse as playerResponseType,
+  playerTurn as playerTurnType,
 } from "@types"
 
-export const playerTurnHandler: playerTurnHandlerMultiplayerType = (
-  playerHandEvent,
+export const playerTurn: playerTurnType = (
+  chosenCard,
   player,
-  clientPlayer,
-  dispatchGameAction
+  playerID,
+  dispatchAction,
+  GameAction
 ) => {
-  const eventTarget = playerHandEvent.target as HTMLImageElement
+  const eventTarget = chosenCard.target as HTMLImageElement
 
   if (player && eventTarget)
     for (const card of player.hand)
       if (card.id === eventTarget.id) {
-        dispatchGameAction({
+        dispatchAction({
           action: GameAction.PLAYER_REQUEST,
-          playerRequest: { card, clientPlayer },
+          playerRequest: { card, playerID },
         })
         break
       }
 }
 
-export const playerResponseHandler: playerResponseHandlerMultiplayerType = (
+export const playerResponse: playerResponseType = (
   hasCard,
-  opponentRequestMultiplayer,
+  opponentRequest,
   player,
-  clientPlayer,
-  dispatchGameAction
+  playerID,
+  dispatchAction,
+  GameAction
 ) => {
-  const { card: opponentRequestCard } = opponentRequestMultiplayer
+  const { card: opponentRequestCard } = opponentRequest
   let log
   let playerCard: playerRequest
 
@@ -39,18 +42,18 @@ export const playerResponseHandler: playerResponseHandlerMultiplayerType = (
     for (const card of player.hand) {
       if (card.value === opponentRequestCard.value) {
         log = "It's your opponent's turn again."
-        playerCard = { clientPlayer, card }
-        dispatchGameAction({
+        playerCard = { playerID, card }
+        dispatchAction({
           action: GameAction.PLAYER_MATCH,
           playerCard,
-          opponentRequestMultiplayer,
+          opponentRequest,
           log,
         })
         return
       }
     }
     log = `Are you sure? Do you have a ${opponentRequestCard.value}?`
-    dispatchGameAction({
+    dispatchAction({
       action: GameAction.PLAYER_MATCH,
       log,
     })
@@ -58,7 +61,7 @@ export const playerResponseHandler: playerResponseHandlerMultiplayerType = (
     for (const card of player.hand) {
       if (card.value === opponentRequestCard.value) {
         log = `Are you sure? Do you have a ${opponentRequestCard.value}?`
-        dispatchGameAction({
+        dispatchAction({
           action: GameAction.PLAYER_MATCH,
           log,
         })
@@ -66,15 +69,25 @@ export const playerResponseHandler: playerResponseHandlerMultiplayerType = (
       }
     }
     log = "Your opponent must now deal a card from the deck."
-    dispatchGameAction({
+    dispatchAction({
       action: GameAction.NO_PLAYER_MATCH,
-      opponentRequestMultiplayer,
+      opponentRequest,
       log,
     })
   }
 }
 
-export default {
-  playerTurnHandler,
-  playerResponseHandler,
-}
+export const playerDeals: playerDealsType = (
+  playerRequest,
+  dispatchAction,
+  GameAction
+) =>
+  dispatchAction({
+    action: GameAction.PLAYER_DEALT,
+    playerRequest,
+  })
+
+export const playerDisconnect: playerDisconnects = (
+  dispatchAction,
+  GameAction
+) => dispatchAction({ action: GameAction.PLAYER_DISCONNECT })

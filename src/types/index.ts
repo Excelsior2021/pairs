@@ -1,9 +1,17 @@
+export * from "./multiplayer-events"
 import type { Accessor, Setter } from "solid-js"
 import type { Socket, io as ioType } from "socket.io-client"
 import type { Deck, Game, Player, Opponent } from "@game-objects"
-import type { GameAction, GameMode, nonNumCardValue, suit } from "@enums"
+import type {
+  GameAction,
+  GameMode,
+  nonNumCardValue,
+  suit,
+  PlayerID as PlayerIDEnum,
+  PlayerOutput,
+} from "@enums"
 
-type card = {
+export type card = {
   id: string
   value: nonNumCardValue | number | null
   suit: suit | ""
@@ -13,23 +21,27 @@ type card = {
 export type createGameHandler = (
   io: typeof ioType,
   setSocket: Setter<Socket | null>,
-  setCreateSessionID: Setter<string>,
+  setSessionID: Setter<string>,
+  setPlayerID: Setter<PlayerIDEnum | null>,
   setMultiplayerMenu: Setter<boolean>,
   setMultiplayerSessionStarted: Setter<boolean>,
   setConnecting: Setter<boolean>,
-  setServerConnected: Setter<false | null>
+  setServerConnected: Setter<false | null>,
+  PlayerID: typeof PlayerIDEnum
 ) => void
 
-export type joinGameHandler = (
+export type joinSessionHandler = (
   sessionID: string,
   io: typeof ioType,
   setSocket: Setter<Socket | null>,
+  setPlayerID: Setter<PlayerIDEnum | null>,
   setJoinGameMenu: Setter<boolean>,
   setMultiplayerSessionStarted: Setter<boolean>,
   setSessionIDNotValid: Setter<boolean>,
   setNoSessionExists: Setter<boolean>,
   setServerConnected: Setter<boolean | null>,
-  setLoading: Setter<boolean>
+  setLoading: Setter<boolean>,
+  PlayerID: typeof PlayerIDEnum
 ) => void
 
 export type terminateCreateSession = (
@@ -39,7 +51,7 @@ export type terminateCreateSession = (
 
 export type playerRequest = {
   card: card
-  clientPlayer: number
+  playerID: number
 }
 
 export type gameStateType = {
@@ -49,27 +61,31 @@ export type gameStateType = {
   player?: Player | null
   opponent?: Opponent | Player | null
   playerTurnHandlerFactory?: ((playerHandEvent: MouseEvent) => void) | null
-  playerHandClickable?: boolean
+  isPlayerTurn: boolean
+  isOpponentTurn: boolean
   playerResponseHandlerFactory?: ((hasCard: boolean) => void) | null
-  deckHandlerFactory?: (() => void) | null
-  deckClickable: boolean
-  playerOutput: number | null
-  opponentTurn: boolean
+  playerDealsHandlerFactory?: ((playerRequest: playerRequest) => void) | null
+  isDealFromDeck: boolean
+  playerOutput: PlayerOutput | null
   opponentRequest?: card | null
-  playerRequest?: playerRequest
   log: string
   outcome: string
   gameOver: boolean
+  deckCount: number | null
 }
 
-export type gameStateMultiplayer = Omit<gameStateType, "deck"> & {
+export type gameStateMultiplayer = Omit<
+  gameStateType,
+  "deck" | "opponentRequest"
+> & {
+  gameStarted: boolean
+  playerID?: number | null
   deck?: card[] | null
   socket?: Socket | null
-  clientPlayer?: number
   sessionID?: string | undefined
-  gameState?: clientStateMutiplayer | null
   playerTurn?: number | null
-  opponentRequestMultiplayer?: playerRequest | null
+  playerRequest?: playerRequest
+  opponentRequest?: playerRequest | null
 }
 
 export type gameStateProp = Accessor<gameStateType | gameStateMultiplayer>
@@ -80,13 +96,10 @@ export type gameAction = {
   deck?: Deck
   player?: Player
   opponent?: Opponent
-  playerTurnHandlerFactory?: (playerHandEvent: MouseEvent) => void
-  playerHandClickable?: boolean
-  playerResponseHandlerFactory?: (hasCard: boolean) => void
-  deckHandlerFactory?: () => void
-  deckClickable?: boolean
-  playerOutput?: number | boolean
-  opponentTurn?: boolean
+  isPlayerTurn?: boolean
+  isOpponentTurn?: boolean
+  isDealFromDeck?: boolean
+  playerOutput?: PlayerOutput
   opponentRequest?: card | null
   log?: string
   chosenCard?: card
@@ -95,13 +108,16 @@ export type gameAction = {
   gameOver?: boolean
 }
 
-export type gameActionMultiplayer = Omit<gameAction, "deck"> & {
+export type gameActionMultiplayer = Omit<
+  gameAction,
+  "deck" | "opponentRequest"
+> & {
   deck?: card[]
   playerTurnHandler?: (playerHandEvent: MouseEvent) => void
   playerCard?: playerRequest
-  opponentRequestMultiplayer?: playerRequest | null
+  opponentRequest?: playerRequest | null
   socket?: Socket | null
-  clientPlayer?: number
+  playerID?: number | null
   sessionID?: string
   serverState?: serverStateMultiplayer
   playerTurn?: number
@@ -112,11 +128,9 @@ export type gameActionMultiplayer = Omit<gameAction, "deck"> & {
   dealtCard?: card
 }
 
-export type dispatchGameActionType = (action: gameAction) => void
+export type dispatchAction = (action: gameAction) => void
 
-export type dispatchGameActionMultiplayerType = (
-  action: gameActionMultiplayer
-) => void
+export type dispatchActionMultiplayer = (action: gameActionMultiplayer) => void
 
 export type serverStateMultiplayer = {
   player1: Player
@@ -129,19 +143,3 @@ export type clientStateMutiplayer = {
   opponent: Player
   deck: card[]
 }
-
-//PLAYER FUNCTIONS
-export type playerTurnHandlerMultiplayerType = (
-  playerHandEvent: MouseEvent,
-  player: Player | null,
-  clientPlayer: number,
-  dispatchGAmeAction: dispatchGameActionMultiplayerType
-) => void
-
-export type playerResponseHandlerMultiplayerType = (
-  hasCard: boolean,
-  oppenentRequest: playerRequest,
-  player: Player,
-  clientPlayer: number,
-  dispatchGAmeAction: dispatchGameActionMultiplayerType
-) => void

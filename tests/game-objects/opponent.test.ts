@@ -69,12 +69,12 @@ describe("Opponent class", () => {
   let player: Player
   let opponent: Opponent
   let game: Game
-  const dispatchGameActionMock = vi.fn()
+  const dispatchActionMock = vi.fn()
 
   beforeEach(() => {
-    opponent = new Opponent(dispatchGameActionMock)
+    opponent = new Opponent(dispatchActionMock)
     opponent.hand = [...handMock]
-    game = new Game(deck, player, opponent, dispatchGameActionMock)
+    game = new Game(deck, player, opponent, dispatchActionMock)
   })
 
   describe("ask()", () => {
@@ -90,7 +90,7 @@ describe("Opponent class", () => {
     let output: OpponentOutput
 
     beforeEach(() => {
-      deck = new Deck(deckMock, dispatchGameActionMock)
+      deck = new Deck(deckMock, dispatchActionMock)
       updateUISpy = vi.spyOn(game, "updateUI")
     })
 

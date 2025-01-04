@@ -1,7 +1,7 @@
 import { describe, expect, test, it, afterEach } from "vitest"
 import { render } from "@solidjs/testing-library"
-import GameOver from "../../src/components/game-over/game-over"
-import { Outcome } from "../../src/enums"
+import GameOver from "@components/game-over/game-over"
+import { Outcome } from "@enums"
 
 describe("GameOver component", () => {
   let Component: Element
@@ -15,9 +15,9 @@ describe("GameOver component", () => {
     Component = (
       <GameOver
         outcome={Outcome.Player}
-        playerPairsAmount={20}
-        opponentPairsAmount={10}
-        deckAmount={0}
+        playerPairsCount={20}
+        opponentPairsCount={10}
+        deckCount={0}
       />
     ) as Element
 
@@ -32,9 +32,9 @@ describe("GameOver component", () => {
     Component = (
       <GameOver
         outcome={Outcome.Opponent}
-        playerPairsAmount={10}
-        opponentPairsAmount={20}
-        deckAmount={0}
+        playerPairsCount={10}
+        opponentPairsCount={20}
+        deckCount={0}
       />
     ) as Element
 
@@ -49,9 +49,9 @@ describe("GameOver component", () => {
     Component = (
       <GameOver
         outcome={Outcome.Draw}
-        playerPairsAmount={20}
-        opponentPairsAmount={20}
-        deckAmount={0}
+        playerPairsCount={20}
+        opponentPairsCount={20}
+        deckCount={0}
       />
     ) as Element
 
@@ -66,9 +66,9 @@ describe("GameOver component", () => {
     Component = (
       <GameOver
         outcome={Outcome.Player}
-        playerPairsAmount={20}
-        opponentPairsAmount={10}
-        deckAmount={0}
+        playerPairsCount={20}
+        opponentPairsCount={10}
+        deckCount={0}
       />
     ) as Element
 
@@ -80,14 +80,14 @@ describe("GameOver component", () => {
     const statsHeading = getByRole("heading", {
       name: /stats/i,
     })
-    const playerPairsAmount = getByText(/your pairs/i)
-    const opponentPairsAmount = getByText(/opponent pairs/i)
-    const deckAmount = getByText(/remaining cards in deck/i)
+    const playerPairsCount = getByText(/your pairs/i)
+    const opponentPairsCount = getByText(/opponent pairs/i)
+    const deckCount = getByText(/remaining cards in deck/i)
 
     expect(gameOverHeading).toBeInTheDocument()
     expect(statsHeading).toBeInTheDocument()
-    expect(playerPairsAmount).toHaveTextContent(/your pairs: 20/i)
-    expect(opponentPairsAmount).toHaveTextContent(/opponent pairs: 10/i)
-    expect(deckAmount).toHaveTextContent(/remaining cards in deck: 0/i)
+    expect(playerPairsCount).toHaveTextContent(/your pairs: 20/i)
+    expect(opponentPairsCount).toHaveTextContent(/opponent pairs: 10/i)
+    expect(deckCount).toHaveTextContent(/remaining cards in deck: 0/i)
   })
 })

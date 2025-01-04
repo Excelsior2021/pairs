@@ -1,56 +1,52 @@
-import { createEffect, createSignal, type Component } from "solid-js"
+import { Show, type Component } from "solid-js"
 import Hand from "@components/hand/hand"
 import GameActions from "@components/game-actions/game-actions"
 import GameOver from "@components/game-over/game-over"
-import { GameMode } from "@enums"
 import "./game.scss"
 
-import type { gameStateProp } from "@types"
+import type { Opponent, Player } from "@game-objects"
 
 type props = {
-  gameState: gameStateProp
+  player: Player
+  opponent: Player | Opponent
+  isPlayerTurn: boolean
+  isOpponentTurn: boolean
+  log: string
+  gameOver: boolean
+  outcome: string
+  deckCount: number | null
+  playerTurnHandler: (playerHandEvent: MouseEvent) => void
+  playerResponseHandler: (hasCard: boolean) => void
 }
 
-const Game: Component<props> = props => {
-  const [deckCount, setDeckCount] = createSignal<null | number>(null)
-
-  createEffect(() => {
-    if (props.gameState().gameOver) {
-      if (props.gameState().gameMode === GameMode.SinglePlayer)
-        setDeckCount(props.gameState().deck!.deck.length)
-      if (props.gameState().gameMode === GameMode.Multiplayer)
-        setDeckCount(props.gameState().deck!.length)
-    }
-  })
-
-  const playerResponseHandler = (hasCard: boolean) =>
-    props.gameState().playerResponseHandlerFactory!(hasCard)
-
-  return (
-    <div class="game">
-      <Hand heading="Opponent Hand" hand={props.gameState().opponent!.hand} />
-      <div class="game__console">
-        {props.gameState().log}
-        {props.gameState().gameOver && (
+const Game: Component<props> = props => (
+  <div class="game">
+    <Hand heading="Opponent Hand" hand={props.opponent!.hand} />
+    <div class="game__console">
+      <Show
+        when={!props.gameOver}
+        fallback={
           <GameOver
-            outcome={props.gameState().outcome}
-            playerPairsAmount={props.gameState().player!.pairs.length}
-            opponentPairsAmount={props.gameState().opponent!.pairs.length}
-            deckAmount={deckCount()!}
+            outcome={props.outcome}
+            playerPairsCount={props.player!.pairs.length}
+            opponentPairsCount={props.opponent!.pairs.length}
+            deckCount={props.deckCount}
           />
-        )}
-        {props.gameState().opponentTurn && (
-          <GameActions playerResponseHandler={playerResponseHandler} />
-        )}
-      </div>
-      <Hand
-        heading="Your Hand"
-        hand={props.gameState().player!.hand}
-        player={true}
-        playerTurnHandler={props.gameState().playerTurnHandlerFactory!}
-      />
+        }>
+        {props.log}
+        <Show when={props.isOpponentTurn} fallback={null}>
+          <GameActions playerResponseHandler={props.playerResponseHandler} />
+        </Show>
+      </Show>
     </div>
-  )
-}
+    <Hand
+      heading="Your Hand"
+      hand={props.player.hand}
+      isPlayer={true}
+      isPlayerTurn={props.isPlayerTurn}
+      playerTurnHandler={props.playerTurnHandler}
+    />
+  </div>
+)
 
 export default Game

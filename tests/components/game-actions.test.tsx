@@ -1,7 +1,7 @@
 import { describe, expect, it, vi } from "vitest"
 import { render } from "@solidjs/testing-library"
 import GameActions from "@components/game-actions/game-actions"
-import user from "@testing-library/user-event"
+import userEvent from "@testing-library/user-event"
 
 describe("GameActions component", async () => {
   const playerResponseHandlerMock = vi.fn()
@@ -10,9 +10,9 @@ describe("GameActions component", async () => {
   ))
   const yesButton = getByRole("button", { name: "yes" })
   const noButton = getByRole("button", { name: "no" })
-  user.setup()
+  const user = userEvent.setup()
 
-  it("renders buttons", () => {
+  it("renders the game action buttons", () => {
     expect(yesButton).toBeInTheDocument()
     expect(noButton).toBeInTheDocument()
   })

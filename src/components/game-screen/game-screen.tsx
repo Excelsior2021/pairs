@@ -8,6 +8,7 @@ import JoinGame from "@components/join-game/join-game"
 import "./game-screen.scss"
 
 import type { Socket } from "socket.io-client"
+import { PlayerID } from "@enums"
 
 export const [sessionStarted, setSessionStarted] = createSignal(false)
 export const [multiplayerMenu, setMultiplayerMenu] = createSignal(false)
@@ -15,7 +16,8 @@ export const [joinGameMenu, setJoinGameMenu] = createSignal(false)
 export const [multiplayerSessionStarted, setMultiplayerSessionStarted] =
   createSignal(false)
 export const [socket, setSocket] = createSignal<Socket | null>(null)
-export const [createSessionID, setCreateSessionID] = createSignal("")
+export const [sessionID, setSessionID] = createSignal("")
+export const [playerID, setPlayerID] = createSignal<PlayerID | null>(null)
 
 const GameScreen: Component = () => (
   <main class="game-screen">
@@ -30,7 +32,11 @@ const GameScreen: Component = () => (
         <JoinGame />
       </Match>
       <Match when={multiplayerSessionStarted()}>
-        <MultiplayerSession socket={socket()} />
+        <MultiplayerSession
+          socket={socket()}
+          sessionID={sessionID()}
+          playerID={playerID()}
+        />
       </Match>
     </Switch>
     <Instructions />

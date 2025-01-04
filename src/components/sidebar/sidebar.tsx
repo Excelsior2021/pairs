@@ -1,31 +1,15 @@
 import { For, type Component } from "solid-js"
 import { setShowPairsModal } from "@components/pairs-modal/pairs-modal"
 import { setShowInstructions } from "@components/instructions/instructions"
-import { dispatchGameAction as dispatchGameActionMultiplayer } from "@components/multiplayer-session/multiplayer-session"
 import { setShowQuitGameModal } from "@components/quit-game-modal/quit-game-modal"
-import { GameAction, GameMode } from "@enums"
 import "./sidebar.scss"
 
-import type { gameStateProp, playerRequest } from "@types"
+import type { GameMode } from "@enums"
 
 type props = {
-  gameState: gameStateProp
-}
-
-export const gameDeckHandler = (
-  deckClickable: boolean,
-  gameMode: GameMode.SinglePlayer | GameMode.Multiplayer,
-  deckHandlerFactory: () => void | null,
-  playerRequest: playerRequest
-) => {
-  if (deckClickable) {
-    if (gameMode === GameMode.SinglePlayer) deckHandlerFactory()
-    if (gameMode === GameMode.Multiplayer)
-      dispatchGameActionMultiplayer({
-        action: GameAction.PLAYER_DEALT,
-        playerRequest,
-      })
-  }
+  isDealFromDeck: boolean
+  gameMode: GameMode
+  playerDealsHandler: (() => void) | null
 }
 
 const Sidebar: Component<props> = props => {
@@ -51,24 +35,20 @@ const Sidebar: Component<props> = props => {
         <h3 class="sidebar__heading">deck</h3>
         <img
           class={
-            props.gameState().deckClickable
+            props.isDealFromDeck
               ? "card card--deck card--deck--active"
               : "card card--deck"
           }
           src="./cards/back.webp"
           alt="game deck"
-          onclick={() =>
-            gameDeckHandler(
-              props.gameState().deckClickable,
-              props.gameState().gameMode,
-              props.gameState().deckHandlerFactory!,
-              props.gameState().playerRequest!
-            )
-          }
+          onclick={() => {
+            if (props.isDealFromDeck && props.playerDealsHandler)
+              props.playerDealsHandler()
+          }}
         />
       </div>
       <div class="sidebar__actions">
-        <h3 class="sidebar__heading">{props.gameState().gameMode}</h3>
+        <h3 class="sidebar__heading">{props.gameMode}</h3>
         <For each={actions}>
           {action => (
             <button

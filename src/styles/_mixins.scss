@@ -19,9 +19,7 @@
   @include button;
   & {
     font-size: 2rem;
-    margin: 1rem 0;
-    padding: 1rem 5rem;
-    max-width: 22.5rem;
+    padding: 1rem;
     cursor: pointer;
   }
 }
@@ -44,24 +42,28 @@
 
 @mixin menu {
   text-align: center;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
   animation: menu-fade-in 0.5s linear;
 
   &__heading {
     text-transform: capitalize;
-    margin-bottom: 1rem;
+    margin-bottom: 2rem;
   }
 
   &__actions {
-    display: flex;
-    flex-direction: column;
+    @include actions;
   }
 
   &__button {
     @include menu-button;
   }
+}
+
+@mixin actions {
+  display: flex;
+  flex-direction: column;
+  gap: 2.5rem;
+  width: 250px;
+  margin: auto;
 }
 
 @mixin menu-notification {

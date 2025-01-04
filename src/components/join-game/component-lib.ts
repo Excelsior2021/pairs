@@ -1,15 +1,17 @@
-import { joinGameHandler as joinGameHandlerType } from "@types"
+import { joinSessionHandler as joinSessionHandlerType } from "@types"
 
-export const joinGameHandler: joinGameHandlerType = async (
+export const joinSessionHandler: joinSessionHandlerType = async (
   sessionID,
   io,
   setSocket,
+  setPlayerID,
   setJoinGameMenu,
   setMultiplayerSessionStarted,
   setSessionIDNotValid,
   setNoSessionExists,
   setServerConnected,
-  setConnecting
+  setConnecting,
+  PlayerID
 ) => {
   setSessionIDNotValid(false)
   setNoSessionExists(false)
@@ -35,6 +37,7 @@ export const joinGameHandler: joinGameHandlerType = async (
     setServerConnected(true)
 
     socket.emit("join_session", sessionID)
+    setPlayerID(PlayerID.P2)
   })
 
   socket.io.on("reconnect_failed", () => {

@@ -7,11 +7,11 @@ import { createReducer } from "@solid-primitives/memo"
 
 describe("PlayerModal component", async () => {
   const reducerMock = vi.fn()
-  const [gameState, dispatchGameAction] = createReducer(
+  const [sessionState, dispatchAction] = createReducer(
     reducerMock,
     singlePlayerGamestate
   )
 
-  const {} = render(() => <PlayerModal gameState={gameState} />)
+  const {} = render(() => <PlayerModal sessionState={sessionState} />)
   it("", () => {})
 })

@@ -12,9 +12,9 @@ export enum nonNumCardValue {
   king = "king",
 }
 
-export enum Player {
-  Player1 = 1,
-  Player2,
+export enum PlayerID {
+  P1 = 1,
+  P2,
 }
 
 export enum PlayerOutput {
@@ -58,7 +58,7 @@ export enum Outcome {
 export enum GameAction {
   UPDATE = "UPDATE",
   PLAYER_ACTION = "PLAYER_ACTION",
-  PLAYER_REQUEST = "PAYER_REQUEST",
+  PLAYER_REQUEST = "PLAYER_REQUEST",
   PLAYER_RESPONSE = "PLAYER_RESPONSE",
   PLAYER_MATCH = "PLAYER_MATCH",
   NO_PLAYER_MATCH = "NO_PLAYER_MATCH",

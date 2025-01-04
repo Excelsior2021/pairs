@@ -7,11 +7,10 @@ export const singlePlayerGamestate = {
   player: null,
   opponent: null,
   playerTurnHandlerFactory: null,
-  playerHandClickable: false,
+  isPlayerTurn: false,
   playerResponseHandlerFactory: null,
   deckHandlerFactory: null,
   deckClickable: false,
-  playerChosenCardEvent: null,
   playerOutput: null,
   opponentTurn: false,
   opponentRequest: null,
@@ -20,7 +19,7 @@ export const singlePlayerGamestate = {
   gameOver: false,
 }
 
-export const multiplayerGameState = {
+export const multiplayerSessionState = {
   gameMode: GameMode.Multiplayer,
   player: null,
   opponent: null,
@@ -30,11 +29,11 @@ export const multiplayerGameState = {
   log: "",
   outcome: "",
   socket: null,
-  clientPlayer: 0,
+  playerID: 0,
   sessionID: "",
-  gameState: null,
+  sessionState: null,
   opponentTurn: false,
-  playerTurn: null,
+  isPlayerTurn: null,
   gameOver: false,
   deckClickable: false,
 }

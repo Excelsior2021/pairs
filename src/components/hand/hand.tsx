@@ -2,20 +2,14 @@ import { For, type Component } from "solid-js"
 import Card from "@components/card/card"
 import "./hand.scss"
 
-import type { card as cardType } from "@types"
+import type { card } from "@types"
 
 type props = {
   heading: string
-  hand: cardType[]
-  player?: true
+  hand: card[]
+  isPlayer?: true
+  isPlayerTurn?: boolean
   playerTurnHandler?: (playerHandEvent: MouseEvent) => void
-}
-
-export const handleCardClick = (
-  e: MouseEvent,
-  playerTurnHandler: (playerHandEvent: MouseEvent) => void
-) => {
-  if (playerTurnHandler) playerTurnHandler(e)
 }
 
 const Hand: Component<props> = props => (
@@ -26,10 +20,11 @@ const Hand: Component<props> = props => (
         {card => (
           <Card
             card={card}
-            show={props.player}
-            playerTurnHandler={props.playerTurnHandler}
-            handleClick={(e: MouseEvent) =>
-              handleCardClick(e, props.playerTurnHandler!)
+            show={props.isPlayer}
+            isPlayer={props.isPlayer}
+            isPlayerTurn={props.isPlayerTurn}
+            playerTurnHandler={
+              props.isPlayer ? props.playerTurnHandler : undefined
             }
           />
         )}

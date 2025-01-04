@@ -6,8 +6,8 @@ import {
 import { GameAction } from "@enums"
 
 describe("multiplayer event functions", () => {
-  const clientPlayer = 1
-  const dispatchGameActionMock = vi.fn()
+  const playerID = 1
+  const dispatchActionMock = vi.fn()
 
   beforeEach(() => {
     vi.resetAllMocks()
@@ -28,15 +28,15 @@ describe("multiplayer event functions", () => {
       playerTurnHandler(
         playerHandEventMock,
         player,
-        clientPlayer,
-        dispatchGameActionMock
+        playerID,
+        dispatchActionMock
       )
 
-      expect(dispatchGameActionMock).toBeCalledWith({
+      expect(dispatchActionMock).toBeCalledWith({
         action: GameAction.PLAYER_REQUEST,
         playerRequest: {
           card,
-          clientPlayer,
+          playerID,
         },
       })
     })
@@ -60,13 +60,13 @@ describe("multiplayer event functions", () => {
           hasCard,
           opponentRequestMultiplayer,
           player,
-          clientPlayer,
-          dispatchGameActionMock
+          playerID,
+          dispatchActionMock
         )
 
-        expect(dispatchGameActionMock).toBeCalledWith({
+        expect(dispatchActionMock).toBeCalledWith({
           action: GameAction.PLAYER_MATCH,
-          playerCard: { clientPlayer, card },
+          playerCard: { playerID, card },
           opponentRequestMultiplayer,
           log,
         })
@@ -82,11 +82,11 @@ describe("multiplayer event functions", () => {
           hasCard,
           opponentRequestMultiplayer,
           player,
-          clientPlayer,
-          dispatchGameActionMock
+          playerID,
+          dispatchActionMock
         )
 
-        expect(dispatchGameActionMock).toBeCalledWith({
+        expect(dispatchActionMock).toBeCalledWith({
           action: GameAction.PLAYER_MATCH,
           log,
         })
@@ -109,11 +109,11 @@ describe("multiplayer event functions", () => {
           hasCard,
           opponentRequestMultiplayer,
           player,
-          clientPlayer,
-          dispatchGameActionMock
+          playerID,
+          dispatchActionMock
         )
 
-        expect(dispatchGameActionMock).toBeCalledWith({
+        expect(dispatchActionMock).toBeCalledWith({
           action: GameAction.PLAYER_MATCH,
           log,
         })
@@ -129,11 +129,11 @@ describe("multiplayer event functions", () => {
           hasCard,
           opponentRequestMultiplayer,
           player,
-          clientPlayer,
-          dispatchGameActionMock
+          playerID,
+          dispatchActionMock
         )
 
-        expect(dispatchGameActionMock).toBeCalledWith({
+        expect(dispatchActionMock).toBeCalledWith({
           action: GameAction.NO_PLAYER_MATCH,
           opponentRequestMultiplayer,
           log,

@@ -1,35 +1,35 @@
 import { GameAction, Outcome } from "@enums"
 
 import type { Deck, Player, Opponent } from "@game-objects"
-import type { card, dispatchGameActionType } from "@types"
+import type { card, dispatchAction } from "@types"
 
 export class Game {
   deck: Deck
   player: Player
   opponent: Opponent
-  dispatchGameAction: dispatchGameActionType
+  dispatchAction: dispatchAction
   initialHandSize: number
-  playerTurnHandlerFactory
-  playerResponseHandlerFactory
-  deckHandlerFactory
+  playerTurnHandler
+  playerResponseHandler
+  playerDealsHandler
 
   constructor(
     Deck: Deck,
     Player: Player,
     Opponent: Opponent,
-    dispatchGameAction: dispatchGameActionType
+    dispatchAction: dispatchAction
   ) {
     this.deck = Deck
     this.player = Player
     this.opponent = Opponent
-    this.dispatchGameAction = dispatchGameAction
+    this.dispatchAction = dispatchAction
     this.initialHandSize = 7
-    this.playerTurnHandlerFactory = (playerHandEvent: MouseEvent) =>
-      this.player.turn(playerHandEvent, this, this.opponent)
-    this.playerResponseHandlerFactory = (hasCard: boolean) =>
+    this.playerTurnHandler = (chosenCard: MouseEvent) =>
+      this.player.turn(chosenCard, this, this.opponent)
+    this.playerResponseHandler = (hasCard: boolean) =>
       this.player.response(hasCard, this, this.deck, this.opponent)
-    this.deckHandlerFactory = () =>
-      this.deck.handler(this, this.player, this.opponent)
+    this.playerDealsHandler = () =>
+      this.deck.deal(this, this.player, this.opponent)
   }
 
   start() {
@@ -45,7 +45,7 @@ export class Game {
       "The cards have been dealt. Any initial pair of cards have been added to your Pairs. Please select a card from your hand to request a match with your opponent."
 
     this.updateUI(true)
-    this.dispatchGameAction({ action: GameAction.GAME_LOG, log })
+    this.dispatchAction({ action: GameAction.GAME_LOG, log })
   }
 
   initialPairs(hand: card[]) {
@@ -71,21 +71,18 @@ export class Game {
   }
 
   updateUI(
-    playerHandClickable = false,
-    opponentTurn = false,
-    deckClickable = false
+    isPlayerTurn = false,
+    isOpponentTurn = false,
+    isDealFromDeck = false
   ) {
-    this.dispatchGameAction({
+    this.dispatchAction({
       action: GameAction.UPDATE,
       deck: this.deck,
       player: this.player,
       opponent: this.opponent,
-      playerTurnHandlerFactory: this.playerTurnHandlerFactory,
-      playerHandClickable,
-      playerResponseHandlerFactory: this.playerResponseHandlerFactory,
-      deckHandlerFactory: this.deckHandlerFactory,
-      deckClickable,
-      opponentTurn,
+      isPlayerTurn,
+      isOpponentTurn,
+      isDealFromDeck,
     })
   }
 
@@ -106,7 +103,7 @@ export class Game {
       const outcome = this.outcome()
 
       this.updateUI()
-      this.dispatchGameAction({
+      this.dispatchAction({
         action: GameAction.GAME_OVER,
         outcome,
         gameOver: true,

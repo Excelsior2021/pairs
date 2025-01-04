@@ -1,19 +1,19 @@
 import { GameAction, OpponentOutput } from "@enums"
 
 import type { Deck, Game } from "@game-objects"
-import type { card, dispatchGameActionType } from "@types"
+import type { card, dispatchActionType } from "@types"
 
 export class Opponent {
   hand: card[]
   pairs: card[]
   request: card | null
-  dispatchGameAction: dispatchGameActionType
+  dispatchAction: dispatchActionType
 
-  constructor(dispatchGameAction: dispatchGameActionType) {
+  constructor(dispatchAction: dispatchActionType) {
     this.hand = []
     this.pairs = []
     this.request = null
-    this.dispatchGameAction = dispatchGameAction
+    this.dispatchAction = dispatchAction
   }
 
   ask() {
@@ -58,7 +58,7 @@ export class Opponent {
       this.ask()
       if (this.request) {
         const log = `Do you have a ${this.request.value}?`
-        this.dispatchGameAction({
+        this.dispatchAction({
           action: GameAction.GAME_LOG,
           log,
         })

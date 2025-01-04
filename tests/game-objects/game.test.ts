@@ -49,7 +49,7 @@ const pairsMock = [
 
 describe("Game class", () => {
   //mocks
-  const dispatchGameActionMock = vi.fn()
+  const dispatchActionMock = vi.fn()
 
   //game objects
   let deck: Deck
@@ -64,10 +64,10 @@ describe("Game class", () => {
   let dealHandSpy: MockInstance
 
   beforeEach(() => {
-    deck = new Deck(mockDeck, dispatchGameActionMock)
-    player = new Player(dispatchGameActionMock)
-    opponent = new Opponent(dispatchGameActionMock)
-    game = new Game(deck, player, opponent, dispatchGameActionMock)
+    deck = new Deck(mockDeck, dispatchActionMock)
+    player = new Player(dispatchActionMock)
+    opponent = new Opponent(dispatchActionMock)
+    game = new Game(deck, player, opponent, dispatchActionMock)
 
     updateUISpy = vi.spyOn(game, "updateUI")
     initialPairsSpy = vi.spyOn(game, "initialPairs")
@@ -85,8 +85,8 @@ describe("Game class", () => {
       expect(shuffleSpy).toHaveBeenCalledOnce()
       expect(initialPairsSpy).toHaveBeenCalledTimes(2)
       expect(updateUISpy).toHaveBeenCalledWith(true)
-      expect(dispatchGameActionMock).toHaveBeenCalledTimes(2)
-      expect(dispatchGameActionMock.mock.calls[1][0]).toStrictEqual({
+      expect(dispatchActionMock).toHaveBeenCalledTimes(2)
+      expect(dispatchActionMock.mock.calls[1][0]).toStrictEqual({
         action: GameAction.GAME_LOG,
         log,
       })
@@ -103,7 +103,7 @@ describe("Game class", () => {
   describe("updateUI()", () => {
     it("calls internal methods with correct arguments", () => {
       game.updateUI()
-      expect(dispatchGameActionMock).toHaveBeenCalledOnce()
+      expect(dispatchActionMock).toHaveBeenCalledOnce()
     })
   })
 
@@ -134,7 +134,7 @@ describe("Game class", () => {
     it("checks internal functions are called with correct arguments", () => {
       const gameEnd = game.end()
       expect(gameEnd).toBe(true)
-      expect(dispatchGameActionMock).toHaveBeenCalledTimes(2)
+      expect(dispatchActionMock).toHaveBeenCalledTimes(2)
       expect(updateUISpy).toHaveBeenCalledOnce()
     })
 
@@ -143,7 +143,7 @@ describe("Game class", () => {
       opponent.pairs = new Array(5).fill(null)
       game.end()
 
-      expect(dispatchGameActionMock.mock.calls[1][0]).toStrictEqual({
+      expect(dispatchActionMock.mock.calls[1][0]).toStrictEqual({
         action: GameAction.GAME_OVER,
         outcome: Outcome.Player,
         gameOver: true,
@@ -155,7 +155,7 @@ describe("Game class", () => {
       opponent.pairs = new Array(10).fill(null)
       game.end()
 
-      expect(dispatchGameActionMock.mock.calls[1][0]).toStrictEqual({
+      expect(dispatchActionMock.mock.calls[1][0]).toStrictEqual({
         action: GameAction.GAME_OVER,
         outcome: Outcome.Opponent,
         gameOver: true,
@@ -166,7 +166,7 @@ describe("Game class", () => {
       player.pairs = new Array(10).fill(null)
       opponent.pairs = new Array(10).fill(null)
       game.end()
-      expect(dispatchGameActionMock.mock.calls[1][0]).toStrictEqual({
+      expect(dispatchActionMock.mock.calls[1][0]).toStrictEqual({
         action: GameAction.GAME_OVER,
         outcome: Outcome.Draw,
         gameOver: true,

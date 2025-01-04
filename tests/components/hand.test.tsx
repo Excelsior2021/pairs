@@ -1,6 +1,6 @@
 import { describe, expect, it, vi } from "vitest"
 import { render } from "@solidjs/testing-library"
-import Hand from "../../src/components/hand/hand"
+import Hand from "@components/hand/hand"
 import user from "@testing-library/user-event"
 
 describe("Hand component", () => {

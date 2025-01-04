@@ -3,12 +3,13 @@ import Card from "@components/card/card"
 import Modal from "@components/modal/modal"
 import "./pairs-modal.scss"
 
-import type { gameStateProp } from "@types"
+import type { Opponent, Player } from "@game-objects"
 
 export const [showPairsModal, setShowPairsModal] = createSignal(false)
 
 type props = {
-  gameState: gameStateProp
+  player: Player
+  opponent: Player | Opponent
 }
 
 const PairsModal: Component<props> = props => (
@@ -16,20 +17,20 @@ const PairsModal: Component<props> = props => (
     <div class="pairs-modal">
       <div class="pairs-modal__pairs-container">
         <p class="pairs-modal__heading">{`Your Pairs (${
-          props.gameState().player!.pairs.length
+          props.player!.pairs.length
         })`}</p>
         <div class="pairs-modal__pairs" data-testid={`player pairs`}>
-          <For each={props.gameState().player!.pairs}>
+          <For each={props.player!.pairs}>
             {card => <Card card={card} show={true} />}
           </For>
         </div>
       </div>
       <div class="pairs-modal__pairs-container">
         <p class="pairs-modal__heading">{`Opponent's Pairs (${
-          props.gameState().opponent!.pairs.length
+          props.opponent!.pairs.length
         })`}</p>
         <div class="pairs-modal__pairs" data-testid={`opponent pairs`}>
-          <For each={props.gameState().opponent!.pairs}>
+          <For each={props.opponent!.pairs}>
             {card => <Card card={card} show={true} />}
           </For>
         </div>

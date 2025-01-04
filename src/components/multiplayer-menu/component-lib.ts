@@ -11,14 +11,16 @@ export const terminateCreateSession: terminateCreateSessionType = (
   socket?.disconnect()
 }
 
-export const createGameHandler: createGameHandlerType = async (
+export const createSessionHandler: createGameHandlerType = async (
   io,
   setSocket,
-  setCreateSessionID,
+  setSessionID,
+  setPlayerID,
   setMultiplayerMenu,
   setMultiplayerSessionStarted,
   setConnecting,
-  setServerConnected
+  setServerConnected,
+  PlayerID
 ) => {
   setConnecting(true)
 
@@ -35,10 +37,11 @@ export const createGameHandler: createGameHandlerType = async (
       .toString()
       .padStart(4, "0")
 
-    setCreateSessionID(sessionID)
+    setSessionID(sessionID)
 
     socket.emit("create_session", sessionID)
 
+    setPlayerID(PlayerID.P1)
     setMultiplayerMenu(false)
     setMultiplayerSessionStarted(true)
   })

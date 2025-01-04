@@ -5,12 +5,14 @@ import {
   setMultiplayerSessionStarted,
   setJoinGameMenu,
   setSocket,
-  setCreateSessionID,
+  setSessionID,
   socket,
+  setPlayerID,
 } from "@components/game-screen/game-screen"
-import { createGameHandler, terminateCreateSession } from "./component-lib"
+import { createSessionHandler, terminateCreateSession } from "./component-lib"
 
 import "./multiplayer-menu.scss"
+import { PlayerID } from "@enums"
 
 const MultiplayerMenu: Component = () => {
   const [serverConnected, setServerConnected] = createSignal<false | null>(null)
@@ -18,21 +20,23 @@ const MultiplayerMenu: Component = () => {
 
   const actions = [
     {
-      name: "create game",
+      name: "create session",
       onclick: () =>
-        createGameHandler(
+        createSessionHandler(
           io,
           setSocket,
-          setCreateSessionID,
+          setSessionID,
+          setPlayerID,
           setMultiplayerMenu,
           setMultiplayerSessionStarted,
           setConnecting,
-          setServerConnected
+          setServerConnected,
+          PlayerID
         ),
       disabled: () => connecting(),
     },
     {
-      name: "join game",
+      name: "join session",
       onclick: () => {
         terminateCreateSession(socket(), setMultiplayerMenu)
         setJoinGameMenu(true)

@@ -1,15 +1,15 @@
 import { GameAction, PlayerOutput } from "@enums"
 
 import type { Game, Opponent, Player } from "@game-objects"
-import type { card, dispatchGameActionType } from "@types"
+import type { card, dispatchActionType } from "@types"
 
 export class Deck {
   deck: card[]
-  dispatchGameAction: dispatchGameActionType
+  dispatchAction: dispatchActionType
 
-  constructor(deck: card[], dispatchGameAction: dispatchGameActionType) {
+  constructor(deck: card[], dispatchAction: dispatchActionType) {
     this.deck = structuredClone(deck)
-    this.dispatchGameAction = dispatchGameAction
+    this.dispatchAction = dispatchAction
   }
 
   shuffle() {
@@ -21,10 +21,10 @@ export class Deck {
     }
   }
 
-  handler(game: Game, player: Player, opponent: Opponent) {
+  deal(game: Game, player: Player, opponent: Opponent) {
     const playerOutput = player.dealt(game, this)
 
-    this.dispatchGameAction({
+    this.dispatchAction({
       action: GameAction.PLAYER_ACTION,
       playerOutput,
       player,

@@ -2,9 +2,9 @@ import type { Component } from "solid-js"
 
 type props = {
   outcome: string
-  playerPairsAmount: number
-  opponentPairsAmount: number
-  deckAmount: number
+  playerPairsCount: number
+  opponentPairsCount: number
+  deckCount: number | null
 }
 
 const GameOver: Component<props> = props => (
@@ -15,12 +15,12 @@ const GameOver: Component<props> = props => (
     </div>
     <div class="game__stats">
       <h2 class="game__game-over-heading">STATS</h2>
-      <p class="game__game-over-text">Your Pairs: {props.playerPairsAmount}</p>
+      <p class="game__game-over-text">Your Pairs: {props.playerPairsCount}</p>
       <p class="game__game-over-text">
-        Opponent Pairs: {props.opponentPairsAmount}
+        Opponent Pairs: {props.opponentPairsCount}
       </p>
       <p class="game__game-over-text">
-        Remaining cards in deck: {props.deckAmount}
+        Remaining cards in deck: {props.deckCount}
       </p>
     </div>
   </div>

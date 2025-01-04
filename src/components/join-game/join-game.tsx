@@ -6,9 +6,11 @@ import {
   setMultiplayerMenu,
   socket,
   setSocket,
+  setPlayerID,
 } from "@components/game-screen/game-screen"
-import { joinGameHandler } from "./component-lib"
+import { joinSessionHandler } from "./component-lib"
 import "./join-game.scss"
+import { PlayerID } from "@enums"
 
 const JoinGame: Component = () => {
   const [joinSessionID, setJoinSessionID] = createSignal("")
@@ -23,16 +25,18 @@ const JoinGame: Component = () => {
     {
       name: "join",
       onclick: () =>
-        joinGameHandler(
+        joinSessionHandler(
           joinSessionID(),
           io,
           setSocket,
+          setPlayerID,
           setJoinGameMenu,
           setMultiplayerSessionStarted,
           setSessionIDNotValid,
           setNoSessionExists,
           setServerConnected,
-          setConnecting
+          setConnecting,
+          PlayerID
         ),
       disabled: () => connecting(),
     },
@@ -63,6 +67,20 @@ const JoinGame: Component = () => {
         onchange={event => setJoinSessionID(event.currentTarget.value)}
         aria-label="session id"
       />
+
+      <div class="join-game__actions">
+        <For each={actions}>
+          {action => (
+            <button
+              class="join-game__button"
+              onclick={action.onclick}
+              disabled={action.disabled && action.disabled()}>
+              {action.name}
+            </button>
+          )}
+        </For>
+      </div>
+
       {connecting() && (
         <p class="join-game__text join-game__text--info">
           Attempting to join session...
@@ -84,18 +102,6 @@ const JoinGame: Component = () => {
           later.
         </p>
       )}
-      <div class="join-game__actions">
-        <For each={actions}>
-          {action => (
-            <button
-              class="join-game__button"
-              onclick={action.onclick}
-              disabled={action.disabled && action.disabled()}>
-              {action.name}
-            </button>
-          )}
-        </For>
-      </div>
     </div>
   )
 }
