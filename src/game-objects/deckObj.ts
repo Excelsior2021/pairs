@@ -1,6 +1,6 @@
 import type { card } from "@types"
 
-export const deckObj = structuredClone([
+export const deckObj = [
   {
     id: "ace_of_clubs",
     value: "ace",
@@ -313,4 +313,4 @@ export const deckObj = structuredClone([
     suit: "spades",
     img: "./cards/10_of_spades.webp",
   },
-]) as card[]
+] as card[]
