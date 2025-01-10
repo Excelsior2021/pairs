@@ -45,7 +45,7 @@ export class Game {
       "The cards have been dealt. Any initial pair of cards have been added to your Pairs. Please select a card from your hand to request a match with your opponent."
 
     this.updateUI(true)
-    this.dispatchAction({ action: GameAction.GAME_LOG, log })
+    this.dispatchAction({ type: GameAction.GAME_LOG, log })
   }
 
   initialPairs(hand: card[]) {
@@ -76,7 +76,7 @@ export class Game {
     isDealFromDeck = false
   ) {
     this.dispatchAction({
-      action: GameAction.UPDATE,
+      type: GameAction.UPDATE,
       deck: this.deck,
       player: this.player,
       opponent: this.opponent,
@@ -104,7 +104,7 @@ export class Game {
 
       this.updateUI()
       this.dispatchAction({
-        action: GameAction.GAME_OVER,
+        type: GameAction.GAME_OVER,
         outcome,
         gameOver: true,
       })

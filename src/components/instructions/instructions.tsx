@@ -1,10 +1,13 @@
-import { For, createSignal, type Component } from "solid-js"
+import { For, Setter, type Component } from "solid-js"
 import Modal from "@components/modal/modal"
 import "./instructions.scss"
 
-export const [showInstructions, setShowInstructions] = createSignal(false)
+type props = {
+  showInstructions: boolean
+  setShowInstructions: Setter<boolean>
+}
 
-const Instructions: Component = () => {
+const Instructions: Component<props> = props => {
   const instructions = [
     "Each player is dealt 7 cards from a shuffled deck.",
     "If there are any pairs of cards in any of the players hands at the start of the game, they get added to the player's pairs.",
@@ -18,8 +21,8 @@ const Instructions: Component = () => {
   ]
   return (
     <Modal
-      showModal={showInstructions}
-      setShowModal={setShowInstructions}
+      showModal={props.showInstructions}
+      setShowModal={props.setShowInstructions}
       heading="instructions">
       <div class="instructions">
         <p class="instructions__text">

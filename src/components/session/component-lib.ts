@@ -8,14 +8,12 @@ import {
   PlayerMatchHeading,
   PlayerMatchSubHeading,
   PlayerOutput,
-  GameMode,
   GameAction,
 } from "@enums"
 
-import type { gameStateType, gameAction } from "@types"
+import type { sessionState, gameAction } from "@types"
 
 export const initialSessionState = {
-  gameMode: GameMode.SinglePlayer,
   game: null,
   deck: null,
   player: null,
@@ -32,10 +30,10 @@ export const initialSessionState = {
 }
 
 export const gameReducer = (
-  state: gameStateType,
+  state: sessionState,
   action: gameAction
-): gameStateType => {
-  switch (action.action) {
+): sessionState => {
+  switch (action.type) {
     case GameAction.UPDATE: {
       return {
         ...state,

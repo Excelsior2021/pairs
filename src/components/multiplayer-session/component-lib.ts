@@ -1,16 +1,16 @@
-import { dispatchAction } from "./multiplayer-session"
 import {
   setShowPlayerModal,
   setMatchStatusHeading,
   setMatchStatusSubHeading,
 } from "@components/player-modal/player-modal"
-import { PlayerOutput, Outcome, GameAction, GameMode, PlayerID } from "@enums"
+import { PlayerOutput, Outcome, GameAction, PlayerID } from "@enums"
 
 import type {
   gameActionMultiplayer,
-  gameStateMultiplayer,
+  sessionStateMultiplayer,
   playerRequest,
   serverStateMultiplayer,
+  dispatchActionMultiplayer,
 } from "@types"
 import type { Socket } from "socket.io-client"
 
@@ -18,7 +18,6 @@ const { P1, P2 } = PlayerID
 
 export const initialSessionState = {
   gameStarted: false,
-  gameMode: GameMode.Multiplayer,
   playerID: null,
   player: null,
   opponent: null,
@@ -37,13 +36,13 @@ export const initialSessionState = {
 }
 
 export const multiplayerReducer = (
-  state: gameStateMultiplayer,
+  state: sessionStateMultiplayer,
   action: gameActionMultiplayer
-): gameStateMultiplayer => {
-  switch (action.action) {
+): sessionStateMultiplayer => {
+  switch (action.type) {
     case GameAction.START_SESSION: {
       return {
-        ...initialSessionState,
+        ...state,
         socket: action.socket,
         playerID: action.playerID,
         gameOver: false,
@@ -328,9 +327,13 @@ export const multiplayerReducer = (
   }
 }
 
-export const startSession = (socket: Socket, playerID: PlayerID) => {
+export const startSession = (
+  socket: Socket,
+  playerID: PlayerID,
+  dispatchAction: dispatchActionMultiplayer
+) => {
   dispatchAction({
-    action: GameAction.START_SESSION,
+    type: GameAction.START_SESSION,
     socket,
     playerID,
   })
@@ -354,23 +357,23 @@ export const startSession = (socket: Socket, playerID: PlayerID) => {
       const player2Log = playerTurn === P2 ? startPlayerLog : nonStartPlayerLog
 
       dispatchAction({
-        action: GameAction.UPDATE,
+        type: GameAction.UPDATE,
         serverState,
         player1Log,
         player2Log,
         playerTurn,
         sessionID,
       })
-      dispatchAction({ action: GameAction.GAME_OVER })
+      dispatchAction({ type: GameAction.GAME_OVER })
     }
   )
 
   socket.on("player_requested", (opponentRequest: playerRequest) => {
     dispatchAction({
-      action: GameAction.PLAYER_RESPONSE,
+      type: GameAction.PLAYER_RESPONSE,
       opponentRequest,
     })
-    dispatchAction({ action: GameAction.GAME_OVER })
+    dispatchAction({ type: GameAction.GAME_OVER })
   })
 
   //helper function for player_match and player_dealt
@@ -381,17 +384,17 @@ export const startSession = (socket: Socket, playerID: PlayerID) => {
     playerTurn: number
   ) => {
     dispatchAction({
-      action: GameAction.UPDATE,
+      type: GameAction.UPDATE,
       serverState,
       playerTurn,
     })
     dispatchAction({
-      action: GameAction.PLAYER_RESULT,
+      type: GameAction.PLAYER_RESULT,
       playerOutput,
       activePlayer,
       serverState,
     })
-    dispatchAction({ action: GameAction.GAME_OVER })
+    dispatchAction({ type: GameAction.GAME_OVER })
   }
 
   //playerTurn is activePlayer
@@ -420,29 +423,29 @@ export const startSession = (socket: Socket, playerID: PlayerID) => {
 
   socket.on("player_to_deal", (playerRequest: playerRequest) => {
     dispatchAction({
-      action: GameAction.PLAYER_DEALS,
+      type: GameAction.PLAYER_DEALS,
       playerRequest,
     })
-    dispatchAction({ action: GameAction.GAME_OVER })
+    dispatchAction({ type: GameAction.GAME_OVER })
   })
 
   socket.on("player_response_message", (playerOutput: number) => {
     dispatchAction({
-      action: GameAction.PLAYER_RESPONSE_MESSAGE,
+      type: GameAction.PLAYER_RESPONSE_MESSAGE,
       playerOutput,
     })
-    dispatchAction({ action: GameAction.GAME_OVER })
+    dispatchAction({ type: GameAction.GAME_OVER })
   })
 
   socket.on("player_turn_switch", (playerTurn: number) => {
     dispatchAction({
-      action: GameAction.PLAYER_TURN_SWITCH,
+      type: GameAction.PLAYER_TURN_SWITCH,
       playerTurn,
     })
-    dispatchAction({ action: GameAction.GAME_OVER })
+    dispatchAction({ type: GameAction.GAME_OVER })
   })
 
   socket.on("player_disconnected", () =>
-    dispatchAction({ action: GameAction.PLAYER_DISCONNECTED })
+    dispatchAction({ type: GameAction.PLAYER_DISCONNECTED })
   )
 }

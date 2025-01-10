@@ -19,7 +19,7 @@ export const playerTurn: playerTurnType = (
     for (const card of player.hand)
       if (card.id === eventTarget.id) {
         dispatchAction({
-          action: GameAction.PLAYER_REQUEST,
+          type: GameAction.PLAYER_REQUEST,
           playerRequest: { card, playerID },
         })
         break
@@ -44,7 +44,7 @@ export const playerResponse: playerResponseType = (
         log = "It's your opponent's turn again."
         playerCard = { playerID, card }
         dispatchAction({
-          action: GameAction.PLAYER_MATCH,
+          type: GameAction.PLAYER_MATCH,
           playerCard,
           opponentRequest,
           log,
@@ -54,7 +54,7 @@ export const playerResponse: playerResponseType = (
     }
     log = `Are you sure? Do you have a ${opponentRequestCard.value}?`
     dispatchAction({
-      action: GameAction.PLAYER_MATCH,
+      type: GameAction.PLAYER_MATCH,
       log,
     })
   } else {
@@ -62,7 +62,7 @@ export const playerResponse: playerResponseType = (
       if (card.value === opponentRequestCard.value) {
         log = `Are you sure? Do you have a ${opponentRequestCard.value}?`
         dispatchAction({
-          action: GameAction.PLAYER_MATCH,
+          type: GameAction.PLAYER_MATCH,
           log,
         })
         return
@@ -70,7 +70,7 @@ export const playerResponse: playerResponseType = (
     }
     log = "Your opponent must now deal a card from the deck."
     dispatchAction({
-      action: GameAction.NO_PLAYER_MATCH,
+      type: GameAction.NO_PLAYER_MATCH,
       opponentRequest,
       log,
     })
@@ -83,11 +83,11 @@ export const playerDeals: playerDealsType = (
   GameAction
 ) =>
   dispatchAction({
-    action: GameAction.PLAYER_DEALT,
+    type: GameAction.PLAYER_DEALT,
     playerRequest,
   })
 
 export const playerDisconnect: playerDisconnects = (
   dispatchAction,
   GameAction
-) => dispatchAction({ action: GameAction.PLAYER_DISCONNECT })
+) => dispatchAction({ type: GameAction.PLAYER_DISCONNECT })

@@ -1,7 +1,4 @@
-import { For, type Component } from "solid-js"
-import { setShowPairsModal } from "@components/pairs-modal/pairs-modal"
-import { setShowInstructions } from "@components/instructions/instructions"
-import { setShowQuitGameModal } from "@components/quit-game-modal/quit-game-modal"
+import { For, type Setter, type Component } from "solid-js"
 import "./sidebar.scss"
 
 import type { GameMode } from "@enums"
@@ -10,21 +7,24 @@ type props = {
   isDealFromDeck: boolean
   gameMode: GameMode
   playerDealsHandler: (() => void) | null
+  setShowPairsModal: Setter<boolean>
+  setShowInstructions: Setter<boolean>
+  setShowQuitGameModal: Setter<boolean>
 }
 
 const Sidebar: Component<props> = props => {
   const actions = [
     {
       name: "pairs",
-      onclick: () => setShowPairsModal(true),
+      onclick: () => props.setShowPairsModal(true),
     },
     {
       name: "instructions",
-      onclick: () => setShowInstructions(true),
+      onclick: () => props.setShowInstructions(true),
     },
     {
       name: "quit",
-      onclick: () => setShowQuitGameModal(true),
+      onclick: () => props.setShowQuitGameModal(true),
       class: "sidebar__button--quit",
     },
   ]

@@ -1,30 +1,35 @@
-import { createEffect, createSignal, For, type Component } from "solid-js"
 import {
-  setSessionStarted,
-  setMultiplayerMenu,
-} from "@components/game-screen/game-screen"
-import { setShowInstructions } from "@components/instructions/instructions"
+  createEffect,
+  createSignal,
+  For,
+  type Setter,
+  type Component,
+} from "solid-js"
 import "./main-menu.scss"
 
-//global signal to prevent appLoaded from reinitializing
-const [appLoaded, setAppLoaded] = createSignal(false)
+type props = {
+  setSessionStarted: Setter<boolean>
+  setMultiplayerMenu: Setter<boolean>
+  setShowInstructions: Setter<boolean>
+}
 
-const MainMenu: Component = () => {
-  //delay for setTimeout, set to 500ms because animation is 500ms
-  createEffect(() => setTimeout(() => setAppLoaded(true), 500))
+const [appLoaded, setAppLoaded] = createSignal(false) //global signal to prevent appLoaded from reinitializing
+
+const MainMenu: Component<props> = props => {
+  createEffect(() => setTimeout(() => setAppLoaded(true), 500)) //delay for setTimeout, set to 500ms because animation is 500ms
 
   const actions = [
     {
       name: "single player",
-      onclick: () => setSessionStarted(true),
+      onclick: () => props.setSessionStarted(true),
     },
     {
       name: "multiplayer",
-      onclick: () => setMultiplayerMenu(true),
+      onclick: () => props.setMultiplayerMenu(true),
     },
     {
       name: "instructions",
-      onclick: () => setShowInstructions(true),
+      onclick: () => props.setShowInstructions(true),
     },
   ]
 

@@ -1,19 +1,21 @@
-import { For, createSignal, type Component } from "solid-js"
+import { For, type Component, type Setter } from "solid-js"
 import Card from "@components/card/card"
 import Modal from "@components/modal/modal"
 import "./pairs-modal.scss"
 
 import type { Opponent, Player } from "@game-objects"
 
-export const [showPairsModal, setShowPairsModal] = createSignal(false)
-
 type props = {
   player: Player
   opponent: Player | Opponent
+  showPairsModal: boolean
+  setShowPairsModal: Setter<boolean>
 }
 
 const PairsModal: Component<props> = props => (
-  <Modal showModal={showPairsModal} setShowModal={setShowPairsModal}>
+  <Modal
+    showModal={props.showPairsModal}
+    setShowModal={props.setShowPairsModal}>
     <div class="pairs-modal">
       <div class="pairs-modal__pairs-container">
         <p class="pairs-modal__heading">{`Your Pairs (${

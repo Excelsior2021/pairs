@@ -1,20 +1,20 @@
-import { createSignal, For, type Component } from "solid-js"
-import { io } from "socket.io-client"
-import {
-  setMultiplayerMenu,
-  setMultiplayerSessionStarted,
-  setJoinGameMenu,
-  setSocket,
-  setSessionID,
-  socket,
-  setPlayerID,
-} from "@components/game-screen/game-screen"
+import { createSignal, For, type Setter, type Component } from "solid-js"
+import { io, type Socket } from "socket.io-client"
 import { createSessionHandler, terminateCreateSession } from "./component-lib"
-
-import "./multiplayer-menu.scss"
 import { PlayerID } from "@enums"
+import "./multiplayer-menu.scss"
 
-const MultiplayerMenu: Component = () => {
+type props = {
+  socket: any
+  setSocket: Setter<Socket | null>
+  setPlayerID: Setter<PlayerID | null>
+  setSessionID: Setter<string>
+  setJoinGameMenu: Setter<boolean>
+  setMultiplayerSessionStarted: Setter<boolean>
+  setMultiplayerMenu: Setter<boolean>
+}
+
+const MultiplayerMenu: Component<props> = props => {
   const [serverConnected, setServerConnected] = createSignal<false | null>(null)
   const [connecting, setConnecting] = createSignal(false)
 
@@ -24,11 +24,11 @@ const MultiplayerMenu: Component = () => {
       onclick: () =>
         createSessionHandler(
           io,
-          setSocket,
-          setSessionID,
-          setPlayerID,
-          setMultiplayerMenu,
-          setMultiplayerSessionStarted,
+          props.setSocket,
+          props.setSessionID,
+          props.setPlayerID,
+          props.setMultiplayerMenu,
+          props.setMultiplayerSessionStarted,
           setConnecting,
           setServerConnected,
           PlayerID
@@ -38,13 +38,14 @@ const MultiplayerMenu: Component = () => {
     {
       name: "join session",
       onclick: () => {
-        terminateCreateSession(socket(), setMultiplayerMenu)
-        setJoinGameMenu(true)
+        terminateCreateSession(props.socket, props.setMultiplayerMenu)
+        props.setJoinGameMenu(true)
       },
     },
     {
       name: "←",
-      onclick: () => terminateCreateSession(socket(), setMultiplayerMenu),
+      onclick: () =>
+        terminateCreateSession(props.socket, props.setMultiplayerMenu),
     },
   ]
 

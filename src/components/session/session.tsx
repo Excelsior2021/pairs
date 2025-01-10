@@ -12,11 +12,22 @@ import {
   Opponent,
 } from "@game-objects"
 import { gameReducer, initialSessionState } from "./component-lib"
+import { GameMode } from "@enums"
 import "./session.scss"
 
-import type { Component } from "solid-js"
+import type { Component, Setter } from "solid-js"
 
-const Session: Component = () => {
+type props = {
+  showPairsModal: boolean
+  showQuitGameModal: boolean
+  setSessionStarted: Setter<boolean>
+  setMultiplayerSessionStarted: Setter<boolean>
+  setShowPairsModal: Setter<boolean>
+  setShowInstructions: Setter<boolean>
+  setShowQuitGameModal: Setter<boolean>
+}
+
+const Session: Component<props> = props => {
   const [sessionState, dispatchAction] = createReducer(
     gameReducer,
     initialSessionState
@@ -45,8 +56,11 @@ const Session: Component = () => {
       />
       <Sidebar
         isDealFromDeck={sessionState().isDealFromDeck}
-        gameMode={sessionState().gameMode}
+        gameMode={GameMode.SinglePlayer}
         playerDealsHandler={game.playerDealsHandler}
+        setShowPairsModal={props.setShowPairsModal}
+        setShowInstructions={props.setShowInstructions}
+        setShowQuitGameModal={props.setShowQuitGameModal}
       />
       <PlayerModal
         player={sessionState().player!}
@@ -55,8 +69,15 @@ const Session: Component = () => {
       <PairsModal
         player={sessionState().player!}
         opponent={sessionState().opponent!}
+        showPairsModal={props.showPairsModal}
+        setShowPairsModal={props.setShowPairsModal}
       />
-      <QuitGameModal />
+      <QuitGameModal
+        showQuitGameModal={props.showQuitGameModal}
+        setSessionStarted={props.setSessionStarted}
+        setMultiplayerSessionStarted={props.setMultiplayerSessionStarted}
+        setShowQuitGameModal={props.setShowQuitGameModal}
+      />
     </div>
   )
 }

@@ -1,4 +1,4 @@
-import { Show, type Component } from "solid-js"
+import { Show, type Component, type Setter } from "solid-js"
 import { createReducer } from "@utils"
 import Game from "@components/game/game"
 import Sidebar from "@components/sidebar/sidebar"
@@ -11,10 +11,10 @@ import {
   multiplayerReducer,
   startSession,
 } from "./component-lib"
+import { GameAction, GameMode, type PlayerID } from "@enums"
 import "@components/session/session.scss"
 
 import type { Socket } from "socket.io-client"
-import { GameAction, type PlayerID } from "@enums"
 import {
   playerDeals,
   playerDisconnect,
@@ -22,19 +22,27 @@ import {
   playerTurn,
 } from "@multiplayer-event-functions"
 
-export const [sessionState, dispatchAction] = createReducer(
-  multiplayerReducer,
-  initialSessionState
-)
-
 type props = {
   socket: Socket | null
   sessionID: string
   playerID: PlayerID | null
+  showPairsModal: boolean
+  showQuitGameModal: boolean
+  setSessionStarted: Setter<boolean>
+  setMultiplayerSessionStarted: Setter<boolean>
+  setShowPairsModal: Setter<boolean>
+  setShowInstructions: Setter<boolean>
+  setShowQuitGameModal: Setter<boolean>
 }
 
 const MultiplayerSession: Component<props> = props => {
-  if (props.socket && props.playerID) startSession(props.socket, props.playerID)
+  const [sessionState, dispatchAction] = createReducer(
+    multiplayerReducer,
+    initialSessionState
+  )
+
+  if (props.socket && props.playerID)
+    startSession(props.socket, props.playerID, dispatchAction)
 
   return (
     <div class="session">
@@ -77,17 +85,26 @@ const MultiplayerSession: Component<props> = props => {
         <PairsModal
           player={sessionState().player}
           opponent={sessionState().opponent}
+          showPairsModal={props.showPairsModal}
+          setShowPairsModal={props.setShowPairsModal}
         />
       </Show>
       <Sidebar
         isDealFromDeck={sessionState().isDealFromDeck}
-        gameMode={sessionState().gameMode}
+        gameMode={GameMode.Multiplayer}
         playerDealsHandler={() =>
           playerDeals(sessionState().playerRequest, dispatchAction, GameAction)
         }
+        setShowPairsModal={props.setShowPairsModal}
+        setShowInstructions={props.setShowInstructions}
+        setShowQuitGameModal={props.setShowQuitGameModal}
       />
       <QuitGameModal
         playerDisconnect={() => playerDisconnect(dispatchAction, GameAction)}
+        showQuitGameModal={props.showQuitGameModal}
+        setSessionStarted={props.setSessionStarted}
+        setMultiplayerSessionStarted={props.setMultiplayerSessionStarted}
+        setShowQuitGameModal={props.setShowQuitGameModal}
       />
     </div>
   )

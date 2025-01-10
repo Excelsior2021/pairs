@@ -1,18 +1,19 @@
-import { createSignal, For, type Component } from "solid-js"
-import { io } from "socket.io-client"
-import {
-  setJoinGameMenu,
-  setMultiplayerSessionStarted,
-  setMultiplayerMenu,
-  socket,
-  setSocket,
-  setPlayerID,
-} from "@components/game-screen/game-screen"
+import { createSignal, For, type Setter, type Component } from "solid-js"
+import { io, type Socket } from "socket.io-client"
 import { joinSessionHandler } from "./component-lib"
-import "./join-game.scss"
 import { PlayerID } from "@enums"
+import "./join-game.scss"
 
-const JoinGame: Component = () => {
+type props = {
+  socket: any
+  setSocket: Setter<Socket | null>
+  setPlayerID: Setter<PlayerID | null>
+  setJoinGameMenu: Setter<boolean>
+  setMultiplayerSessionStarted: Setter<boolean>
+  setMultiplayerMenu: Setter<boolean>
+}
+
+const JoinGame: Component<props> = props => {
   const [joinSessionID, setJoinSessionID] = createSignal("")
   const [sessionIDNotValid, setSessionIDNotValid] = createSignal(false)
   const [noSessionExists, setNoSessionExists] = createSignal(false)
@@ -28,10 +29,10 @@ const JoinGame: Component = () => {
         joinSessionHandler(
           joinSessionID(),
           io,
-          setSocket,
-          setPlayerID,
-          setJoinGameMenu,
-          setMultiplayerSessionStarted,
+          props.setSocket,
+          props.setPlayerID,
+          props.setJoinGameMenu,
+          props.setMultiplayerSessionStarted,
           setSessionIDNotValid,
           setNoSessionExists,
           setServerConnected,
@@ -43,11 +44,11 @@ const JoinGame: Component = () => {
     {
       name: "←",
       onclick: () => {
-        setJoinGameMenu(false)
-        setMultiplayerMenu(true)
+        props.setJoinGameMenu(false)
+        props.setMultiplayerMenu(true)
         setSessionIDNotValid(false)
         setNoSessionExists(false)
-        socket()?.disconnect()
+        props.socket.disconnect()
       },
     },
   ]

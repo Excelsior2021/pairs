@@ -8,39 +8,87 @@ import JoinGame from "@components/join-game/join-game"
 import "./game-screen.scss"
 
 import type { Socket } from "socket.io-client"
-import { PlayerID } from "@enums"
+import type { PlayerID } from "@enums"
 
-export const [sessionStarted, setSessionStarted] = createSignal(false)
-export const [multiplayerMenu, setMultiplayerMenu] = createSignal(false)
-export const [joinGameMenu, setJoinGameMenu] = createSignal(false)
-export const [multiplayerSessionStarted, setMultiplayerSessionStarted] =
-  createSignal(false)
-export const [socket, setSocket] = createSignal<Socket | null>(null)
-export const [sessionID, setSessionID] = createSignal("")
-export const [playerID, setPlayerID] = createSignal<PlayerID | null>(null)
+const GameScreen: Component = () => {
+  const [sessionStarted, setSessionStarted] = createSignal(false)
+  const [multiplayerMenu, setMultiplayerMenu] = createSignal(false)
+  const [joinGameMenu, setJoinGameMenu] = createSignal(false)
+  const [multiplayerSessionStarted, setMultiplayerSessionStarted] =
+    createSignal(false)
+  const [socket, setSocket] = createSignal<Socket | null>(null)
+  const [sessionID, setSessionID] = createSignal("")
+  const [playerID, setPlayerID] = createSignal<PlayerID | null>(null)
+  const [showPairsModal, setShowPairsModal] = createSignal(false)
+  const [showQuitGameModal, setShowQuitGameModal] = createSignal(false)
+  const [showInstructions, setShowInstructions] = createSignal(false)
+  const [showPlayerModal, setShowPlayerModal] = createSignal(false)
+  const [matchStatusHeading, setMatchStatusHeading] = createSignal("")
+  const [matchStatusSubHeading, setMatchStatusSubHeading] = createSignal("")
 
-const GameScreen: Component = () => (
-  <main class="game-screen">
-    <Switch fallback={<MainMenu />}>
-      <Match when={sessionStarted()}>
-        <Session />
-      </Match>
-      <Match when={multiplayerMenu()}>
-        <MultiplayerMenu />
-      </Match>
-      <Match when={joinGameMenu()}>
-        <JoinGame />
-      </Match>
-      <Match when={multiplayerSessionStarted()}>
-        <MultiplayerSession
-          socket={socket()}
-          sessionID={sessionID()}
-          playerID={playerID()}
-        />
-      </Match>
-    </Switch>
-    <Instructions />
-  </main>
-)
+  return (
+    <main class="game-screen">
+      <Switch
+        fallback={
+          <MainMenu
+            setSessionStarted={setSessionStarted}
+            setMultiplayerMenu={setMultiplayerMenu}
+            setShowInstructions={setShowInstructions}
+          />
+        }>
+        <Match when={sessionStarted()}>
+          <Session
+            showPairsModal={showPairsModal()}
+            showQuitGameModal={showQuitGameModal()}
+            setSessionStarted={setSessionStarted}
+            setMultiplayerSessionStarted={setMultiplayerSessionStarted}
+            setShowPairsModal={setShowPairsModal}
+            setShowInstructions={setShowInstructions}
+            setShowQuitGameModal={setShowQuitGameModal}
+          />
+        </Match>
+        <Match when={multiplayerMenu()}>
+          <MultiplayerMenu
+            socket={socket()}
+            setSocket={setSocket}
+            setPlayerID={setPlayerID}
+            setSessionID={setSessionID}
+            setJoinGameMenu={setJoinGameMenu}
+            setMultiplayerSessionStarted={setMultiplayerSessionStarted}
+            setMultiplayerMenu={setMultiplayerMenu}
+          />
+        </Match>
+        <Match when={joinGameMenu()}>
+          <JoinGame
+            socket={socket()}
+            setSocket={setSocket}
+            setPlayerID={setPlayerID}
+            setJoinGameMenu={setJoinGameMenu}
+            setMultiplayerSessionStarted={setMultiplayerSessionStarted}
+            setMultiplayerMenu={setMultiplayerMenu}
+          />
+        </Match>
+        <Match when={multiplayerSessionStarted()}>
+          <MultiplayerSession
+            socket={socket()}
+            sessionID={sessionID()}
+            playerID={playerID()}
+            showPairsModal={showPairsModal()}
+            showQuitGameModal={showQuitGameModal()}
+            setSessionStarted={setSessionStarted}
+            setMultiplayerSessionStarted={setMultiplayerSessionStarted}
+            setShowPairsModal={setShowPairsModal}
+            setShowInstructions={setShowInstructions}
+            setShowQuitGameModal={setShowQuitGameModal}
+          />
+        </Match>
+      </Switch>
+      <Instructions
+        showInstructions={showInstructions()}
+        setShowInstructions={setShowInstructions}
+      />
+    </main>
+  )
+}
 
 export default GameScreen

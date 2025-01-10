@@ -1,22 +1,20 @@
-import { createSignal, type Component } from "solid-js"
+import { type Setter, type Component } from "solid-js"
 import Modal from "@components/modal/modal"
-import {
-  setMultiplayerSessionStarted,
-  setSessionStarted,
-} from "@components/game-screen/game-screen"
 import { ModalHeadingColor } from "@enums"
 import "./quit-game-modal.scss"
 
-export const [showQuitGameModal, setShowQuitGameModal] = createSignal(false)
-
 type props = {
   playerDisconnect?: () => void
+  showQuitGameModal: boolean
+  setSessionStarted: Setter<boolean>
+  setMultiplayerSessionStarted: Setter<boolean>
+  setShowQuitGameModal: Setter<boolean>
 }
 
 const QuitGameModal: Component<props> = props => (
   <Modal
-    showModal={showQuitGameModal}
-    setShowModal={setShowQuitGameModal}
+    showModal={props.showQuitGameModal}
+    setShowModal={props.setShowQuitGameModal}
     heading="quit game"
     headingColor={ModalHeadingColor.red}
     hideTitle={true}>
@@ -27,9 +25,9 @@ const QuitGameModal: Component<props> = props => (
       <button
         class="quit-game-modal__button"
         onclick={() => {
-          setSessionStarted(false)
-          setMultiplayerSessionStarted(false)
-          setShowQuitGameModal(false)
+          props.setSessionStarted(false)
+          props.setMultiplayerSessionStarted(false)
+          props.setShowQuitGameModal(false)
           if (props.playerDisconnect) props.playerDisconnect()
         }}>
         confirm

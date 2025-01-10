@@ -18,7 +18,7 @@ type props = {
 
 const PlayerModal: Component<props> = props => (
   <Modal
-    showModal={showPlayerModal}
+    showModal={showPlayerModal()}
     setShowModal={setShowPlayerModal}
     heading={matchStatusHeading()}
     subHeading={matchStatusSubHeading()}

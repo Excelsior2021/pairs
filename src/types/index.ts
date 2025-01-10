@@ -4,7 +4,6 @@ import type { Socket, io as ioType } from "socket.io-client"
 import type { Deck, Game, Player, Opponent } from "@game-objects"
 import type {
   GameAction,
-  GameMode,
   nonNumCardValue,
   suit,
   PlayerID as PlayerIDEnum,
@@ -54,8 +53,7 @@ export type playerRequest = {
   playerID: number
 }
 
-export type gameStateType = {
-  gameMode: GameMode
+export type sessionState = {
   game?: Game | null
   deck?: Deck | null
   player?: Player | null
@@ -74,8 +72,8 @@ export type gameStateType = {
   deckCount: number | null
 }
 
-export type gameStateMultiplayer = Omit<
-  gameStateType,
+export type sessionStateMultiplayer = Omit<
+  sessionState,
   "deck" | "opponentRequest"
 > & {
   gameStarted: boolean
@@ -88,10 +86,10 @@ export type gameStateMultiplayer = Omit<
   opponentRequest?: playerRequest | null
 }
 
-export type gameStateProp = Accessor<gameStateType | gameStateMultiplayer>
+export type sessionStateProp = Accessor<sessionState | sessionStateMultiplayer>
 
 export type gameAction = {
-  action: GameAction
+  type: GameAction
   game?: Game
   deck?: Deck
   player?: Player

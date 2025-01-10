@@ -1,9 +1,4 @@
-import {
-  Show,
-  type ParentComponent,
-  type Accessor,
-  type Setter,
-} from "solid-js"
+import { Show, type ParentComponent, type Setter } from "solid-js"
 import { ModalHeadingColor } from "@enums"
 import "./modal.scss"
 
@@ -14,7 +9,7 @@ type contentProps = {
 }
 
 type modalProps = {
-  showModal: Accessor<boolean>
+  showModal: boolean
   setShowModal: Setter<boolean>
   heading?: string
   subHeading?: string
@@ -52,7 +47,7 @@ const Content: ParentComponent<contentProps> = props => (
 )
 
 const Modal: ParentComponent<modalProps> = props => (
-  <Show when={props.showModal()} fallback={null}>
+  <Show when={props.showModal} fallback={null}>
     <Backdrop>
       {!props.hideTitle && <p class="modal__title">Pairs</p>}
       <Content
