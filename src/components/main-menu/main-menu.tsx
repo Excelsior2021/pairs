@@ -5,10 +5,11 @@ import {
   type Setter,
   type Component,
 } from "solid-js"
+import { GameMode } from "@enums"
 import "./main-menu.scss"
 
 type props = {
-  setSessionStarted: Setter<boolean>
+  setGameMode: Setter<GameMode>
   setMultiplayerMenu: Setter<boolean>
   setShowInstructions: Setter<boolean>
 }
@@ -20,11 +21,11 @@ const MainMenu: Component<props> = props => {
 
   const actions = [
     {
-      name: "single player",
-      onclick: () => props.setSessionStarted(true),
+      name: GameMode.SinglePlayer,
+      onclick: () => props.setGameMode(GameMode.SinglePlayer),
     },
     {
-      name: "multiplayer",
+      name: GameMode.Multiplayer,
       onclick: () => props.setMultiplayerMenu(true),
     },
     {

@@ -29,7 +29,7 @@ export const initialSessionState = {
   deckCount: null,
 }
 
-export const gameReducer = (
+export const singlePlayerReducer = (
   state: sessionState,
   action: gameAction
 ): sessionState => {

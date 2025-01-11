@@ -1,7 +1,7 @@
 import { createSignal, For, type Setter, type Component } from "solid-js"
 import { io, type Socket } from "socket.io-client"
 import { joinSessionHandler } from "./component-lib"
-import { PlayerID } from "@enums"
+import { GameMode, PlayerID } from "@enums"
 import "./join-game.scss"
 
 type props = {
@@ -9,7 +9,7 @@ type props = {
   setSocket: Setter<Socket | null>
   setPlayerID: Setter<PlayerID | null>
   setJoinGameMenu: Setter<boolean>
-  setMultiplayerSessionStarted: Setter<boolean>
+  setGameMode: Setter<GameMode>
   setMultiplayerMenu: Setter<boolean>
 }
 
@@ -32,11 +32,12 @@ const JoinGame: Component<props> = props => {
           props.setSocket,
           props.setPlayerID,
           props.setJoinGameMenu,
-          props.setMultiplayerSessionStarted,
+          props.setGameMode,
           setSessionIDNotValid,
           setNoSessionExists,
           setServerConnected,
           setConnecting,
+          GameMode,
           PlayerID
         ),
       disabled: () => connecting(),
@@ -94,7 +95,8 @@ const JoinGame: Component<props> = props => {
       )}
       {noSessionExists() && (
         <p class="join-game__text join-game__text--info">
-          This session does not exist. Please check the session ID is correct.
+          This session does not exist. Please check that the session ID is
+          correct.
         </p>
       )}
       {serverConnected() === false && (

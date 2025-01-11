@@ -1,17 +1,22 @@
-import { createSignal, Switch, Match, type Component } from "solid-js"
+import {
+  createSignal,
+  Switch,
+  Match,
+  type Component,
+  type Setter,
+} from "solid-js"
 import MainMenu from "@components/main-menu/main-menu"
 import Session from "@components/session/session"
 import Instructions from "@components/instructions/instructions"
 import MultiplayerMenu from "@components/multiplayer-menu/multiplayer-menu"
-import MultiplayerSession from "@components/multiplayer-session/multiplayer-session"
 import JoinGame from "@components/join-game/join-game"
 import "./game-screen.scss"
 
 import type { Socket } from "socket.io-client"
-import type { PlayerID } from "@enums"
+import { GameMode, type PlayerID } from "@enums"
 
 const GameScreen: Component = () => {
-  const [sessionStarted, setSessionStarted] = createSignal(false)
+  const [gameMode, setGameMode] = createSignal<GameMode | null>(null)
   const [multiplayerMenu, setMultiplayerMenu] = createSignal(false)
   const [joinGameMenu, setJoinGameMenu] = createSignal(false)
   const [multiplayerSessionStarted, setMultiplayerSessionStarted] =
@@ -31,17 +36,20 @@ const GameScreen: Component = () => {
       <Switch
         fallback={
           <MainMenu
-            setSessionStarted={setSessionStarted}
+            setGameMode={setGameMode as Setter<GameMode>}
             setMultiplayerMenu={setMultiplayerMenu}
             setShowInstructions={setShowInstructions}
           />
         }>
-        <Match when={sessionStarted()}>
+        <Match when={gameMode()}>
           <Session
+            gameMode={gameMode() as GameMode}
+            socket={socket()}
+            sessionID={sessionID()}
+            playerID={playerID()}
             showPairsModal={showPairsModal()}
             showQuitGameModal={showQuitGameModal()}
-            setSessionStarted={setSessionStarted}
-            setMultiplayerSessionStarted={setMultiplayerSessionStarted}
+            setGameMode={setGameMode as Setter<null>}
             setShowPairsModal={setShowPairsModal}
             setShowInstructions={setShowInstructions}
             setShowQuitGameModal={setShowQuitGameModal}
@@ -54,7 +62,7 @@ const GameScreen: Component = () => {
             setPlayerID={setPlayerID}
             setSessionID={setSessionID}
             setJoinGameMenu={setJoinGameMenu}
-            setMultiplayerSessionStarted={setMultiplayerSessionStarted}
+            setGameMode={setGameMode as Setter<GameMode>}
             setMultiplayerMenu={setMultiplayerMenu}
           />
         </Match>
@@ -64,22 +72,8 @@ const GameScreen: Component = () => {
             setSocket={setSocket}
             setPlayerID={setPlayerID}
             setJoinGameMenu={setJoinGameMenu}
-            setMultiplayerSessionStarted={setMultiplayerSessionStarted}
+            setGameMode={setGameMode as Setter<GameMode>}
             setMultiplayerMenu={setMultiplayerMenu}
-          />
-        </Match>
-        <Match when={multiplayerSessionStarted()}>
-          <MultiplayerSession
-            socket={socket()}
-            sessionID={sessionID()}
-            playerID={playerID()}
-            showPairsModal={showPairsModal()}
-            showQuitGameModal={showQuitGameModal()}
-            setSessionStarted={setSessionStarted}
-            setMultiplayerSessionStarted={setMultiplayerSessionStarted}
-            setShowPairsModal={setShowPairsModal}
-            setShowInstructions={setShowInstructions}
-            setShowQuitGameModal={setShowQuitGameModal}
           />
         </Match>
       </Switch>

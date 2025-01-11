@@ -1,7 +1,7 @@
 import type {
   playerRequest,
   playerDeals as playerDealsType,
-  playerDisconnects as playerDisconnects,
+  playerDisconnects as playerDisconnectsType,
   playerResponse as playerResponseType,
   playerTurn as playerTurnType,
 } from "@types"
@@ -87,7 +87,7 @@ export const playerDeals: playerDealsType = (
     playerRequest,
   })
 
-export const playerDisconnect: playerDisconnects = (
+export const playerDisconnects: playerDisconnectsType = (
   dispatchAction,
   GameAction
 ) => dispatchAction({ type: GameAction.PLAYER_DISCONNECT })

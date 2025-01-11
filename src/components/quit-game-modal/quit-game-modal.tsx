@@ -1,13 +1,13 @@
-import { type Setter, type Component } from "solid-js"
 import Modal from "@components/modal/modal"
 import { ModalHeadingColor } from "@enums"
 import "./quit-game-modal.scss"
 
+import type { Setter, Component } from "solid-js"
+
 type props = {
-  playerDisconnect?: () => void
+  playerDisconnectHandler?: () => void
   showQuitGameModal: boolean
-  setSessionStarted: Setter<boolean>
-  setMultiplayerSessionStarted: Setter<boolean>
+  setGameMode: Setter<null>
   setShowQuitGameModal: Setter<boolean>
 }
 
@@ -24,11 +24,11 @@ const QuitGameModal: Component<props> = props => (
       </p>
       <button
         class="quit-game-modal__button"
+        //move to Session component
         onclick={() => {
-          props.setSessionStarted(false)
-          props.setMultiplayerSessionStarted(false)
+          props.setGameMode(null)
           props.setShowQuitGameModal(false)
-          if (props.playerDisconnect) props.playerDisconnect()
+          if (props.playerDisconnectHandler) props.playerDisconnectHandler()
         }}>
         confirm
       </button>

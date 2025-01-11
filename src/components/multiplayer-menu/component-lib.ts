@@ -17,9 +17,10 @@ export const createSessionHandler: createGameHandlerType = async (
   setSessionID,
   setPlayerID,
   setMultiplayerMenu,
-  setMultiplayerSessionStarted,
+  setGameMode,
   setConnecting,
   setServerConnected,
+  GameMode,
   PlayerID
 ) => {
   setConnecting(true)
@@ -43,7 +44,7 @@ export const createSessionHandler: createGameHandlerType = async (
 
     setPlayerID(PlayerID.P1)
     setMultiplayerMenu(false)
-    setMultiplayerSessionStarted(true)
+    setGameMode(GameMode.Multiplayer)
   })
 
   socket.io.on("reconnect_failed", () => {

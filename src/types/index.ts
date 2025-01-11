@@ -8,6 +8,7 @@ import type {
   suit,
   PlayerID as PlayerIDEnum,
   PlayerOutput,
+  GameMode as GameModeEnum,
 } from "@enums"
 
 export type card = {
@@ -23,9 +24,10 @@ export type createGameHandler = (
   setSessionID: Setter<string>,
   setPlayerID: Setter<PlayerIDEnum | null>,
   setMultiplayerMenu: Setter<boolean>,
-  setMultiplayerSessionStarted: Setter<boolean>,
+  setGameMode: Setter<GameModeEnum>,
   setConnecting: Setter<boolean>,
   setServerConnected: Setter<false | null>,
+  GameMode: typeof GameModeEnum,
   PlayerID: typeof PlayerIDEnum
 ) => void
 
@@ -35,11 +37,12 @@ export type joinSessionHandler = (
   setSocket: Setter<Socket | null>,
   setPlayerID: Setter<PlayerIDEnum | null>,
   setJoinGameMenu: Setter<boolean>,
-  setMultiplayerSessionStarted: Setter<boolean>,
+  setGameMode: Setter<GameModeEnum>,
   setSessionIDNotValid: Setter<boolean>,
   setNoSessionExists: Setter<boolean>,
   setServerConnected: Setter<boolean | null>,
   setLoading: Setter<boolean>,
+  GameMode: typeof GameModeEnum,
   PlayerID: typeof PlayerIDEnum
 ) => void
 
