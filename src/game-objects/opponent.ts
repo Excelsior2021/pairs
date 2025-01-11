@@ -1,4 +1,4 @@
-import { GameAction, OpponentOutput } from "@enums"
+import { Action, OpponentOutput } from "@enums"
 
 import type { Deck, Game } from "@game-objects"
 import type { card, dispatchAction } from "@types"
@@ -59,7 +59,7 @@ export class Opponent {
       if (this.request) {
         const log = `Do you have a ${this.request.value}?`
         this.dispatchAction({
-          type: GameAction.GAME_LOG,
+          type: Action.GAME_LOG,
           log,
         })
 

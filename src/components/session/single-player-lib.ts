@@ -1,40 +1,18 @@
 import {
-  setShowPlayerModal,
-  setMatchStatusHeading,
-  setMatchStatusSubHeading,
-} from "@components/player-modal/player-modal"
-
-import {
-  PlayerMatchHeading,
-  PlayerMatchSubHeading,
+  PlayerModalHeading,
+  PlayerModalSubHeading,
   PlayerOutput,
-  GameAction,
+  Action,
 } from "@enums"
 
-import type { sessionState, gameAction } from "@types"
-
-export const initialSessionState = {
-  game: null,
-  deck: null,
-  player: null,
-  opponent: null,
-  isPlayerTurn: false,
-  isOpponentTurn: false,
-  isDealFromDeck: false,
-  playerOutput: null,
-  opponentRequest: null,
-  log: "",
-  outcome: "",
-  gameOver: false,
-  deckCount: null,
-}
+import type { sessionState, action } from "@types"
 
 export const singlePlayerReducer = (
   state: sessionState,
-  action: gameAction
+  action: action
 ): sessionState => {
   switch (action.type) {
-    case GameAction.UPDATE: {
+    case Action.UPDATE: {
       return {
         ...state,
         deck: action.deck,
@@ -46,58 +24,57 @@ export const singlePlayerReducer = (
         gameOver: false,
       }
     }
-    case GameAction.PLAYER_ACTION: {
-      if (action.playerOutput !== PlayerOutput.NoOpponentMatch)
-        setShowPlayerModal(true)
-
-      const updatePlayerOutputFactory = (
-        playerMatchHeading: PlayerMatchHeading,
-        playerMatchSubHeading: PlayerMatchSubHeading
-      ) => {
-        setMatchStatusHeading(playerMatchHeading)
-        setMatchStatusSubHeading(playerMatchSubHeading)
+    case Action.PLAYER_ACTION: {
+      if (action.playerOutput === PlayerOutput.NoOpponentMatch)
         return {
           ...state,
-          playerOutput: action.playerOutput!,
+        }
+
+      if (action.playerOutput !== undefined) {
+        state.showPlayerModal = true
+        state.playerOutput = action.playerOutput
+        state.playerModalHeading = PlayerModalHeading.Match //matches 3 out of 4
+        switch (action.playerOutput) {
+          case PlayerOutput.OpponentMatch: {
+            return {
+              ...state,
+              playerModalSubHeading: PlayerModalSubHeading.Opponent,
+            }
+          }
+          case PlayerOutput.DeckMatch: {
+            return {
+              ...state,
+              playerModalSubHeading: PlayerModalSubHeading.Deck,
+            }
+          }
+          case PlayerOutput.HandMatch: {
+            return {
+              ...state,
+              playerModalSubHeading: PlayerModalSubHeading.Player,
+            }
+          }
+          case PlayerOutput.NoMatch: {
+            return {
+              ...state,
+              playerModalHeading: PlayerModalHeading.NoMatch,
+              playerModalSubHeading: PlayerModalSubHeading.None,
+            }
+          }
+          default:
+            return state
         }
       }
-
-      switch (action.playerOutput) {
-        case PlayerOutput.OpponentMatch: {
-          return updatePlayerOutputFactory(
-            PlayerMatchHeading.Match,
-            PlayerMatchSubHeading.Opponent
-          )
-        }
-        case PlayerOutput.DeckMatch: {
-          return updatePlayerOutputFactory(
-            PlayerMatchHeading.Match,
-            PlayerMatchSubHeading.Deck
-          )
-        }
-        case PlayerOutput.HandMatch: {
-          return updatePlayerOutputFactory(
-            PlayerMatchHeading.Match,
-            PlayerMatchSubHeading.Player
-          )
-        }
-        case PlayerOutput.NoMatch: {
-          return updatePlayerOutputFactory(
-            PlayerMatchHeading.NoMatch,
-            PlayerMatchSubHeading.None
-          )
-        }
-        default:
-          return state
+      return {
+        ...state,
       }
     }
-    case GameAction.GAME_LOG: {
+    case Action.GAME_LOG: {
       return {
         ...state,
         log: action.log!,
       }
     }
-    case GameAction.GAME_OVER: {
+    case Action.GAME_OVER: {
       if (action.gameOver && state.deck)
         return {
           ...state,
@@ -106,6 +83,12 @@ export const singlePlayerReducer = (
           log: "",
           deckCount: state.deck.deck.length,
         }
+    }
+    case Action.CLOSE_PLAYER_MODAL: {
+      return {
+        ...state,
+        showPlayerModal: false,
+      }
     }
     default:
       return state

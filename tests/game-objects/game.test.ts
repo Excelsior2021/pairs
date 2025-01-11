@@ -8,7 +8,7 @@ import {
   type MockInstance,
 } from "vitest"
 import { Deck, Game, Player, Opponent } from "@game-objects"
-import { suit, GameAction, Outcome } from "@enums"
+import { Suit, Action, Outcome } from "@enums"
 import mockDeck from "../__mocks__/deck"
 
 const handMock = [
@@ -87,7 +87,7 @@ describe("Game class", () => {
       expect(updateUISpy).toHaveBeenCalledWith(true)
       expect(dispatchActionMock).toHaveBeenCalledTimes(2)
       expect(dispatchActionMock.mock.calls[1][0]).toStrictEqual({
-        type: GameAction.GAME_LOG,
+        type: Action.GAME_LOG,
         log,
       })
     })
@@ -144,7 +144,7 @@ describe("Game class", () => {
       game.end()
 
       expect(dispatchActionMock.mock.calls[1][0]).toStrictEqual({
-        type: GameAction.GAME_OVER,
+        type: Action.GAME_OVER,
         outcome: Outcome.Player,
         gameOver: true,
       })
@@ -156,7 +156,7 @@ describe("Game class", () => {
       game.end()
 
       expect(dispatchActionMock.mock.calls[1][0]).toStrictEqual({
-        type: GameAction.GAME_OVER,
+        type: Action.GAME_OVER,
         outcome: Outcome.Opponent,
         gameOver: true,
       })
@@ -167,7 +167,7 @@ describe("Game class", () => {
       opponent.pairs = new Array(10).fill(null)
       game.end()
       expect(dispatchActionMock.mock.calls[1][0]).toStrictEqual({
-        type: GameAction.GAME_OVER,
+        type: Action.GAME_OVER,
         outcome: Outcome.Draw,
         gameOver: true,
       })

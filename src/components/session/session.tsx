@@ -21,9 +21,15 @@ import {
 } from "@multiplayer-event-functions"
 import { singlePlayerReducer } from "./single-player-lib"
 import { multiplayerReducer, startSession } from "./multiplayer-lib"
-import { GameAction, GameMode, type PlayerID } from "@enums"
+import { Action, GameMode, type PlayerID } from "@enums"
 import type { Socket } from "socket.io-client"
 import "@components/session/session.scss"
+import {
+  action,
+  actionMultiplayer,
+  sessionState,
+  sessionStateMultiplayer,
+} from "@types"
 
 type props = {
   gameMode: GameMode
@@ -38,31 +44,50 @@ type props = {
   setShowQuitGameModal: Setter<boolean>
 }
 
-const initialSessionState = {
-  game: null,
-  player: null,
-  opponent: null,
-  deck: null,
-  opponentRequest: null,
-  isPlayerTurn: false,
-  isOpponentTurn: false,
-  playerOutput: null,
-  log: "",
-  outcome: "",
-  gameOver: false,
-  isDealFromDeck: false,
-  deckCount: null,
-  gameStarted: null,
-  playerID: null,
-  socket: null,
-  sessionID: "",
-  playerTurn: null,
-}
-
 const Session: Component<props> = props => {
-  let reducer
-  if (props.gameMode === GameMode.SinglePlayer) reducer = singlePlayerReducer
-  if (props.gameMode === GameMode.Multiplayer) reducer = multiplayerReducer
+  const initialSessionState = {
+    game: null,
+    player: null,
+    opponent: null,
+    deck: null,
+    opponentRequest: null,
+    isPlayerTurn: false,
+    isOpponentTurn: false,
+    playerOutput: null,
+    log: "",
+    outcome: "",
+    gameOver: false,
+    isDealFromDeck: false,
+    deckCount: null,
+    gameStarted: null,
+    playerID: null,
+    socket: null,
+    sessionID: "",
+    playerTurn: null,
+    showPlayerModal: false,
+    playerModalHeading: "",
+    playerModalSubHeading: "",
+  }
+
+  let reducer:
+    | ((state: sessionState, action: action) => sessionState)
+    | ((
+        state: sessionStateMultiplayer,
+        action: actionMultiplayer
+      ) => sessionStateMultiplayer)
+
+  if (props.gameMode === GameMode.SinglePlayer)
+    reducer = singlePlayerReducer as (
+      state: sessionState,
+      action: action
+    ) => sessionState
+
+  if (props.gameMode === GameMode.Multiplayer)
+    reducer = multiplayerReducer as (
+      state: sessionStateMultiplayer,
+      action: actionMultiplayer
+    ) => sessionStateMultiplayer
+
   const [sessionState, dispatchAction] = createReducer(
     reducer,
     initialSessionState
@@ -72,6 +97,10 @@ const Session: Component<props> = props => {
   let playerResponseHandler: (hasCard: boolean) => void
   let playerDealsHandler: (() => void) | null
   let playerDisconnectHandler: (() => void) | undefined
+  const closePlayerModalHandler = () =>
+    dispatchAction({
+      type: Action.CLOSE_PLAYER_MODAL,
+    })
 
   if (props.gameMode === GameMode.SinglePlayer) {
     deck = new Deck(deckObj, dispatchAction)
@@ -92,7 +121,7 @@ const Session: Component<props> = props => {
         sessionState().player,
         sessionState().playerID,
         dispatchAction,
-        GameAction
+        Action
       )
 
     playerResponseHandler = hasCard =>
@@ -102,14 +131,13 @@ const Session: Component<props> = props => {
         sessionState().player,
         sessionState().playerID,
         dispatchAction,
-        GameAction
+        Action
       )
 
     playerDealsHandler = () =>
-      playerDeals(sessionState().playerRequest, dispatchAction, GameAction)
+      playerDeals(sessionState().playerRequest, dispatchAction, Action)
 
-    playerDisconnectHandler = () =>
-      playerDisconnects(dispatchAction, GameAction)
+    playerDisconnectHandler = () => playerDisconnects(dispatchAction, Action)
 
     if (props.socket && props.playerID)
       startSession(props.socket, props.playerID, dispatchAction)
@@ -137,6 +165,10 @@ const Session: Component<props> = props => {
         <PlayerModal
           player={sessionState().player}
           playerOutput={sessionState().playerOutput}
+          showPlayerModal={sessionState().showPlayerModal}
+          playerModalHeading={sessionState().playerModalHeading}
+          playerModalSubHeading={sessionState().playerModalSubHeading}
+          closePlayerModalHandler={closePlayerModalHandler}
         />
         <PairsModal
           player={sessionState().player}

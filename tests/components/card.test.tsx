@@ -1,13 +1,13 @@
 import { describe, expect, it, vi } from "vitest"
 import { render } from "@solidjs/testing-library"
 import Card from "@components/card/card"
-import { nonNumCardValue, suit } from "@enums"
+import { NonNumCardValue, Suit } from "@enums"
 import userEvent from "@testing-library/user-event"
 
 describe("Card component", () => {
   const cardMock = {
     id: "ace_of_clubs",
-    value: nonNumCardValue.ace,
+    value: NonNumCardValue.ace,
     suit: suit.clubs,
     img: "./cards/ace_of_clubs.webp",
   }

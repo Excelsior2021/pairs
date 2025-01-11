@@ -1,29 +1,35 @@
-import { createSignal, Switch, Match, type Component, For } from "solid-js"
+import { Switch, Match, type Component, For } from "solid-js"
 import Card from "@components/card/card"
 import Modal from "@components/modal/modal"
-import { ModalHeadingColor, PlayerOutput } from "@enums"
+import {
+  ModalHeadingColor,
+  PlayerModalHeading,
+  type PlayerModalSubHeading,
+  PlayerOutput,
+} from "@enums"
 import "./player-modal.scss"
 
 import type { Player } from "@game-objects"
 
-export const [showPlayerModal, setShowPlayerModal] = createSignal(false)
-export const [matchStatusHeading, setMatchStatusHeading] = createSignal("")
-export const [matchStatusSubHeading, setMatchStatusSubHeading] =
-  createSignal("")
-
 type props = {
   player: Player
   playerOutput: PlayerOutput
+  showPlayerModal: boolean
+  playerModalHeading: PlayerModalHeading
+  playerModalSubHeading: PlayerModalSubHeading
+  closePlayerModalHandler: (...args: any[]) => undefined
 }
 
 const PlayerModal: Component<props> = props => (
   <Modal
-    showModal={showPlayerModal()}
-    setShowModal={setShowPlayerModal}
-    heading={matchStatusHeading()}
-    subHeading={matchStatusSubHeading()}
+    showModal={props.showPlayerModal}
+    setShowModal={props.closePlayerModalHandler}
+    heading={props.playerModalHeading}
+    subHeading={props.playerModalSubHeading}
     headingColor={
-      props.playerOutput! < 3 ? ModalHeadingColor.green : ModalHeadingColor.red
+      props.playerModalHeading === PlayerModalHeading.Match
+        ? ModalHeadingColor.green
+        : ModalHeadingColor.red
     }
     hideTitle={true}>
     <div class="player-modal__output">

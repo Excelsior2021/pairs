@@ -1,4 +1,4 @@
-import { GameAction, Outcome } from "@enums"
+import { Action, Outcome } from "@enums"
 
 import type { Deck, Player, Opponent } from "@game-objects"
 import type { card, dispatchAction } from "@types"
@@ -45,7 +45,7 @@ export class Game {
       "The cards have been dealt. Any initial pair of cards have been added to your Pairs. Please select a card from your hand to request a match with your opponent."
 
     this.updateUI(true)
-    this.dispatchAction({ type: GameAction.GAME_LOG, log })
+    this.dispatchAction({ type: Action.GAME_LOG, log })
   }
 
   initialPairs(hand: card[]) {
@@ -76,7 +76,7 @@ export class Game {
     isDealFromDeck = false
   ) {
     this.dispatchAction({
-      type: GameAction.UPDATE,
+      type: Action.UPDATE,
       deck: this.deck,
       player: this.player,
       opponent: this.opponent,
@@ -104,7 +104,7 @@ export class Game {
 
       this.updateUI()
       this.dispatchAction({
-        type: GameAction.GAME_OVER,
+        type: Action.GAME_OVER,
         outcome,
         gameOver: true,
       })

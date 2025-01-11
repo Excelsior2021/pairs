@@ -1,11 +1,11 @@
-export enum suit {
+export enum Suit {
   clubs = "clubs",
   diamonds = "diamonds",
   hearts = "hearts",
   spades = "spades",
 }
 
-export enum nonNumCardValue {
+export enum NonNumCardValue {
   ace = "ace",
   jack = "jack",
   queen = "queen",
@@ -25,12 +25,12 @@ export enum PlayerOutput {
   NoOpponentMatch,
 }
 
-export enum PlayerMatchHeading {
+export enum PlayerModalHeading {
   Match = "match",
   NoMatch = "no match",
 }
 
-export enum PlayerMatchSubHeading {
+export enum PlayerModalSubHeading {
   Opponent = "opponent hand",
   Deck = "dealt card",
   Player = "your hand",
@@ -55,7 +55,7 @@ export enum Outcome {
   Disconnect = "Your opponent has disconnected. The game has ended.",
 }
 
-export enum GameAction {
+export enum Action {
   UPDATE = "UPDATE",
   PLAYER_ACTION = "PLAYER_ACTION",
   PLAYER_REQUEST = "PLAYER_REQUEST",
@@ -72,6 +72,7 @@ export enum GameAction {
   GAME_LOG = "GAME_LOG",
   GAME_OVER = "GAME_OVER",
   START_SESSION = "START_SESSION",
+  CLOSE_PLAYER_MODAL = "CLOSE_PLAYER_MODAL",
 }
 
 export enum ModalHeadingColor {

@@ -1,4 +1,4 @@
-import { GameAction, PlayerOutput } from "@enums"
+import { Action, PlayerOutput } from "@enums"
 
 import type { Game, Opponent, Player } from "@game-objects"
 import type { card, dispatchAction } from "@types"
@@ -25,7 +25,7 @@ export class Deck {
     const playerOutput = player.dealt(game, this)
 
     this.dispatchAction({
-      type: GameAction.PLAYER_ACTION,
+      type: Action.PLAYER_ACTION,
       playerOutput,
       player,
     })

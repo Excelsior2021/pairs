@@ -1,12 +1,14 @@
 import {
-  setShowPlayerModal,
-  setMatchStatusHeading,
-  setMatchStatusSubHeading,
-} from "@components/player-modal/player-modal"
-import { PlayerOutput, Outcome, GameAction, PlayerID } from "@enums"
+  PlayerOutput,
+  Outcome,
+  Action,
+  PlayerID,
+  PlayerModalHeading,
+  PlayerModalSubHeading,
+} from "@enums"
 
 import type {
-  gameActionMultiplayer,
+  actionMultiplayer,
   sessionStateMultiplayer,
   playerRequest,
   serverStateMultiplayer,
@@ -16,31 +18,12 @@ import type { Socket } from "socket.io-client"
 
 const { P1, P2 } = PlayerID
 
-export const initialSessionState = {
-  gameStarted: false,
-  playerID: null,
-  player: null,
-  opponent: null,
-  deck: null,
-  isPlayerTurn: false,
-  isOpponentTurn: false,
-  playerOutput: null,
-  log: "",
-  outcome: "",
-  socket: null,
-  sessionID: "",
-  playerTurn: null,
-  gameOver: false,
-  isDealFromDeck: false,
-  deckCount: null,
-}
-
 export const multiplayerReducer = (
   state: sessionStateMultiplayer,
-  action: gameActionMultiplayer
+  action: actionMultiplayer
 ): sessionStateMultiplayer => {
   switch (action.type) {
-    case GameAction.START_SESSION: {
+    case Action.START_SESSION: {
       return {
         ...state,
         socket: action.socket,
@@ -48,7 +31,7 @@ export const multiplayerReducer = (
         gameOver: false,
       }
     }
-    case GameAction.UPDATE: {
+    case Action.UPDATE: {
       if (!state.gameStarted) state.gameStarted = true
       if (!state.sessionID) state.sessionID = action.sessionID
       if (state.isOpponentTurn) state.isOpponentTurn = false
@@ -82,7 +65,7 @@ export const multiplayerReducer = (
       }
     }
 
-    case GameAction.PLAYER_REQUEST: {
+    case Action.PLAYER_REQUEST: {
       if (state.socket)
         state.socket.emit(
           "player_request",
@@ -97,7 +80,7 @@ export const multiplayerReducer = (
         isPlayerTurn: false,
       }
     }
-    case GameAction.PLAYER_RESPONSE: {
+    case Action.PLAYER_RESPONSE: {
       const { card } = action.opponentRequest! //opponent's request
       state.isOpponentTurn = false
 
@@ -112,7 +95,7 @@ export const multiplayerReducer = (
         opponentRequest: action.opponentRequest,
       }
     }
-    case GameAction.PLAYER_MATCH: {
+    case Action.PLAYER_MATCH: {
       if (action.playerCard && action.opponentRequest) {
         const playerOutput = PlayerOutput.OpponentMatch
         if (state.socket) {
@@ -140,7 +123,7 @@ export const multiplayerReducer = (
         log: action.log!,
       }
     }
-    case GameAction.NO_PLAYER_MATCH: {
+    case Action.NO_PLAYER_MATCH: {
       if (state.socket)
         state.socket.emit(
           "no_player_match",
@@ -153,7 +136,7 @@ export const multiplayerReducer = (
         isOpponentTurn: false,
       }
     }
-    case GameAction.PLAYER_DEALS: {
+    case Action.PLAYER_DEALS: {
       const log =
         "There were no matches with your opponent. You must now deal a card from the deck."
 
@@ -164,7 +147,7 @@ export const multiplayerReducer = (
         isDealFromDeck: true,
       }
     }
-    case GameAction.PLAYER_DEALT: {
+    case Action.PLAYER_DEALT: {
       if (state.socket) {
         const sessionState = {
           player: state.player,
@@ -180,25 +163,23 @@ export const multiplayerReducer = (
       }
       return { ...state, isDealFromDeck: false }
     }
-    case GameAction.PLAYER_RESULT: {
+    case Action.PLAYER_RESULT: {
       if (action.activePlayer === state.playerID) {
-        setShowPlayerModal(true)
+        state.showPlayerModal = true
 
+        state.playerModalHeading = PlayerModalHeading.Match
         switch (action.playerOutput) {
           case PlayerOutput.OpponentMatch: {
-            setMatchStatusHeading("match")
-            setMatchStatusSubHeading("opponent hand")
             const log = "It's your turn again."
             return {
               ...state,
               log,
               playerOutput: action.playerOutput,
+              playerModalSubHeading: PlayerModalSubHeading.Opponent,
             }
           }
           case PlayerOutput.DeckMatch: {
             if (state.socket) {
-              setMatchStatusHeading("match")
-              setMatchStatusSubHeading("dealt card")
               const log = "It's your turn again."
               state.socket.emit(
                 "player_response_message",
@@ -211,13 +192,12 @@ export const multiplayerReducer = (
                 log,
                 playerOutput: action.playerOutput,
                 playerTurn,
+                playerModalSubHeading: PlayerModalSubHeading.Deck,
               }
             }
           }
           case PlayerOutput.HandMatch: {
             if (state.socket) {
-              setMatchStatusHeading("match")
-              setMatchStatusSubHeading("your hand")
               const log = "It's your opponent's turn."
               state.socket.emit(
                 "player_response_message",
@@ -231,13 +211,12 @@ export const multiplayerReducer = (
                 log,
                 playerOutput: action.playerOutput,
                 playerTurn,
+                playerModalSubHeading: PlayerModalSubHeading.Player,
               }
             }
           }
           case PlayerOutput.NoMatch: {
             if (state.socket) {
-              setMatchStatusHeading("no match")
-              setMatchStatusSubHeading("")
               const log = "It's your opponent's turn."
               state.socket.emit(
                 "player_response_message",
@@ -251,6 +230,8 @@ export const multiplayerReducer = (
                 log,
                 playerOutput: action.playerOutput,
                 playerTurn,
+                playerModalHeading: PlayerModalHeading.NoMatch,
+                playerModalSubHeading: PlayerModalSubHeading.None,
               }
             }
           }
@@ -260,7 +241,7 @@ export const multiplayerReducer = (
       }
       return state
     }
-    case GameAction.PLAYER_RESPONSE_MESSAGE: {
+    case Action.PLAYER_RESPONSE_MESSAGE: {
       let log: string
       switch (action.playerOutput) {
         case PlayerOutput.DeckMatch: {
@@ -282,16 +263,16 @@ export const multiplayerReducer = (
           return state
       }
     }
-    case GameAction.PLAYER_TURN_SWITCH: {
+    case Action.PLAYER_TURN_SWITCH: {
       return {
         ...state,
         isPlayerTurn: true,
       }
     }
-    case GameAction.PLAYER_DISCONNECT: {
+    case Action.PLAYER_DISCONNECT: {
       if (state.socket) state.socket.disconnect()
     }
-    case GameAction.PLAYER_DISCONNECTED: {
+    case Action.PLAYER_DISCONNECTED: {
       return {
         ...state,
         log: "",
@@ -299,7 +280,7 @@ export const multiplayerReducer = (
         gameOver: true,
       }
     }
-    case GameAction.GAME_OVER: {
+    case Action.GAME_OVER: {
       if (state.player && state.opponent && state.deck)
         if (
           state.player.hand.length === 0 ||
@@ -322,6 +303,12 @@ export const multiplayerReducer = (
         }
       return state
     }
+    case Action.CLOSE_PLAYER_MODAL: {
+      return {
+        ...state,
+        showPlayerModal: false,
+      }
+    }
     default:
       return state
   }
@@ -333,7 +320,7 @@ export const startSession = (
   dispatchAction: dispatchActionMultiplayer
 ) => {
   dispatchAction({
-    type: GameAction.START_SESSION,
+    type: Action.START_SESSION,
     socket,
     playerID,
   })
@@ -357,23 +344,23 @@ export const startSession = (
       const player2Log = playerTurn === P2 ? startPlayerLog : nonStartPlayerLog
 
       dispatchAction({
-        type: GameAction.UPDATE,
+        type: Action.UPDATE,
         serverState,
         player1Log,
         player2Log,
         playerTurn,
         sessionID,
       })
-      dispatchAction({ type: GameAction.GAME_OVER })
+      dispatchAction({ type: Action.GAME_OVER })
     }
   )
 
   socket.on("player_requested", (opponentRequest: playerRequest) => {
     dispatchAction({
-      type: GameAction.PLAYER_RESPONSE,
+      type: Action.PLAYER_RESPONSE,
       opponentRequest,
     })
-    dispatchAction({ type: GameAction.GAME_OVER })
+    dispatchAction({ type: Action.GAME_OVER })
   })
 
   //helper function for player_match and player_dealt
@@ -384,17 +371,17 @@ export const startSession = (
     playerTurn: number
   ) => {
     dispatchAction({
-      type: GameAction.UPDATE,
+      type: Action.UPDATE,
       serverState,
       playerTurn,
     })
     dispatchAction({
-      type: GameAction.PLAYER_RESULT,
+      type: Action.PLAYER_RESULT,
       playerOutput,
       activePlayer,
       serverState,
     })
-    dispatchAction({ type: GameAction.GAME_OVER })
+    dispatchAction({ type: Action.GAME_OVER })
   }
 
   //playerTurn is activePlayer
@@ -423,29 +410,29 @@ export const startSession = (
 
   socket.on("player_to_deal", (playerRequest: playerRequest) => {
     dispatchAction({
-      type: GameAction.PLAYER_DEALS,
+      type: Action.PLAYER_DEALS,
       playerRequest,
     })
-    dispatchAction({ type: GameAction.GAME_OVER })
+    dispatchAction({ type: Action.GAME_OVER })
   })
 
   socket.on("player_response_message", (playerOutput: number) => {
     dispatchAction({
-      type: GameAction.PLAYER_RESPONSE_MESSAGE,
+      type: Action.PLAYER_RESPONSE_MESSAGE,
       playerOutput,
     })
-    dispatchAction({ type: GameAction.GAME_OVER })
+    dispatchAction({ type: Action.GAME_OVER })
   })
 
   socket.on("player_turn_switch", (playerTurn: number) => {
     dispatchAction({
-      type: GameAction.PLAYER_TURN_SWITCH,
+      type: Action.PLAYER_TURN_SWITCH,
       playerTurn,
     })
-    dispatchAction({ type: GameAction.GAME_OVER })
+    dispatchAction({ type: Action.GAME_OVER })
   })
 
   socket.on("player_disconnected", () =>
-    dispatchAction({ type: GameAction.PLAYER_DISCONNECTED })
+    dispatchAction({ type: Action.PLAYER_DISCONNECTED })
   )
 }

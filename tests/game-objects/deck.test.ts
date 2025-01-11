@@ -1,7 +1,7 @@
 import { it, describe, expect, beforeEach, vi } from "vitest"
 import { Deck, Game, Player, Opponent } from "@game-objects"
 import mockDeck from "../__mocks__/deck"
-import { GameAction, PlayerOutput } from "@enums"
+import { Action, PlayerOutput } from "@enums"
 
 describe("Deck class", () => {
   let deck: Deck
@@ -36,7 +36,7 @@ describe("Deck class", () => {
       deck.handler(game, player, opponent)
       expect(playerSpy).toHaveBeenCalledWith(game, deck)
       expect(deck.dispatchAction).toHaveBeenCalledWith({
-        type: GameAction.PLAYER_ACTION,
+        type: Action.PLAYER_ACTION,
         playerOutput: PlayerOutput.HandMatch,
         player,
       })

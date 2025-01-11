@@ -3,18 +3,20 @@ import type { Accessor, Setter } from "solid-js"
 import type { Socket, io as ioType } from "socket.io-client"
 import type { Deck, Game, Player, Opponent } from "@game-objects"
 import type {
-  GameAction,
-  nonNumCardValue,
-  suit,
+  Action,
+  NonNumCardValue,
+  Suit,
   PlayerID as PlayerIDEnum,
   PlayerOutput,
   GameMode as GameModeEnum,
+  PlayerModalHeading,
+  PlayerModalSubHeading,
 } from "@enums"
 
 export type card = {
   id: string
-  value: nonNumCardValue | number | null
-  suit: suit | ""
+  value: NonNumCardValue | number | null
+  suit: Suit | ""
   img: string
 }
 
@@ -61,11 +63,8 @@ export type sessionState = {
   deck?: Deck | null
   player?: Player | null
   opponent?: Opponent | Player | null
-  playerTurnHandlerFactory?: ((playerHandEvent: MouseEvent) => void) | null
   isPlayerTurn: boolean
   isOpponentTurn: boolean
-  playerResponseHandlerFactory?: ((hasCard: boolean) => void) | null
-  playerDealsHandlerFactory?: ((playerRequest: playerRequest) => void) | null
   isDealFromDeck: boolean
   playerOutput: PlayerOutput | null
   opponentRequest?: card | null
@@ -73,6 +72,9 @@ export type sessionState = {
   outcome: string
   gameOver: boolean
   deckCount: number | null
+  showPlayerModal: boolean
+  playerModalHeading: PlayerModalHeading
+  playerModalSubHeading: PlayerModalSubHeading
 }
 
 export type sessionStateMultiplayer = Omit<
@@ -91,8 +93,8 @@ export type sessionStateMultiplayer = Omit<
 
 export type sessionStateProp = Accessor<sessionState | sessionStateMultiplayer>
 
-export type gameAction = {
-  type: GameAction
+export type action = {
+  type: Action
   game?: Game
   deck?: Deck
   player?: Player
@@ -109,12 +111,8 @@ export type gameAction = {
   gameOver?: boolean
 }
 
-export type gameActionMultiplayer = Omit<
-  gameAction,
-  "deck" | "opponentRequest"
-> & {
+export type actionMultiplayer = Omit<action, "deck" | "opponentRequest"> & {
   deck?: card[]
-  playerTurnHandler?: (playerHandEvent: MouseEvent) => void
   playerCard?: playerRequest
   opponentRequest?: playerRequest | null
   socket?: Socket | null
@@ -129,9 +127,9 @@ export type gameActionMultiplayer = Omit<
   dealtCard?: card
 }
 
-export type dispatchAction = (action: gameAction) => void
+export type dispatchAction = (action: action) => void
 
-export type dispatchActionMultiplayer = (action: gameActionMultiplayer) => void
+export type dispatchActionMultiplayer = (action: actionMultiplayer) => void
 
 export type serverStateMultiplayer = {
   player1: Player

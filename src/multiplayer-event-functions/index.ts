@@ -11,7 +11,7 @@ export const playerTurn: playerTurnType = (
   player,
   playerID,
   dispatchAction,
-  GameAction
+  Action
 ) => {
   const eventTarget = chosenCard.target as HTMLImageElement
 
@@ -19,7 +19,7 @@ export const playerTurn: playerTurnType = (
     for (const card of player.hand)
       if (card.id === eventTarget.id) {
         dispatchAction({
-          type: GameAction.PLAYER_REQUEST,
+          type: Action.PLAYER_REQUEST,
           playerRequest: { card, playerID },
         })
         break
@@ -32,7 +32,7 @@ export const playerResponse: playerResponseType = (
   player,
   playerID,
   dispatchAction,
-  GameAction
+  Action
 ) => {
   const { card: opponentRequestCard } = opponentRequest
   let log
@@ -44,7 +44,7 @@ export const playerResponse: playerResponseType = (
         log = "It's your opponent's turn again."
         playerCard = { playerID, card }
         dispatchAction({
-          type: GameAction.PLAYER_MATCH,
+          type: Action.PLAYER_MATCH,
           playerCard,
           opponentRequest,
           log,
@@ -54,7 +54,7 @@ export const playerResponse: playerResponseType = (
     }
     log = `Are you sure? Do you have a ${opponentRequestCard.value}?`
     dispatchAction({
-      type: GameAction.PLAYER_MATCH,
+      type: Action.PLAYER_MATCH,
       log,
     })
   } else {
@@ -62,7 +62,7 @@ export const playerResponse: playerResponseType = (
       if (card.value === opponentRequestCard.value) {
         log = `Are you sure? Do you have a ${opponentRequestCard.value}?`
         dispatchAction({
-          type: GameAction.PLAYER_MATCH,
+          type: Action.PLAYER_MATCH,
           log,
         })
         return
@@ -70,7 +70,7 @@ export const playerResponse: playerResponseType = (
     }
     log = "Your opponent must now deal a card from the deck."
     dispatchAction({
-      type: GameAction.NO_PLAYER_MATCH,
+      type: Action.NO_PLAYER_MATCH,
       opponentRequest,
       log,
     })
@@ -80,14 +80,14 @@ export const playerResponse: playerResponseType = (
 export const playerDeals: playerDealsType = (
   playerRequest,
   dispatchAction,
-  GameAction
+  Action
 ) =>
   dispatchAction({
-    type: GameAction.PLAYER_DEALT,
+    type: Action.PLAYER_DEALT,
     playerRequest,
   })
 
 export const playerDisconnects: playerDisconnectsType = (
   dispatchAction,
-  GameAction
-) => dispatchAction({ type: GameAction.PLAYER_DISCONNECT })
+  Action
+) => dispatchAction({ type: Action.PLAYER_DISCONNECT })
