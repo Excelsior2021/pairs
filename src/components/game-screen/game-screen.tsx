@@ -19,17 +19,12 @@ const GameScreen: Component = () => {
   const [gameMode, setGameMode] = createSignal<GameMode | null>(null)
   const [multiplayerMenu, setMultiplayerMenu] = createSignal(false)
   const [joinGameMenu, setJoinGameMenu] = createSignal(false)
-  const [multiplayerSessionStarted, setMultiplayerSessionStarted] =
-    createSignal(false)
   const [socket, setSocket] = createSignal<Socket | null>(null)
   const [sessionID, setSessionID] = createSignal("")
   const [playerID, setPlayerID] = createSignal<PlayerID | null>(null)
   const [showPairsModal, setShowPairsModal] = createSignal(false)
   const [showQuitGameModal, setShowQuitGameModal] = createSignal(false)
   const [showInstructions, setShowInstructions] = createSignal(false)
-  const [showPlayerModal, setShowPlayerModal] = createSignal(false)
-  const [matchStatusHeading, setMatchStatusHeading] = createSignal("")
-  const [matchStatusSubHeading, setMatchStatusSubHeading] = createSignal("")
 
   return (
     <main class="game-screen">

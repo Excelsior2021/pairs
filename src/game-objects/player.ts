@@ -77,7 +77,10 @@ export class Player {
   turn(playerChosenCardEvent: MouseEvent, game: Game, opponent: Opponent) {
     const eventTarget = playerChosenCardEvent.target as HTMLImageElement
     for (const card of this.hand)
-      if (card.id === eventTarget.id) this.chosenCard = card
+      if (card.id === eventTarget.id) {
+        this.chosenCard = card
+        break
+      }
 
     const playerOutput = this.match(game, opponent)
 

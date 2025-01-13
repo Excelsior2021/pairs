@@ -27,7 +27,6 @@ export class Deck {
     this.dispatchAction({
       type: Action.PLAYER_ACTION,
       playerOutput,
-      player,
     })
 
     if (

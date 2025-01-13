@@ -18,21 +18,17 @@ const PairsModal: Component<props> = props => (
     setShowModal={props.setShowPairsModal}>
     <div class="pairs-modal">
       <div class="pairs-modal__pairs-container">
-        <p class="pairs-modal__heading">{`Your Pairs (${
-          props.player!.pairs.length
-        })`}</p>
-        <div class="pairs-modal__pairs" data-testid={`player pairs`}>
-          <For each={props.player!.pairs}>
+        <p class="pairs-modal__heading">{`Your Pairs (${props.player.pairs.length})`}</p>
+        <div class="pairs-modal__pairs" data-testid="player pairs">
+          <For each={props.player.pairs}>
             {card => <Card card={card} show={true} />}
           </For>
         </div>
       </div>
       <div class="pairs-modal__pairs-container">
-        <p class="pairs-modal__heading">{`Opponent's Pairs (${
-          props.opponent!.pairs.length
-        })`}</p>
-        <div class="pairs-modal__pairs" data-testid={`opponent pairs`}>
-          <For each={props.opponent!.pairs}>
+        <p class="pairs-modal__heading">{`Opponent's Pairs (${props.opponent.pairs.length})`}</p>
+        <div class="pairs-modal__pairs" data-testid="opponent pairs">
+          <For each={props.opponent.pairs}>
             {card => <Card card={card} show={true} />}
           </For>
         </div>
