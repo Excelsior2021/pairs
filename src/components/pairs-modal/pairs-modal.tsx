@@ -3,11 +3,11 @@ import Card from "@components/card/card"
 import Modal from "@components/modal/modal"
 import "./pairs-modal.scss"
 
-import type { Opponent, Player } from "@game-objects"
+import type { player } from "@types"
 
 type props = {
-  player: Player
-  opponent: Player | Opponent
+  player: player
+  opponent: player
   showPairsModal: boolean
   setShowPairsModal: Setter<boolean>
 }

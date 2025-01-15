@@ -1,19 +1,19 @@
 import { Action, OpponentOutput, PlayerOutput } from "@enums"
 
 import type { Deck, Game, Opponent } from "@game-objects"
-import type { card, dispatchAction } from "@types"
+import type { card, handleAction } from "@types"
 
 export class Player {
   hand: card[]
   pairs: card[]
   chosenCard: card | null
-  dispatchAction: dispatchAction
+  handleAction: handleAction
 
-  constructor(dispatchAction: dispatchAction) {
+  constructor(handleAction: handleAction) {
     this.hand = []
     this.pairs = []
     this.chosenCard = null
-    this.dispatchAction = dispatchAction
+    this.handleAction = handleAction
   }
 
   match(game: Game, opponent: Opponent) {
@@ -27,8 +27,7 @@ export class Player {
             if (this.chosenCard!.id === card.id) {
               this.pairs.push(card)
               this.hand.splice(this.hand.indexOf(card), 1)
-              game.updateUI(true)
-              this.dispatchAction({ type: Action.GAME_LOG, log: "" })
+              game.updateUI("", true)
               this.chosenCard = null
               return PlayerOutput.OpponentMatch
             }
@@ -49,8 +48,7 @@ export class Player {
           if (this.chosenCard.id === card.id) {
             this.pairs.push(card)
             this.hand.splice(this.hand.indexOf(card), 1)
-            game.updateUI(true)
-            this.dispatchAction({ type: Action.GAME_LOG, log: "" })
+            game.updateUI("", true)
             return PlayerOutput.DeckMatch
           }
         }
@@ -84,28 +82,25 @@ export class Player {
 
     const playerOutput = this.match(game, opponent)
 
-    this.dispatchAction({
-      type: Action.PLAYER_ACTION,
-      playerOutput,
-      player: this,
-    })
-
-    const gameOver = game.end()
-
-    if (!gameOver) {
-      if (playerOutput === PlayerOutput.NoOpponentMatch) {
-        const log =
-          "You didn't match with any card in your opponent's hand. Please deal a card from the deck."
-        game.updateUI(false, false, true)
-        this.dispatchAction({ type: Action.GAME_LOG, log })
+    if (playerOutput! < PlayerOutput.NoOpponentMatch) {
+      this.handleAction({
+        type: Action.PLAYER_ACTION,
+        playerOutput,
+      })
+    } else {
+      const gameOver = game.end()
+      if (!gameOver) {
+        if (playerOutput === PlayerOutput.NoOpponentMatch) {
+          const log =
+            "You didn't match with any card in your opponent's hand. Please deal a card from the deck."
+          game.updateUI(log, false, false, true)
+        }
       }
     }
   }
 
   response(hasCard: boolean, game: Game, deck: Deck, opponent: Opponent) {
     const opponentTurn = () => opponent.turn(game)
-
-    let log
 
     if (opponent.request) {
       if (hasCard) {
@@ -117,32 +112,25 @@ export class Player {
             opponent.pairs.push(card)
             this.hand.splice(this.hand.indexOf(card), 1)
 
-            game.updateUI()
+            const log = "It's your opponent's turn again."
+            game.updateUI(log)
 
-            log = "It's your opponent's turn again."
-            this.dispatchAction({ type: Action.GAME_LOG, log })
             setTimeout(opponentTurn, 2000)
             return
           }
         }
-        log = `Are you sure? Do you have a ${opponent.request.value}?`
+        const log = `Are you sure? Do you have a ${opponent.request.value}?`
 
-        this.dispatchAction({
-          type: Action.GAME_LOG,
-          log,
-        })
+        game.updateUI(log)
         return
       }
 
       if (!hasCard) {
         for (const card of this.hand) {
           if (card.value === opponent.request.value) {
-            log = `Are you sure? Do you have a ${opponent.request.value}?`
+            const log = `Are you sure? Do you have a ${opponent.request.value}?`
 
-            this.dispatchAction({
-              type: Action.GAME_LOG,
-              log,
-            })
+            game.updateUI(log)
             return
           }
         }
@@ -150,25 +138,23 @@ export class Player {
         const opponentOutput = opponent.dealt(game, deck)
 
         if (opponentOutput === OpponentOutput.DeckMatch) {
-          game.updateUI()
-          log =
+          const log =
             "Your opponent has dealt a card from the deck and matched with the dealt card. It's your opponent's turn again."
-
-          this.dispatchAction({ type: Action.GAME_LOG, log })
+          game.updateUI(log)
           setTimeout(opponentTurn, 2000)
         }
+
         if (opponentOutput === OpponentOutput.HandMatch) {
-          log =
+          const log =
             "Your opponent has dealt a card from the deck. They didn't match with the dealt card but they had a hand match. It's your turn."
+          game.updateUI(log, true)
         }
         if (opponentOutput === OpponentOutput.NoMatch) {
-          log =
+          const log =
             "Your opponent has dealt a card from the deck and added it to their hand. There were no matches. It's your turn."
+          game.updateUI(log, true)
         }
       }
     }
-
-    game.updateUI(true, false)
-    this.dispatchAction({ type: Action.GAME_LOG, log })
   }
 }

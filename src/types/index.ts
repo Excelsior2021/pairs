@@ -1,7 +1,6 @@
 export * from "./multiplayer-events"
 import type { Accessor, Setter } from "solid-js"
 import type { Socket, io as ioType } from "socket.io-client"
-import type { Deck, Game, Player, Opponent } from "@game-objects"
 import type {
   Action,
   NonNumCardValue,
@@ -18,6 +17,11 @@ export type card = {
   value: NonNumCardValue | number | null
   suit: Suit | ""
   img: string
+}
+
+export type player = {
+  hand: card[]
+  pairs: card[]
 }
 
 export type createGameHandler = (
@@ -59,10 +63,8 @@ export type playerRequest = {
 }
 
 export type sessionState = {
-  game?: Game | null
-  deck?: Deck | null
-  player?: Player | null
-  opponent?: Opponent | Player | null
+  player?: player | null
+  opponent?: player | null
   isPlayerTurn: boolean
   isOpponentTurn: boolean
   isDealFromDeck: boolean
@@ -95,10 +97,8 @@ export type sessionStateProp = Accessor<sessionState | sessionStateMultiplayer>
 
 export type action = {
   type: Action
-  game?: Game
-  deck?: Deck
-  player?: Player
-  opponent?: Opponent
+  player?: player
+  opponent?: player
   isPlayerTurn?: boolean
   isOpponentTurn?: boolean
   isDealFromDeck?: boolean
@@ -109,6 +109,7 @@ export type action = {
   opponentAsked?: card
   outcome?: string
   gameOver?: boolean
+  deckCount?: number
 }
 
 export type actionMultiplayer = Omit<action, "deck" | "opponentRequest"> & {
@@ -127,18 +128,18 @@ export type actionMultiplayer = Omit<action, "deck" | "opponentRequest"> & {
   dealtCard?: card
 }
 
-export type dispatchAction = (action: action) => void
+export type handleAction = (action: action) => void
 
-export type dispatchActionMultiplayer = (action: actionMultiplayer) => void
+export type handleActionMultiplayer = (action: actionMultiplayer) => void
 
 export type serverStateMultiplayer = {
-  player1: Player
-  player2: Player
+  player1: player
+  player2: player
   deck: card[]
 }
 
 export type clientStateMutiplayer = {
-  player: Player
-  opponent: Player
+  player: player
+  opponent: player
   deck: card[]
 }

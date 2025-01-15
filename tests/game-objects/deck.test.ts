@@ -5,11 +5,11 @@ import { Action, PlayerOutput } from "@enums"
 
 describe("Deck class", () => {
   let deck: Deck
-  let dispatchActionMock = vi.fn()
+  let handleActionMock = vi.fn()
 
   beforeEach(() => {
     vi.resetAllMocks()
-    deck = new Deck(mockDeck, dispatchActionMock)
+    deck = new Deck(mockDeck, handleActionMock)
   })
 
   describe("shuffle()", () => {
@@ -20,9 +20,9 @@ describe("Deck class", () => {
   })
 
   describe("handler()", () => {
-    const player = new Player(dispatchActionMock)
-    const opponent = new Opponent(dispatchActionMock)
-    const game = new Game(deck, player, opponent, dispatchActionMock)
+    const player = new Player(handleActionMock)
+    const opponent = new Opponent(handleActionMock)
+    const game = new Game(deck, player, opponent, handleActionMock)
 
     let opponentSpy = vi.spyOn(opponent, "turn")
 
@@ -35,7 +35,7 @@ describe("Deck class", () => {
 
       deck.handler(game, player, opponent)
       expect(playerSpy).toHaveBeenCalledWith(game, deck)
-      expect(deck.dispatchAction).toHaveBeenCalledWith({
+      expect(deck.handleAction).toHaveBeenCalledWith({
         type: Action.PLAYER_ACTION,
         playerOutput: PlayerOutput.HandMatch,
         player,

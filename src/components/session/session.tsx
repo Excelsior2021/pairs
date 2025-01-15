@@ -1,5 +1,4 @@
 import { Show, type Component, type Setter } from "solid-js"
-import { createReducer } from "@utils"
 import Game from "@components/game/game"
 import Sidebar from "@components/sidebar/sidebar"
 import CreateGame from "@components/create-game/create-game"
@@ -30,6 +29,7 @@ import {
   sessionState,
   sessionStateMultiplayer,
 } from "@types"
+import { createStore, produce, type SetStoreFunction } from "solid-js/store"
 
 type props = {
   gameMode: GameMode
@@ -46,10 +46,8 @@ type props = {
 
 const Session: Component<props> = props => {
   const initialSessionState = {
-    game: null,
-    player: null,
-    opponent: null,
-    deck: null,
+    player: { hand: [], pairs: [] },
+    opponent: { hand: [], pairs: [] },
     opponentRequest: null,
     isPlayerTurn: false,
     isOpponentTurn: false,
@@ -70,7 +68,7 @@ const Session: Component<props> = props => {
   }
 
   let reducer:
-    | ((state: sessionState, action: action) => sessionState)
+    | ((action: action, setState: SetStoreFunction<sessionState>) => void)
     | ((
         state: sessionStateMultiplayer,
         action: actionMultiplayer
@@ -78,35 +76,35 @@ const Session: Component<props> = props => {
 
   if (props.gameMode === GameMode.SinglePlayer)
     reducer = singlePlayerReducer as (
-      state: sessionState,
-      action: action
-    ) => sessionState
+      action: action,
+      setState: SetStoreFunction<sessionState>
+    ) => void
 
   if (props.gameMode === GameMode.Multiplayer)
     reducer = multiplayerReducer as (
-      state: sessionStateMultiplayer,
-      action: actionMultiplayer
-    ) => sessionStateMultiplayer
+      action: actionMultiplayer,
+      setState: SetStoreFunction<sessionStateMultiplayer>
+    ) => void
 
-  const [sessionState, dispatchAction] = createReducer(
-    reducer!,
-    initialSessionState
-  )
+  const [sessionState, setState] = createStore(initialSessionState)
+
+  const handleAction = (action: action | actionMultiplayer) =>
+    reducer(action, setState)
 
   let playerTurnHandler: (playerHandEvent: MouseEvent) => void
   let playerResponseHandler: (hasCard: boolean) => void
   let playerDealsHandler: (() => void) | null
   let playerDisconnectHandler: (() => void) | undefined
   const closePlayerModalHandler = () =>
-    dispatchAction({
+    handleAction({
       type: Action.CLOSE_PLAYER_MODAL,
     })
 
   if (props.gameMode === GameMode.SinglePlayer) {
-    const deck = new Deck(deckObj, dispatchAction)
-    const player = new Player(dispatchAction)
-    const opponent = new Opponent(dispatchAction)
-    const game = new GameObject(deck, player, opponent, dispatchAction)
+    const deck = new Deck(deckObj, handleAction)
+    const player = new Player(handleAction)
+    const opponent = new Opponent(handleAction)
+    const game = new GameObject(deck, player, opponent, handleAction)
 
     game.start()
 
@@ -118,67 +116,67 @@ const Session: Component<props> = props => {
     playerTurnHandler = chosenCard =>
       playerTurn(
         chosenCard,
-        sessionState().player,
-        sessionState().playerID,
-        dispatchAction,
+        sessionState.player,
+        sessionState.playerID,
+        handleAction,
         Action
       )
 
     playerResponseHandler = hasCard =>
       playerResponse(
         hasCard,
-        sessionState().opponentRequest,
-        sessionState().player,
-        sessionState().playerID,
-        dispatchAction,
+        sessionState.opponentRequest,
+        sessionState.player,
+        sessionState.playerID,
+        handleAction,
         Action
       )
 
     playerDealsHandler = () =>
-      playerDeals(sessionState().playerRequest, dispatchAction, Action)
+      playerDeals(sessionState.playerRequest, handleAction, Action)
 
-    playerDisconnectHandler = () => playerDisconnects(dispatchAction, Action)
+    playerDisconnectHandler = () => playerDisconnects(handleAction, Action)
 
     if (props.socket && props.playerID)
-      startSession(props.socket, props.playerID, dispatchAction)
+      startSession(props.socket, props.playerID, handleAction)
   }
 
   return (
     <div class="session">
       <Show
         when={
-          props.gameMode === GameMode.SinglePlayer || sessionState().gameStarted
+          props.gameMode === GameMode.SinglePlayer || sessionState.gameStarted
         }
         fallback={<CreateGame sessionID={props.sessionID} />}>
         <Game
-          player={sessionState().player!}
-          opponent={sessionState().opponent!}
-          isPlayerTurn={sessionState().isPlayerTurn!}
-          isOpponentTurn={sessionState().isOpponentTurn}
-          log={sessionState().log}
-          gameOver={sessionState().gameOver}
-          outcome={sessionState().outcome}
-          deckCount={sessionState().deckCount}
+          player={sessionState.player}
+          opponent={sessionState.opponent}
+          isPlayerTurn={sessionState.isPlayerTurn!}
+          isOpponentTurn={sessionState.isOpponentTurn}
+          log={sessionState.log}
+          gameOver={sessionState.gameOver}
+          outcome={sessionState.outcome}
+          deckCount={sessionState.deckCount}
           playerTurnHandler={playerTurnHandler!}
           playerResponseHandler={playerResponseHandler!}
         />
         <PlayerModal
-          player={sessionState().player}
-          playerOutput={sessionState().playerOutput}
-          showPlayerModal={sessionState().showPlayerModal}
-          playerModalHeading={sessionState().playerModalHeading}
-          playerModalSubHeading={sessionState().playerModalSubHeading}
+          player={sessionState.player}
+          playerOutput={sessionState.playerOutput}
+          showPlayerModal={sessionState.showPlayerModal}
+          playerModalHeading={sessionState.playerModalHeading}
+          playerModalSubHeading={sessionState.playerModalSubHeading}
           closePlayerModalHandler={closePlayerModalHandler}
         />
         <PairsModal
-          player={sessionState().player}
-          opponent={sessionState().opponent}
+          player={sessionState.player}
+          opponent={sessionState.opponent}
           showPairsModal={props.showPairsModal}
           setShowPairsModal={props.setShowPairsModal}
         />
       </Show>
       <Sidebar
-        isDealFromDeck={sessionState().isDealFromDeck}
+        isDealFromDeck={sessionState.isDealFromDeck}
         gameMode={props.gameMode}
         playerDealsHandler={playerDealsHandler!}
         setShowPairsModal={props.setShowPairsModal}

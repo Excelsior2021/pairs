@@ -9,10 +9,10 @@ import {
 } from "@enums"
 import "./player-modal.scss"
 
-import type { Player } from "@game-objects"
+import type { player } from "@types"
 
 type props = {
-  player: Player
+  player: player
   playerOutput: PlayerOutput
   showPlayerModal: boolean
   playerModalHeading: PlayerModalHeading

@@ -1,13 +1,13 @@
 import { Action, Outcome } from "@enums"
 
 import type { Deck, Player, Opponent } from "@game-objects"
-import type { card, dispatchAction } from "@types"
+import type { card, handleAction } from "@types"
 
 export class Game {
   deck: Deck
   player: Player
   opponent: Opponent
-  dispatchAction: dispatchAction
+  handleAction: handleAction
   initialHandSize: number
   playerTurnHandler
   playerResponseHandler
@@ -17,12 +17,12 @@ export class Game {
     Deck: Deck,
     Player: Player,
     Opponent: Opponent,
-    dispatchAction: dispatchAction
+    handleAction: handleAction
   ) {
     this.deck = Deck
     this.player = Player
     this.opponent = Opponent
-    this.dispatchAction = dispatchAction
+    this.handleAction = handleAction
     this.initialHandSize = 7
     this.playerTurnHandler = (chosenCard: MouseEvent) =>
       this.player.turn(chosenCard, this, this.opponent)
@@ -44,8 +44,7 @@ export class Game {
     const log =
       "The cards have been dealt. Any initial pair of cards have been added to your Pairs. Please select a card from your hand to request a match with your opponent."
 
-    this.updateUI(true)
-    this.dispatchAction({ type: Action.GAME_LOG, log })
+    this.updateUI(log, true)
   }
 
   initialPairs(hand: card[]) {
@@ -71,15 +70,19 @@ export class Game {
   }
 
   updateUI(
+    log = "",
     isPlayerTurn = false,
     isOpponentTurn = false,
     isDealFromDeck = false
   ) {
-    this.dispatchAction({
+    const player = { hand: this.player.hand, pairs: this.player.pairs }
+    const opponent = { hand: this.opponent.hand, pairs: this.opponent.pairs }
+
+    this.handleAction({
       type: Action.UPDATE,
-      deck: this.deck,
-      player: this.player,
-      opponent: this.opponent,
+      log,
+      player,
+      opponent,
       isPlayerTurn,
       isOpponentTurn,
       isDealFromDeck,
@@ -102,11 +105,11 @@ export class Game {
     ) {
       const outcome = this.outcome()
 
-      this.updateUI()
-      this.dispatchAction({
+      this.handleAction({
         type: Action.GAME_OVER,
         outcome,
         gameOver: true,
+        deckCount: this.deck.deck.length,
       })
       return true
     }

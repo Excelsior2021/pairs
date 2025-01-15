@@ -12,16 +12,17 @@ import type {
   sessionStateMultiplayer,
   playerRequest,
   serverStateMultiplayer,
-  dispatchActionMultiplayer,
+  handleActionMultiplayer,
 } from "@types"
 import type { Socket } from "socket.io-client"
+import type { SetStoreFunction } from "solid-js/store"
 
 const { P1, P2 } = PlayerID
 
 export const multiplayerReducer = (
-  state: sessionStateMultiplayer,
-  action: actionMultiplayer
-): sessionStateMultiplayer => {
+  action: actionMultiplayer,
+  setState: SetStoreFunction<sessionStateMultiplayer>
+): void => {
   switch (action.type) {
     case Action.START_SESSION: {
       return {
@@ -317,9 +318,9 @@ export const multiplayerReducer = (
 export const startSession = (
   socket: Socket,
   playerID: PlayerID,
-  dispatchAction: dispatchActionMultiplayer
+  handleAction: handleActionMultiplayer
 ) => {
-  dispatchAction({
+  handleAction({
     type: Action.START_SESSION,
     socket,
     playerID,
@@ -343,7 +344,7 @@ export const startSession = (
 
       const player2Log = playerTurn === P2 ? startPlayerLog : nonStartPlayerLog
 
-      dispatchAction({
+      handleAction({
         type: Action.UPDATE,
         serverState,
         player1Log,
@@ -351,16 +352,16 @@ export const startSession = (
         playerTurn,
         sessionID,
       })
-      dispatchAction({ type: Action.GAME_OVER })
+      handleAction({ type: Action.GAME_OVER })
     }
   )
 
   socket.on("player_requested", (opponentRequest: playerRequest) => {
-    dispatchAction({
+    handleAction({
       type: Action.PLAYER_RESPONSE,
       opponentRequest,
     })
-    dispatchAction({ type: Action.GAME_OVER })
+    handleAction({ type: Action.GAME_OVER })
   })
 
   //helper function for player_match and player_dealt
@@ -370,18 +371,18 @@ export const startSession = (
     activePlayer: number,
     playerTurn: number
   ) => {
-    dispatchAction({
+    handleAction({
       type: Action.UPDATE,
       serverState,
       playerTurn,
     })
-    dispatchAction({
+    handleAction({
       type: Action.PLAYER_RESULT,
       playerOutput,
       activePlayer,
       serverState,
     })
-    dispatchAction({ type: Action.GAME_OVER })
+    handleAction({ type: Action.GAME_OVER })
   }
 
   //playerTurn is activePlayer
@@ -409,30 +410,30 @@ export const startSession = (
   )
 
   socket.on("player_to_deal", (playerRequest: playerRequest) => {
-    dispatchAction({
+    handleAction({
       type: Action.PLAYER_DEALS,
       playerRequest,
     })
-    dispatchAction({ type: Action.GAME_OVER })
+    handleAction({ type: Action.GAME_OVER })
   })
 
   socket.on("player_response_message", (playerOutput: number) => {
-    dispatchAction({
+    handleAction({
       type: Action.PLAYER_RESPONSE_MESSAGE,
       playerOutput,
     })
-    dispatchAction({ type: Action.GAME_OVER })
+    handleAction({ type: Action.GAME_OVER })
   })
 
   socket.on("player_turn_switch", (playerTurn: number) => {
-    dispatchAction({
+    handleAction({
       type: Action.PLAYER_TURN_SWITCH,
       playerTurn,
     })
-    dispatchAction({ type: Action.GAME_OVER })
+    handleAction({ type: Action.GAME_OVER })
   })
 
   socket.on("player_disconnected", () =>
-    dispatchAction({ type: Action.PLAYER_DISCONNECTED })
+    handleAction({ type: Action.PLAYER_DISCONNECTED })
   )
 }

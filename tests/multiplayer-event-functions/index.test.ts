@@ -7,7 +7,7 @@ import { Action } from "@enums"
 
 describe("multiplayer event functions", () => {
   const playerID = 1
-  const dispatchActionMock = vi.fn()
+  const handleActionMock = vi.fn()
 
   beforeEach(() => {
     vi.resetAllMocks()
@@ -25,14 +25,9 @@ describe("multiplayer event functions", () => {
     } as any
 
     it("dispatches game action correctly", () => {
-      playerTurnHandler(
-        playerHandEventMock,
-        player,
-        playerID,
-        dispatchActionMock
-      )
+      playerTurnHandler(playerHandEventMock, player, playerID, handleActionMock)
 
-      expect(dispatchActionMock).toBeCalledWith({
+      expect(handleActionMock).toBeCalledWith({
         type: Action.PLAYER_REQUEST,
         playerRequest: {
           card,
@@ -61,10 +56,10 @@ describe("multiplayer event functions", () => {
           opponentRequestMultiplayer,
           player,
           playerID,
-          dispatchActionMock
+          handleActionMock
         )
 
-        expect(dispatchActionMock).toBeCalledWith({
+        expect(handleActionMock).toBeCalledWith({
           type: Action.PLAYER_MATCH,
           playerCard: { playerID, card },
           opponentRequestMultiplayer,
@@ -83,10 +78,10 @@ describe("multiplayer event functions", () => {
           opponentRequestMultiplayer,
           player,
           playerID,
-          dispatchActionMock
+          handleActionMock
         )
 
-        expect(dispatchActionMock).toBeCalledWith({
+        expect(handleActionMock).toBeCalledWith({
           type: Action.PLAYER_MATCH,
           log,
         })
@@ -110,10 +105,10 @@ describe("multiplayer event functions", () => {
           opponentRequestMultiplayer,
           player,
           playerID,
-          dispatchActionMock
+          handleActionMock
         )
 
-        expect(dispatchActionMock).toBeCalledWith({
+        expect(handleActionMock).toBeCalledWith({
           type: Action.PLAYER_MATCH,
           log,
         })
@@ -130,10 +125,10 @@ describe("multiplayer event functions", () => {
           opponentRequestMultiplayer,
           player,
           playerID,
-          dispatchActionMock
+          handleActionMock
         )
 
-        expect(dispatchActionMock).toBeCalledWith({
+        expect(handleActionMock).toBeCalledWith({
           type: Action.NO_PLAYER_MATCH,
           opponentRequestMultiplayer,
           log,

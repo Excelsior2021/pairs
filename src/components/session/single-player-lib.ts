@@ -6,91 +6,73 @@ import {
 } from "@enums"
 
 import type { sessionState, action } from "@types"
+import type { SetStoreFunction } from "solid-js/store"
 
 export const singlePlayerReducer = (
-  state: sessionState,
-  action: action
-): sessionState => {
+  action: action,
+  setState: SetStoreFunction<sessionState>
+): void => {
   switch (action.type) {
     case Action.UPDATE: {
-      return {
-        ...state,
-        deck: action.deck,
-        player: action.player,
-        opponent: action.opponent,
-        isOpponentTurn: action.isOpponentTurn!,
-        isPlayerTurn: action.isPlayerTurn!,
-        isDealFromDeck: action.isDealFromDeck!,
+      setState({
+        log: action.log,
+        isOpponentTurn: action.isOpponentTurn,
+        isPlayerTurn: action.isPlayerTurn,
+        isDealFromDeck: action.isDealFromDeck,
         gameOver: false,
-      }
+      })
+      setState("player", "hand", [...action.player!.hand])
+      setState("player", "pairs", [...action.player!.pairs])
+
+      setState("opponent", "hand", [...action.opponent!.hand])
+      setState("opponent", "pairs", [...action.opponent!.pairs])
+      return
     }
     case Action.PLAYER_ACTION: {
-      if (action.playerOutput === PlayerOutput.NoOpponentMatch)
-        return {
-          ...state,
+      let playerModalHeading = PlayerModalHeading.Match
+      let playerModalSubHeading
+      switch (action.playerOutput) {
+        case PlayerOutput.OpponentMatch: {
+          playerModalSubHeading = PlayerModalSubHeading.Opponent
+          break
         }
-
-      if (action.playerOutput !== undefined) {
-        state.showPlayerModal = true
-        state.playerOutput = action.playerOutput
-        state.playerModalHeading = PlayerModalHeading.Match //matches 3 out of 4
-        switch (action.playerOutput) {
-          case PlayerOutput.OpponentMatch: {
-            return {
-              ...state,
-              playerModalSubHeading: PlayerModalSubHeading.Opponent,
-            }
-          }
-          case PlayerOutput.DeckMatch: {
-            return {
-              ...state,
-              playerModalSubHeading: PlayerModalSubHeading.Deck,
-            }
-          }
-          case PlayerOutput.HandMatch: {
-            return {
-              ...state,
-              playerModalSubHeading: PlayerModalSubHeading.Player,
-            }
-          }
-          case PlayerOutput.NoMatch: {
-            return {
-              ...state,
-              playerModalHeading: PlayerModalHeading.NoMatch,
-              playerModalSubHeading: PlayerModalSubHeading.None,
-            }
-          }
-          default:
-            return state
+        case PlayerOutput.DeckMatch: {
+          playerModalSubHeading = PlayerModalSubHeading.Deck
+          break
+        }
+        case PlayerOutput.HandMatch: {
+          playerModalSubHeading = PlayerModalSubHeading.Player
+          break
+        }
+        case PlayerOutput.NoMatch: {
+          playerModalHeading = PlayerModalHeading.NoMatch
+          playerModalSubHeading = PlayerModalSubHeading.None
+          break
         }
       }
-      return {
-        ...state,
-      }
-    }
-    case Action.GAME_LOG: {
-      return {
-        ...state,
-        log: action.log!,
-      }
+      setState({
+        showPlayerModal: true,
+        playerOutput: action.playerOutput,
+        playerModalHeading,
+        playerModalSubHeading,
+      })
+      return
     }
     case Action.GAME_OVER: {
-      if (action.gameOver && state.deck)
-        return {
-          ...state,
-          outcome: action.outcome!,
+      if (action.gameOver)
+        setState({
+          outcome: action.outcome,
           gameOver: action.gameOver,
           log: "",
-          deckCount: state.deck.deck.length,
-        }
+          deckCount: action.deckCount,
+        })
+      return
     }
     case Action.CLOSE_PLAYER_MODAL: {
-      return {
-        ...state,
+      setState({
         showPlayerModal: false,
-      }
+      })
+      return
     }
-    default:
-      return state
   }
 }

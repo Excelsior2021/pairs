@@ -8,12 +8,12 @@ describe("player class", () => {
   let player: Player
   let opponent: Opponent
   let game: Game
-  const dispatchActionMock = vi.fn()
+  const handleActionMock = vi.fn()
 
   beforeEach(() => {
-    player = new Player(dispatchActionMock)
-    opponent = new Opponent(dispatchActionMock)
-    game = new Game(deck, player, opponent, dispatchActionMock)
+    player = new Player(handleActionMock)
+    opponent = new Opponent(handleActionMock)
+    game = new Game(deck, player, opponent, handleActionMock)
   })
 
   describe(".match()", () => {
