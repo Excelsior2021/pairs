@@ -5,13 +5,14 @@ import {
   Action,
 } from "@enums"
 
-import type { sessionState, action } from "@types"
+import type { action, sessionState } from "@types"
 import type { SetStoreFunction } from "solid-js/store"
 
 export const singlePlayerReducer = (
   action: action,
-  setState: SetStoreFunction<sessionState>
-): void => {
+  setState: SetStoreFunction<sessionState>,
+  reconcile
+) => {
   switch (action.type) {
     case Action.UPDATE: {
       setState({
@@ -21,12 +22,12 @@ export const singlePlayerReducer = (
         isDealFromDeck: action.isDealFromDeck,
         gameOver: false,
       })
-      setState("player", "hand", [...action.player!.hand])
-      setState("player", "pairs", [...action.player!.pairs])
+      setState("player", "hand", reconcile([...action.player!.hand]))
+      setState("player", "pairs", reconcile([...action.player!.pairs]))
 
-      setState("opponent", "hand", [...action.opponent!.hand])
-      setState("opponent", "pairs", [...action.opponent!.pairs])
-      return
+      setState("opponent", "hand", reconcile([...action.opponent!.hand]))
+      setState("opponent", "pairs", reconcile([...action.opponent!.pairs]))
+      break
     }
     case Action.PLAYER_ACTION: {
       let playerModalHeading = PlayerModalHeading.Match
@@ -56,7 +57,7 @@ export const singlePlayerReducer = (
         playerModalHeading,
         playerModalSubHeading,
       })
-      return
+      break
     }
     case Action.GAME_OVER: {
       if (action.gameOver)
@@ -66,13 +67,13 @@ export const singlePlayerReducer = (
           log: "",
           deckCount: action.deckCount,
         })
-      return
+      break
     }
     case Action.CLOSE_PLAYER_MODAL: {
       setState({
         showPlayerModal: false,
       })
-      return
+      break
     }
   }
 }

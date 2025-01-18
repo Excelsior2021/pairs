@@ -8,11 +8,11 @@ import {
 } from "@enums"
 
 import type {
-  actionMultiplayer,
-  sessionStateMultiplayer,
   playerRequest,
   serverStateMultiplayer,
-  handleActionMultiplayer,
+  sessionState,
+  action,
+  handleAction,
 } from "@types"
 import type { Socket } from "socket.io-client"
 import type { SetStoreFunction } from "solid-js/store"
@@ -20,136 +20,137 @@ import type { SetStoreFunction } from "solid-js/store"
 const { P1, P2 } = PlayerID
 
 export const multiplayerReducer = (
-  action: actionMultiplayer,
-  setState: SetStoreFunction<sessionStateMultiplayer>
-): void => {
+  action: action,
+  setState: SetStoreFunction<sessionState>,
+  produce: (
+    fn: (state: sessionState) => void
+  ) => (state: sessionState) => sessionState
+) => {
   switch (action.type) {
     case Action.START_SESSION: {
-      return {
-        ...state,
+      setState({
         socket: action.socket,
         playerID: action.playerID,
         gameOver: false,
-      }
+      })
+      break
     }
     case Action.UPDATE: {
-      if (!state.gameStarted) state.gameStarted = true
-      if (!state.sessionID) state.sessionID = action.sessionID
-      if (state.isOpponentTurn) state.isOpponentTurn = false
       const { player1, player2, deck } = action.serverState!
 
-      //update client side players state depending on client player
-      switch (state.playerID) {
-        case P1: {
-          state.player = player1
-          state.opponent = player2
+      setState(
+        produce((state: sessionState) => {
+          //update client side players state depending on client player
+          switch (state.playerID) {
+            case P1: {
+              state.player = player1
+              state.opponent = player2
+              state.log = action.player1Log || state.log
+              break
+            }
+            case P2: {
+              state.player = player2
+              state.opponent = player1
+              state.log = action.player2Log || state.log
+              break
+            }
+          }
+        })
+      )
 
-          state.log = action.player1Log || state.log
-          break
+      setState(state => {
+        let isPlayerTurn = false
+        if (state.playerID === action.playerTurn) isPlayerTurn = true
+
+        return {
+          gameStartedMultiplayer: true,
+          isPlayerTurn,
+          sessionID: action.sessionID ? action.sessionID : state.sessionID,
+          isOpponentTurn: false,
+          deck,
         }
-        case P2: {
-          state.player = player2
-          state.opponent = player1
-
-          state.log = action.player2Log || state.log
-          break
-        }
-      }
-
-      if (state.playerID === action.playerTurn) state.isPlayerTurn = true
-      else state.isPlayerTurn = false
-
-      return {
-        ...state,
-        deck, //update deck state from server
-        deckCount: deck.length,
-      }
+      })
+      break
     }
-
     case Action.PLAYER_REQUEST: {
-      if (state.socket)
+      setState(state => {
         state.socket.emit(
           "player_request",
           action.playerRequest,
           state.sessionID
         )
-      const log = "Waiting for you opponent to respond..."
-
-      return {
-        ...state,
-        log,
-        isPlayerTurn: false,
-      }
+        const log = "Waiting for you opponent to respond..."
+        return {
+          log,
+          isPlayerTurn: false,
+        }
+      })
+      break
     }
     case Action.PLAYER_RESPONSE: {
-      const { card } = action.opponentRequest! //opponent's request
-      state.isOpponentTurn = false
+      setState(state => {
+        const { card } = action.opponentRequest! //opponent's request
+        let isOpponentTurn = false
 
-      if (state.playerID === P1) state.isOpponentTurn = true
-      if (state.playerID === P2) state.isOpponentTurn = true
+        if (state.playerID === P1) isOpponentTurn = true
+        if (state.playerID === P2) isOpponentTurn = true
 
-      const log = `Do you have a ${card.value}?`
+        const log = `Do you have a ${card.value}?`
 
-      return {
-        ...state,
-        log,
-        opponentRequest: action.opponentRequest,
-      }
+        return {
+          log,
+          opponentRequest: action.opponentRequest,
+          isOpponentTurn,
+        }
+      })
+      break
     }
     case Action.PLAYER_MATCH: {
-      if (action.playerCard && action.opponentRequest) {
+      setState(state => {
         const playerOutput = PlayerOutput.OpponentMatch
-        if (state.socket) {
-          const sessionState = {
-            player: state.player,
-            opponent: state.opponent,
-            deck: state.deck,
-          }
-          state.socket.emit(
-            "player_match",
-            action.opponentRequest,
-            action.playerCard,
-            sessionState,
-            playerOutput,
-            state.sessionID
-          )
+        const sessionState = {
+          player: state.player,
+          opponent: state.opponent,
+          deck: state.deck,
         }
+        state.socket.emit(
+          "player_match",
+          action.opponentRequest,
+          action.playerCard,
+          sessionState,
+          playerOutput,
+          state.sessionID
+        )
         return {
-          ...state,
           log: action.log!,
         }
-      }
-      return {
-        ...state,
-        log: action.log!,
-      }
+      })
+      break
     }
     case Action.NO_PLAYER_MATCH: {
-      if (state.socket)
+      setState(state => {
         state.socket.emit(
           "no_player_match",
           action.opponentRequest,
           state.sessionID
         )
-      return {
-        ...state,
-        log: action.log!,
-        isOpponentTurn: false,
-      }
+        return {
+          log: action.log!,
+          isOpponentTurn: false,
+        }
+      })
+      break
     }
     case Action.PLAYER_DEALS: {
-      const log =
-        "There were no matches with your opponent. You must now deal a card from the deck."
-
-      return {
-        ...state,
-        log,
+      setState({
+        log: "There were no matches with your opponent. You must now deal a card from the deck.",
         playerRequest: action.playerRequest,
         isDealFromDeck: true,
-      }
+      })
+      break
     }
     case Action.PLAYER_DEALT: {
-      if (state.socket) {
+      setState(state => {
         const sessionState = {
           player: state.player,
           opponent: state.opponent,
@@ -161,64 +162,61 @@ export const multiplayerReducer = (
           sessionState,
           state.sessionID
         )
-      }
-      return { ...state, isDealFromDeck: false }
+        return { isDealFromDeck: false }
+      })
+      break
     }
     case Action.PLAYER_RESULT: {
-      if (action.activePlayer === state.playerID) {
-        state.showPlayerModal = true
-
-        state.playerModalHeading = PlayerModalHeading.Match
-        switch (action.playerOutput) {
-          case PlayerOutput.OpponentMatch: {
-            const log = "It's your turn again."
-            return {
-              ...state,
-              log,
-              playerOutput: action.playerOutput,
-              playerModalSubHeading: PlayerModalSubHeading.Opponent,
-            }
+      setState(state => {
+        if (action.activePlayer === state.playerID) {
+          const initialNewState = {
+            showPlayerModal: true,
+            playerModalHeading: PlayerModalHeading.Match,
+            playerOutput: action.playerOutput,
+            log: "It's your turn again.",
           }
-          case PlayerOutput.DeckMatch: {
-            if (state.socket) {
-              const log = "It's your turn again."
-              state.socket.emit(
-                "player_response_message",
-                action.playerOutput,
-                state.sessionID
-              )
-              const playerTurn = state.playerID
+
+          const opponentTurn = {
+            log: "It's your opponent's turn.",
+            player: P1 ? P2 : P1,
+          }
+
+          switch (action.playerOutput) {
+            case PlayerOutput.OpponentMatch: {
               return {
-                ...state,
-                log,
-                playerOutput: action.playerOutput,
-                playerTurn,
-                playerModalSubHeading: PlayerModalSubHeading.Deck,
+                ...initialNewState,
+                playerModalSubHeading: PlayerModalSubHeading.Opponent,
               }
             }
-          }
-          case PlayerOutput.HandMatch: {
-            if (state.socket) {
-              const log = "It's your opponent's turn."
+            case PlayerOutput.DeckMatch: {
+              if (state.socket) {
+                state.socket.emit(
+                  "player_response_message",
+                  action.playerOutput,
+                  state.sessionID
+                )
+                return {
+                  ...initialNewState,
+                  playerTurn: state.playerID,
+                  playerModalSubHeading: PlayerModalSubHeading.Deck,
+                }
+              }
+            }
+            case PlayerOutput.HandMatch: {
               state.socket.emit(
                 "player_response_message",
                 action.playerOutput,
                 state.sessionID
               )
               state.socket.emit("player_turn_switch", state.sessionID)
-              const playerTurn = state.playerID === P1 ? P2 : P1
               return {
-                ...state,
-                log,
-                playerOutput: action.playerOutput,
-                playerTurn,
+                ...initialNewState,
+                log: opponentTurn.log,
+                playerTurn: opponentTurn.player,
                 playerModalSubHeading: PlayerModalSubHeading.Player,
               }
             }
-          }
-          case PlayerOutput.NoMatch: {
-            if (state.socket) {
-              const log = "It's your opponent's turn."
+            case PlayerOutput.NoMatch: {
               state.socket.emit(
                 "player_response_message",
                 action.playerOutput,
@@ -227,98 +225,95 @@ export const multiplayerReducer = (
               state.socket.emit("player_turn_switch", state.sessionID)
               const playerTurn = state.playerID === P1 ? P2 : P1
               return {
-                ...state,
-                log,
-                playerOutput: action.playerOutput,
-                playerTurn,
+                ...initialNewState,
+                log: opponentTurn.log,
+                playerTurn: opponentTurn.player,
                 playerModalHeading: PlayerModalHeading.NoMatch,
                 playerModalSubHeading: PlayerModalSubHeading.None,
               }
             }
           }
-          default:
-            return state
         }
-      }
-      return state
+        return {}
+      })
+      break
     }
     case Action.PLAYER_RESPONSE_MESSAGE: {
-      let log: string
-      switch (action.playerOutput) {
-        case PlayerOutput.DeckMatch: {
-          log =
-            "Your opponent matched with the dealt card. It's their turn again."
-          return { ...state, log }
+      setState(_ => {
+        let log: string
+        switch (action.playerOutput) {
+          case PlayerOutput.DeckMatch: {
+            log =
+              "Your opponent matched with the dealt card. It's their turn again."
+            return { log }
+          }
+          case PlayerOutput.HandMatch: {
+            log =
+              "Your opponent didn't match with the dealt card. But another card in their hand did. It's your turn."
+            return { log }
+          }
+          case PlayerOutput.NoMatch: {
+            log =
+              "Your opponent had no matches. The dealt card has been added to their hand. It's your turn."
+            return { log }
+          }
         }
-        case PlayerOutput.HandMatch: {
-          log =
-            "Your opponent didn't match with the dealt card. But another card in their hand did. It's your turn."
-          return { ...state, log }
-        }
-        case PlayerOutput.NoMatch: {
-          log =
-            "Your opponent had no matches. The dealt card has been added to their hand. It's your turn."
-          return { ...state, log }
-        }
-        default:
-          return state
-      }
+        return {}
+      })
+      break
     }
     case Action.PLAYER_TURN_SWITCH: {
-      return {
-        ...state,
+      setState({
         isPlayerTurn: true,
-      }
-    }
-    case Action.PLAYER_DISCONNECT: {
-      if (state.socket) state.socket.disconnect()
+      })
+      break
     }
     case Action.PLAYER_DISCONNECTED: {
-      return {
-        ...state,
+      setState({
         log: "",
         outcome: Outcome.Disconnect,
         gameOver: true,
-      }
+      })
+      break
     }
     case Action.GAME_OVER: {
-      if (state.player && state.opponent && state.deck)
-        if (
-          state.player.hand.length === 0 ||
-          state.opponent.hand.length === 0 ||
-          state.deck.length === 0
-        ) {
-          let outcome
-          if (state.player.pairs.length > state.opponent.pairs.length)
-            outcome = Outcome.Player
-          else if (state.player.pairs.length === state.opponent.pairs.length)
-            outcome = Outcome.Draw
-          else outcome = Outcome.Opponent
-          return {
-            ...state,
-            log: "",
-            outcome,
-            gameOver: true,
-            deckCount: state.deck.length,
+      setState(state => {
+        if (state.player && state.opponent && state.deck)
+          if (
+            state.player.hand.length === 0 ||
+            state.opponent.hand.length === 0 ||
+            state.deck.length === 0
+          ) {
+            let outcome
+            if (state.player.pairs.length > state.opponent.pairs.length)
+              outcome = Outcome.Player
+            else if (state.player.pairs.length === state.opponent.pairs.length)
+              outcome = Outcome.Draw
+            else outcome = Outcome.Opponent
+            return {
+              log: "",
+              outcome,
+              gameOver: true,
+              deckCount: state.deck.length, //should come from payload?
+            }
           }
-        }
-      return state
+        return {}
+      })
+      break
     }
     case Action.CLOSE_PLAYER_MODAL: {
-      return {
-        ...state,
+      setState({
         showPlayerModal: false,
-      }
+      })
+      break
     }
-    default:
-      return state
   }
 }
 
 export const startSession = (
   socket: Socket,
   playerID: PlayerID,
-  handleAction: handleActionMultiplayer
+  handleAction: handleAction
 ) => {
   handleAction({
     type: Action.START_SESSION,

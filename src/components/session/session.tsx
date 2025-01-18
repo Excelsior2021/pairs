@@ -14,22 +14,28 @@ import {
 } from "@game-objects"
 import {
   playerDeals,
-  playerDisconnects,
   playerResponse,
   playerTurn,
 } from "@multiplayer-event-functions"
 import { singlePlayerReducer } from "./single-player-lib"
 import { multiplayerReducer, startSession } from "./multiplayer-lib"
-import { Action, GameMode, type PlayerID } from "@enums"
+import {
+  Action,
+  GameMode,
+  PlayerModalHeading,
+  PlayerModalSubHeading,
+  PlayerOutput,
+  type PlayerID,
+} from "@enums"
 import type { Socket } from "socket.io-client"
 import "@components/session/session.scss"
+import type { action, playerRequest, sessionState } from "@types"
 import {
-  action,
-  actionMultiplayer,
-  sessionState,
-  sessionStateMultiplayer,
-} from "@types"
-import { createStore, produce, type SetStoreFunction } from "solid-js/store"
+  createStore,
+  produce,
+  reconcile,
+  SetStoreFunction,
+} from "solid-js/store"
 
 type props = {
   gameMode: GameMode
@@ -48,7 +54,6 @@ const Session: Component<props> = props => {
   const initialSessionState = {
     player: { hand: [], pairs: [] },
     opponent: { hand: [], pairs: [] },
-    opponentRequest: null,
     isPlayerTurn: false,
     isOpponentTurn: false,
     playerOutput: null,
@@ -57,40 +62,20 @@ const Session: Component<props> = props => {
     gameOver: false,
     isDealFromDeck: false,
     deckCount: null,
-    gameStarted: null,
+    gameStartedMultiplayer: false,
     playerID: null,
-    socket: null,
-    sessionID: "",
+    socket: props.socket,
+    sessionID: props.sessionID,
     playerTurn: null,
     showPlayerModal: false,
-    playerModalHeading: "",
-    playerModalSubHeading: "",
-  }
-
-  let reducer:
-    | ((action: action, setState: SetStoreFunction<sessionState>) => void)
-    | ((
-        state: sessionStateMultiplayer,
-        action: actionMultiplayer
-      ) => sessionStateMultiplayer)
-
-  if (props.gameMode === GameMode.SinglePlayer)
-    reducer = singlePlayerReducer as (
-      action: action,
-      setState: SetStoreFunction<sessionState>
-    ) => void
-
-  if (props.gameMode === GameMode.Multiplayer)
-    reducer = multiplayerReducer as (
-      action: actionMultiplayer,
-      setState: SetStoreFunction<sessionStateMultiplayer>
-    ) => void
+    playerModalHeading: null,
+    playerModalSubHeading: null,
+    opponentRequest: null,
+  } as sessionState
 
   const [sessionState, setState] = createStore(initialSessionState)
 
-  const handleAction = (action: action | actionMultiplayer) =>
-    reducer(action, setState)
-
+  let handleAction: (action: action) => void
   let playerTurnHandler: (playerHandEvent: MouseEvent) => void
   let playerResponseHandler: (hasCard: boolean) => void
   let playerDealsHandler: (() => void) | null
@@ -101,6 +86,9 @@ const Session: Component<props> = props => {
     })
 
   if (props.gameMode === GameMode.SinglePlayer) {
+    handleAction = (action: action) =>
+      singlePlayerReducer(action, setState, reconcile)
+
     const deck = new Deck(deckObj, handleAction)
     const player = new Player(handleAction)
     const opponent = new Opponent(handleAction)
@@ -113,11 +101,14 @@ const Session: Component<props> = props => {
     playerDealsHandler = game.playerDealsHandler
   }
   if (props.gameMode === GameMode.Multiplayer) {
+    handleAction = (action: action) =>
+      multiplayerReducer(action, setState, produce)
+
     playerTurnHandler = chosenCard =>
       playerTurn(
         chosenCard,
         sessionState.player,
-        sessionState.playerID,
+        sessionState.playerID as PlayerID,
         handleAction,
         Action
       )
@@ -125,17 +116,21 @@ const Session: Component<props> = props => {
     playerResponseHandler = hasCard =>
       playerResponse(
         hasCard,
-        sessionState.opponentRequest,
+        sessionState.opponentRequest as playerRequest,
         sessionState.player,
-        sessionState.playerID,
+        sessionState.playerID as PlayerID,
         handleAction,
         Action
       )
 
     playerDealsHandler = () =>
-      playerDeals(sessionState.playerRequest, handleAction, Action)
+      playerDeals(
+        sessionState.playerRequest as playerRequest,
+        handleAction,
+        Action
+      )
 
-    playerDisconnectHandler = () => playerDisconnects(handleAction, Action)
+    playerDisconnectHandler = () => props.socket?.disconnect()
 
     if (props.socket && props.playerID)
       startSession(props.socket, props.playerID, handleAction)
@@ -145,7 +140,8 @@ const Session: Component<props> = props => {
     <div class="session">
       <Show
         when={
-          props.gameMode === GameMode.SinglePlayer || sessionState.gameStarted
+          props.gameMode === GameMode.SinglePlayer ||
+          sessionState.gameStartedMultiplayer
         }
         fallback={<CreateGame sessionID={props.sessionID} />}>
         <Game
@@ -160,13 +156,18 @@ const Session: Component<props> = props => {
           playerTurnHandler={playerTurnHandler!}
           playerResponseHandler={playerResponseHandler!}
         />
+
         <PlayerModal
           player={sessionState.player}
-          playerOutput={sessionState.playerOutput}
+          playerOutput={sessionState.playerOutput as PlayerOutput}
           showPlayerModal={sessionState.showPlayerModal}
-          playerModalHeading={sessionState.playerModalHeading}
-          playerModalSubHeading={sessionState.playerModalSubHeading}
-          closePlayerModalHandler={closePlayerModalHandler}
+          playerModalHeading={
+            sessionState.playerModalHeading as PlayerModalHeading
+          }
+          playerModalSubHeading={
+            sessionState.playerModalSubHeading as PlayerModalSubHeading
+          }
+          closePlayerModalHandler={closePlayerModalHandler!}
         />
         <PairsModal
           player={sessionState.player}

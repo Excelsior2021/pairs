@@ -19,38 +19,34 @@ type props = {
   playerResponseHandler: (hasCard: boolean) => void
 }
 
-const Game: Component<props> = props => {
-  createEffect(() => {
-    console.log(props.deckCount)
-  })
-  return (
-    <div class="game">
-      <Hand heading="Opponent Hand" hand={props.opponent!.hand} />
-      <div class="game__console">
-        <Show
-          when={!props.gameOver}
-          fallback={
-            <GameOver
-              outcome={props.outcome}
-              playerPairsCount={props.player!.pairs.length}
-              opponentPairsCount={props.opponent!.pairs.length}
-              deckCount={props.deckCount}
-            />
-          }>
-          {props.log}
-          <Show when={props.isOpponentTurn} fallback={null}>
-            <GameActions playerResponseHandler={props.playerResponseHandler} />
-          </Show>
+const Game: Component<props> = props => (
+  <div class="game">
+    <Hand heading="Opponent Hand" hand={props.opponent!.hand} />
+    <div class="game__console">
+      <Show
+        when={!props.gameOver}
+        fallback={
+          <GameOver
+            outcome={props.outcome}
+            playerPairsCount={props.player!.pairs.length}
+            opponentPairsCount={props.opponent!.pairs.length}
+            deckCount={props.deckCount}
+          />
+        }>
+        {props.log}
+        <Show when={props.isOpponentTurn} fallback={null}>
+          <GameActions playerResponseHandler={props.playerResponseHandler} />
         </Show>
-      </div>
-      <Hand
-        heading="Your Hand"
-        hand={props.player.hand}
-        isPlayer={true}
-        isPlayerTurn={props.isPlayerTurn}
-        playerTurnHandler={props.playerTurnHandler}
-      />
+      </Show>
     </div>
-  )
-}
+    <Hand
+      heading="Your Hand"
+      hand={props.player.hand}
+      isPlayer={true}
+      isPlayerTurn={props.isPlayerTurn}
+      playerTurnHandler={props.playerTurnHandler}
+    />
+  </div>
+)
+
 export default Game

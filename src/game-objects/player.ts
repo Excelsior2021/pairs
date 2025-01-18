@@ -87,14 +87,14 @@ export class Player {
         type: Action.PLAYER_ACTION,
         playerOutput,
       })
-    } else {
-      const gameOver = game.end()
-      if (!gameOver) {
-        if (playerOutput === PlayerOutput.NoOpponentMatch) {
-          const log =
-            "You didn't match with any card in your opponent's hand. Please deal a card from the deck."
-          game.updateUI(log, false, false, true)
-        }
+    }
+
+    const gameOver = game.end()
+    if (!gameOver) {
+      if (playerOutput === PlayerOutput.NoOpponentMatch) {
+        const log =
+          "You didn't match with any card in your opponent's hand. Please deal a card from the deck."
+        game.updateUI(log, false, false, true)
       }
     }
   }
@@ -121,7 +121,7 @@ export class Player {
         }
         const log = `Are you sure? Do you have a ${opponent.request.value}?`
 
-        game.updateUI(log)
+        game.updateUI(log, false, true)
         return
       }
 
@@ -130,7 +130,7 @@ export class Player {
           if (card.value === opponent.request.value) {
             const log = `Are you sure? Do you have a ${opponent.request.value}?`
 
-            game.updateUI(log)
+            game.updateUI(log, false, true)
             return
           }
         }

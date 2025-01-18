@@ -17,7 +17,7 @@ type props = {
   showPlayerModal: boolean
   playerModalHeading: PlayerModalHeading
   playerModalSubHeading: PlayerModalSubHeading
-  closePlayerModalHandler: (...args: any[]) => undefined
+  closePlayerModalHandler: () => void
 }
 
 const PlayerModal: Component<props> = props => (

@@ -1,4 +1,4 @@
-import { For, type Setter, type Component } from "solid-js"
+import { For, type Setter, type Component, createEffect } from "solid-js"
 import "./sidebar.scss"
 
 import type { GameMode } from "@enums"

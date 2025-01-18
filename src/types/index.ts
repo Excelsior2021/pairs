@@ -63,37 +63,31 @@ export type playerRequest = {
 }
 
 export type sessionState = {
-  player?: player | null
-  opponent?: player | null
+  player: player
+  opponent: player
   isPlayerTurn: boolean
   isOpponentTurn: boolean
   isDealFromDeck: boolean
   playerOutput: PlayerOutput | null
-  opponentRequest?: card | null
   log: string
   outcome: string
   gameOver: boolean
   deckCount: number | null
   showPlayerModal: boolean
-  playerModalHeading: PlayerModalHeading
-  playerModalSubHeading: PlayerModalSubHeading
-}
-
-export type sessionStateMultiplayer = Omit<
-  sessionState,
-  "deck" | "opponentRequest"
-> & {
-  gameStarted: boolean
+  playerModalHeading: PlayerModalHeading | null
+  playerModalSubHeading: PlayerModalSubHeading | null
+  //multiplayer additional properties
+  gameStartedMultiplayer: boolean
   playerID?: number | null
   deck?: card[] | null
-  socket?: Socket | null
-  sessionID?: string | undefined
+  socket: Socket
+  sessionID: string
   playerTurn?: number | null
   playerRequest?: playerRequest
   opponentRequest?: playerRequest | null
 }
 
-export type sessionStateProp = Accessor<sessionState | sessionStateMultiplayer>
+export type sessionStateProp = Accessor<sessionState>
 
 export type action = {
   type: Action
@@ -103,20 +97,17 @@ export type action = {
   isOpponentTurn?: boolean
   isDealFromDeck?: boolean
   playerOutput?: PlayerOutput
-  opponentRequest?: card | null
   log?: string
   chosenCard?: card
   opponentAsked?: card
   outcome?: string
   gameOver?: boolean
   deckCount?: number
-}
-
-export type actionMultiplayer = Omit<action, "deck" | "opponentRequest"> & {
+  //multiplayer additional properties
   deck?: card[]
   playerCard?: playerRequest
   opponentRequest?: playerRequest | null
-  socket?: Socket | null
+  socket?: Socket
   playerID?: number | null
   sessionID?: string
   serverState?: serverStateMultiplayer
@@ -129,8 +120,6 @@ export type actionMultiplayer = Omit<action, "deck" | "opponentRequest"> & {
 }
 
 export type handleAction = (action: action) => void
-
-export type handleActionMultiplayer = (action: actionMultiplayer) => void
 
 export type serverStateMultiplayer = {
   player1: player

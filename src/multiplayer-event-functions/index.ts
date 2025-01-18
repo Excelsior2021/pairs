@@ -86,8 +86,3 @@ export const playerDeals: playerDealsType = (
     type: Action.PLAYER_DEALT,
     playerRequest,
   })
-
-export const playerDisconnects: playerDisconnectsType = (
-  handleAction,
-  Action
-) => handleAction({ type: Action.PLAYER_DISCONNECT })
