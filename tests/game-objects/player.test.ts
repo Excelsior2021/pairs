@@ -1,5 +1,5 @@
 import { beforeEach, describe, test, expect, vi } from "vitest"
-import { Deck, Game, Player, Opponent } from "@game-objects"
+import { Deck, Game, Player, Opponent } from "@game-controller"
 import { Suit } from "@enums"
 import { PlayerOutput } from "@enums"
 

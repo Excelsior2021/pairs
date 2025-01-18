@@ -1,5 +1,5 @@
 import { it, describe, expect, beforeEach, vi } from "vitest"
-import { Deck, Game, Player, Opponent } from "@game-objects"
+import { Deck, Game, Player, Opponent } from "@game-controller"
 import mockDeck from "../__mocks__/deck"
 import { Action, PlayerOutput } from "@enums"
 

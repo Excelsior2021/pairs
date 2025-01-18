@@ -6,7 +6,7 @@ import {
   vi,
   type MockInstance,
 } from "vitest"
-import { Deck, Game, Player, Opponent } from "@game-objects"
+import { Deck, Game, Player, Opponent } from "@game-controller"
 import { OpponentOutput } from "@enums"
 import { card } from "@types"
 

@@ -1,17 +1,13 @@
 import { Show, type Component, type Setter } from "solid-js"
+import { createStore, produce, reconcile } from "solid-js/store"
+import { deck } from "@assets"
 import Game from "@components/game/game"
 import Sidebar from "@components/sidebar/sidebar"
 import CreateGame from "@components/create-game/create-game"
 import PairsModal from "@components/pairs-modal/pairs-modal"
 import QuitGameModal from "@components/quit-game-modal/quit-game-modal"
 import PlayerModal from "@components/player-modal/player-modal"
-import {
-  deckObj,
-  Deck,
-  Game as GameObject,
-  Player,
-  Opponent,
-} from "@game-objects"
+import { GameController } from "@game-controller"
 import {
   playerDeals,
   playerResponse,
@@ -28,14 +24,9 @@ import {
   type PlayerID,
 } from "@enums"
 import type { Socket } from "socket.io-client"
-import "@components/session/session.scss"
 import type { action, playerRequest, sessionState } from "@types"
-import {
-  createStore,
-  produce,
-  reconcile,
-  SetStoreFunction,
-} from "solid-js/store"
+
+import "@components/session/session.scss"
 
 type props = {
   gameMode: GameMode
@@ -89,10 +80,7 @@ const Session: Component<props> = props => {
     handleAction = (action: action) =>
       singlePlayerReducer(action, setState, reconcile)
 
-    const deck = new Deck(deckObj, handleAction)
-    const player = new Player(handleAction)
-    const opponent = new Opponent(handleAction)
-    const game = new GameObject(deck, player, opponent, handleAction)
+    const game = new GameController(deck, handleAction)
 
     game.start()
 
@@ -100,6 +88,7 @@ const Session: Component<props> = props => {
     playerResponseHandler = game.playerResponseHandler
     playerDealsHandler = game.playerDealsHandler
   }
+
   if (props.gameMode === GameMode.Multiplayer) {
     handleAction = (action: action) =>
       multiplayerReducer(action, setState, produce)
