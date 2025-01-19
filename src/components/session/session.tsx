@@ -42,6 +42,7 @@ type props = {
 }
 
 const Session: Component<props> = props => {
+  console.log(props.socket)
   const initialSessionState = {
     player: { hand: [], pairs: [] },
     opponent: { hand: [], pairs: [] },

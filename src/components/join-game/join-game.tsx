@@ -5,7 +5,7 @@ import { GameMode, PlayerID } from "@enums"
 import "./join-game.scss"
 
 type props = {
-  socket: any
+  socket: Socket | null
   setSocket: Setter<Socket | null>
   setPlayerID: Setter<PlayerID | null>
   setJoinGameMenu: Setter<boolean>
@@ -49,7 +49,7 @@ const JoinGame: Component<props> = props => {
         props.setMultiplayerMenu(true)
         setSessionIDNotValid(false)
         setNoSessionExists(false)
-        props.socket.disconnect()
+        props.socket?.disconnect()
       },
     },
   ]

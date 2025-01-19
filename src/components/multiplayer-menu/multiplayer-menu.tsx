@@ -5,7 +5,7 @@ import { GameMode, PlayerID } from "@enums"
 import "./multiplayer-menu.scss"
 
 type props = {
-  socket: any
+  socket: Socket | null
   setSocket: Setter<Socket | null>
   setPlayerID: Setter<PlayerID | null>
   setSessionID: Setter<string>

@@ -16,4 +16,14 @@
     font-size: 5rem;
     text-shadow: $text-shadow-global;
   }
+
+  &__container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    justify-self: center;
+    width: 100%;
+    min-width: 1200px;
+    max-height: 600px;
+  }
 }
