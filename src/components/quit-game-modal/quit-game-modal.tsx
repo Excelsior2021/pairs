@@ -3,11 +3,13 @@ import { ModalHeadingColor } from "@enums"
 import "./quit-game-modal.scss"
 
 import type { Setter, Component } from "solid-js"
+import type { multiplayerConfig } from "@types"
 
 type props = {
+  multiplayerConfig: multiplayerConfig
+  setGameMode: Setter<null>
   playerDisconnectHandler?: () => void
   showQuitGameModal: boolean
-  setGameMode: Setter<null>
   setShowQuitGameModal: Setter<boolean>
 }
 
@@ -24,8 +26,10 @@ const QuitGameModal: Component<props> = props => (
       </p>
       <button
         class="quit-game-modal__button"
-        //move to Session component
         onclick={() => {
+          props.multiplayerConfig.socket = null
+          props.multiplayerConfig.sessionID = ""
+          props.multiplayerConfig.playerID = null
           props.setGameMode(null)
           props.setShowQuitGameModal(false)
           if (props.playerDisconnectHandler) props.playerDisconnectHandler()

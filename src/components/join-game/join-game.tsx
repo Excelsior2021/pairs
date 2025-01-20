@@ -1,15 +1,15 @@
 import { createSignal, For, type Setter, type Component } from "solid-js"
-import { io, type Socket } from "socket.io-client"
+import { io } from "socket.io-client"
 import { joinSessionHandler } from "./component-lib"
 import { GameMode, PlayerID } from "@enums"
 import "./join-game.scss"
 
+import type { multiplayerConfig } from "@types"
+
 type props = {
-  socket: Socket | null
-  setSocket: Setter<Socket | null>
-  setPlayerID: Setter<PlayerID | null>
-  setJoinGameMenu: Setter<boolean>
+  multiplayerConfig: multiplayerConfig
   setGameMode: Setter<GameMode>
+  setJoinGameMenu: Setter<boolean>
   setMultiplayerMenu: Setter<boolean>
 }
 
@@ -29,10 +29,9 @@ const JoinGame: Component<props> = props => {
         joinSessionHandler(
           joinSessionID(),
           io,
-          props.setSocket,
-          props.setPlayerID,
-          props.setJoinGameMenu,
+          props.multiplayerConfig,
           props.setGameMode,
+          props.setJoinGameMenu,
           setSessionIDNotValid,
           setNoSessionExists,
           setServerConnected,
@@ -49,7 +48,7 @@ const JoinGame: Component<props> = props => {
         props.setMultiplayerMenu(true)
         setSessionIDNotValid(false)
         setNoSessionExists(false)
-        props.socket?.disconnect()
+        props.multiplayerConfig.socket?.disconnect()
       },
     },
   ]

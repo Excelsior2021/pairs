@@ -24,13 +24,17 @@ export type player = {
   pairs: card[]
 }
 
+export type multiplayerConfig = {
+  socket: Socket | null
+  sessionID: string
+  playerID: PlayerIDEnum | null
+}
+
 export type createGameHandler = (
   io: typeof ioType,
-  setSocket: Setter<Socket | null>,
-  setSessionID: Setter<string>,
-  setPlayerID: Setter<PlayerIDEnum | null>,
-  setMultiplayerMenu: Setter<boolean>,
+  multiplayerConfig: multiplayerConfig,
   setGameMode: Setter<GameModeEnum>,
+  setMultiplayerMenu: Setter<boolean>,
   setConnecting: Setter<boolean>,
   setServerConnected: Setter<false | null>,
   GameMode: typeof GameModeEnum,
@@ -40,10 +44,9 @@ export type createGameHandler = (
 export type joinSessionHandler = (
   sessionID: string,
   io: typeof ioType,
-  setSocket: Setter<Socket | null>,
-  setPlayerID: Setter<PlayerIDEnum | null>,
-  setJoinGameMenu: Setter<boolean>,
+  multiplayerConfig: multiplayerConfig,
   setGameMode: Setter<GameModeEnum>,
+  setJoinGameMenu: Setter<boolean>,
   setSessionIDNotValid: Setter<boolean>,
   setNoSessionExists: Setter<boolean>,
   setServerConnected: Setter<boolean | null>,

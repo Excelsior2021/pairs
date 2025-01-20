@@ -10,20 +10,22 @@ import Session from "@components/session/session"
 import Instructions from "@components/instructions/instructions"
 import MultiplayerMenu from "@components/multiplayer-menu/multiplayer-menu"
 import JoinGame from "@components/join-game/join-game"
-import type { GameMode, PlayerID } from "@enums"
-import type { Socket } from "socket.io-client"
+import type { GameMode } from "@enums"
 import "./app.scss"
 
 const App: Component = () => {
-  const [gameMode, setGameMode] = createSignal<GameMode | null>(null) //session config
+  const [gameMode, setGameMode] = createSignal<GameMode | null>(null)
   const [multiplayerMenu, setMultiplayerMenu] = createSignal(false)
   const [joinGameMenu, setJoinGameMenu] = createSignal(false)
-  const [socket, setSocket] = createSignal<Socket | null>(null) //session config
-  const [sessionID, setSessionID] = createSignal("") //session config
-  const [playerID, setPlayerID] = createSignal<PlayerID | null>(null) //session config
   const [showPairsModal, setShowPairsModal] = createSignal(false)
   const [showQuitGameModal, setShowQuitGameModal] = createSignal(false)
   const [showInstructions, setShowInstructions] = createSignal(false)
+
+  const multiplayerConfig = {
+    socket: null,
+    sessionID: "",
+    playerID: null,
+  }
 
   return (
     <div class="app" data-testId="app">
@@ -49,39 +51,32 @@ const App: Component = () => {
               setShowInstructions={setShowInstructions}
             />
           }>
-          <Match when={gameMode()}>
-            <Session
-              gameMode={gameMode() as GameMode}
-              socket={socket()}
-              sessionID={sessionID()}
-              playerID={playerID()}
-              showPairsModal={showPairsModal()}
-              showQuitGameModal={showQuitGameModal()}
-              setGameMode={setGameMode as Setter<null>}
-              setShowPairsModal={setShowPairsModal}
-              setShowInstructions={setShowInstructions}
-              setShowQuitGameModal={setShowQuitGameModal}
-            />
-          </Match>
           <Match when={multiplayerMenu()}>
             <MultiplayerMenu
-              socket={socket()}
-              setSocket={setSocket}
-              setPlayerID={setPlayerID}
-              setSessionID={setSessionID}
-              setJoinGameMenu={setJoinGameMenu}
+              multiplayerConfig={multiplayerConfig}
               setGameMode={setGameMode as Setter<GameMode>}
+              setJoinGameMenu={setJoinGameMenu}
               setMultiplayerMenu={setMultiplayerMenu}
             />
           </Match>
           <Match when={joinGameMenu()}>
             <JoinGame
-              socket={socket()}
-              setSocket={setSocket}
-              setPlayerID={setPlayerID}
-              setJoinGameMenu={setJoinGameMenu}
+              multiplayerConfig={multiplayerConfig}
               setGameMode={setGameMode as Setter<GameMode>}
+              setJoinGameMenu={setJoinGameMenu}
               setMultiplayerMenu={setMultiplayerMenu}
+            />
+          </Match>
+          <Match when={gameMode()}>
+            <Session
+              multiplayerConfig={multiplayerConfig}
+              gameMode={gameMode() as GameMode}
+              setGameMode={setGameMode as Setter<null>}
+              showPairsModal={showPairsModal()}
+              showQuitGameModal={showQuitGameModal()}
+              setShowPairsModal={setShowPairsModal}
+              setShowInstructions={setShowInstructions}
+              setShowQuitGameModal={setShowQuitGameModal}
             />
           </Match>
         </Switch>
