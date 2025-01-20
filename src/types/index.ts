@@ -81,10 +81,7 @@ export type sessionState = {
   playerModalSubHeading: PlayerModalSubHeading | null
   //multiplayer additional properties
   gameStartedMultiplayer: boolean
-  playerID?: number | null
   deck?: card[] | null
-  socket: Socket
-  sessionID: string
   playerTurn?: number | null
   playerRequest?: playerRequest
   opponentRequest?: playerRequest | null
@@ -110,9 +107,6 @@ export type action = {
   deck?: card[]
   playerCard?: playerRequest
   opponentRequest?: playerRequest | null
-  socket?: Socket
-  playerID?: number | null
-  sessionID?: string
   serverState?: serverStateMultiplayer
   playerTurn?: number
   player1Log?: string

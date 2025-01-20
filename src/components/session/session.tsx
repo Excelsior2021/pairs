@@ -32,6 +32,8 @@ import type {
 
 import "@components/session/session.scss"
 
+import type { Socket } from "socket.io-client"
+
 type props = {
   multiplayerConfig: multiplayerConfig
   gameMode: GameMode
@@ -44,6 +46,7 @@ type props = {
 }
 
 const Session: Component<props> = props => {
+  const { socket, playerID, sessionID } = props.multiplayerConfig
   const initialSessionState = {
     player: { hand: [], pairs: [] },
     opponent: { hand: [], pairs: [] },
@@ -56,9 +59,6 @@ const Session: Component<props> = props => {
     isDealFromDeck: false,
     deckCount: null,
     gameStartedMultiplayer: false,
-    playerID: null,
-    socket: props.multiplayerConfig.socket,
-    sessionID: props.multiplayerConfig.sessionID,
     playerTurn: null,
     showPlayerModal: false,
     playerModalHeading: null,
@@ -93,13 +93,20 @@ const Session: Component<props> = props => {
 
   if (props.gameMode === GameMode.Multiplayer) {
     handleAction = (action: action) =>
-      multiplayerReducer(action, setState, produce)
+      multiplayerReducer(
+        action,
+        socket as Socket,
+        playerID as PlayerID,
+        sessionID,
+        setState,
+        produce
+      )
 
     playerTurnHandler = chosenCard =>
       playerTurn(
         chosenCard,
         sessionState.player,
-        sessionState.playerID as PlayerID,
+        playerID as PlayerID,
         handleAction,
         Action
       )
@@ -109,7 +116,7 @@ const Session: Component<props> = props => {
         hasCard,
         sessionState.opponentRequest as playerRequest,
         sessionState.player,
-        sessionState.playerID as PlayerID,
+        playerID as PlayerID,
         handleAction,
         Action
       )
@@ -121,14 +128,9 @@ const Session: Component<props> = props => {
         Action
       )
 
-    playerDisconnectHandler = () => props.multiplayerConfig.socket?.disconnect()
+    playerDisconnectHandler = () => socket?.disconnect()
 
-    if (props.multiplayerConfig.socket && props.multiplayerConfig.playerID)
-      startSession(
-        props.multiplayerConfig.socket,
-        props.multiplayerConfig.playerID,
-        handleAction
-      )
+    if (socket) startSession(socket, handleAction)
   }
 
   return (
@@ -138,7 +140,7 @@ const Session: Component<props> = props => {
           props.gameMode === GameMode.SinglePlayer ||
           sessionState.gameStartedMultiplayer
         }
-        fallback={<CreateGame sessionID={props.multiplayerConfig.sessionID} />}>
+        fallback={<CreateGame sessionID={sessionID} />}>
         <Game
           player={sessionState.player}
           opponent={sessionState.opponent}

@@ -50,7 +50,8 @@ export const joinSessionHandler: joinSessionHandlerType = async (
     socket.disconnect()
   })
 
-  socket.on("sessionID_exists", () => {
+  socket.on("sessionID_exists", sessionID => {
+    multiplayerConfig.sessionID = sessionID
     setJoinGameMenu(false)
     setGameMode(GameMode.Multiplayer)
   })

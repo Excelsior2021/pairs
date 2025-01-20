@@ -28,8 +28,8 @@ const Game: Component<props> = props => (
         fallback={
           <GameOver
             outcome={props.outcome}
-            playerPairsCount={props.player!.pairs.length}
-            opponentPairsCount={props.opponent!.pairs.length}
+            playerPairsCount={props.player.pairs.length}
+            opponentPairsCount={props.opponent.pairs.length}
             deckCount={props.deckCount}
           />
         }>

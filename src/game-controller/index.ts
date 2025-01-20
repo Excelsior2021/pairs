@@ -119,13 +119,10 @@ export class GameController {
       })
     }
 
-    const gameOver = this.end()
-    if (!gameOver) {
-      if (playerOutput === PlayerOutput.NoOpponentMatch) {
-        const log =
-          "You didn't match with any card in your opponent's hand. Please deal a card from the deck."
-        this.updateUI(log, false, false, true)
-      }
+    if (playerOutput === PlayerOutput.NoOpponentMatch) {
+      const log =
+        "You didn't match with any card in your opponent's hand. Please deal a card from the deck."
+      this.updateUI(log, false, false, true)
     }
   }
 
@@ -204,8 +201,6 @@ export class GameController {
       playerOutput === PlayerOutput.NoMatch
     )
       this.opponentTurn()
-
-    this.end()
   }
 
   playerDealsOutput() {
@@ -277,17 +272,12 @@ export class GameController {
   }
 
   opponentTurn() {
-    const gameOver = this.end()
+    this.opponentChosenCard =
+      this.opponent.hand[Math.floor(Math.random() * this.opponent.hand.length)]
 
-    if (!gameOver) {
-      this.opponentChosenCard =
-        this.opponent.hand[
-          Math.floor(Math.random() * this.opponent.hand.length)
-        ]
-      if (this.opponentChosenCard) {
-        const log = `Do you have a ${this.opponentChosenCard.value}?`
-        this.updateUI(log, false, true)
-      }
+    if (this.opponentChosenCard) {
+      const log = `Do you have a ${this.opponentChosenCard.value}?`
+      this.updateUI(log, false, true)
     }
   }
 
@@ -311,6 +301,7 @@ export class GameController {
       isPlayerTurn,
       isOpponentTurn,
       isDealFromDeck,
+      deckCount: this.deck.length,
     })
   }
 
@@ -320,24 +311,5 @@ export class GameController {
     else if (this.player.pairs.length === this.opponent.pairs.length)
       return Outcome.Draw
     else return Outcome.Opponent
-  }
-
-  end() {
-    if (
-      this.player.hand.length === 0 ||
-      this.opponent.hand.length === 0 ||
-      this.deck.length === 0
-    ) {
-      const outcome = this.outcome()
-
-      this.handleAction({
-        type: Action.GAME_OVER,
-        outcome,
-        gameOver: true,
-        deckCount: this.deck.length,
-      })
-      return true
-    }
-    return false
   }
 }

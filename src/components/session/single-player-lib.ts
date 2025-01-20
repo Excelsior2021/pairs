@@ -20,7 +20,7 @@ export const singlePlayerReducer = (
         isOpponentTurn: action.isOpponentTurn,
         isPlayerTurn: action.isPlayerTurn,
         isDealFromDeck: action.isDealFromDeck,
-        gameOver: false,
+        deckCount: action.deckCount,
       })
       setState("player", "hand", reconcile([...action.player!.hand]))
       setState("player", "pairs", reconcile([...action.player!.pairs]))
@@ -59,21 +59,27 @@ export const singlePlayerReducer = (
       })
       break
     }
-    case Action.GAME_OVER: {
-      if (action.gameOver)
-        setState({
-          outcome: action.outcome,
-          gameOver: action.gameOver,
-          log: "",
-          deckCount: action.deckCount,
-        })
-      break
-    }
     case Action.CLOSE_PLAYER_MODAL: {
       setState({
         showPlayerModal: false,
       })
-      break
+      return
     }
   }
+
+  //Game Over Check
+  setState(state => {
+    if (
+      state.player.hand.length === 0 ||
+      state.opponent.hand.length === 0 ||
+      state.deckCount === 0
+    )
+      return {
+        outcome: action.outcome,
+        gameOver: true,
+        log: "",
+        deckCount: state.deckCount,
+      }
+    return {}
+  })
 }

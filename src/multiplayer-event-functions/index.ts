@@ -1,7 +1,6 @@
 import type {
   playerRequest,
   playerDeals as playerDealsType,
-  playerDisconnects as playerDisconnectsType,
   playerResponse as playerResponseType,
   playerTurn as playerTurnType,
 } from "@types"
@@ -53,16 +52,18 @@ export const playerResponse: playerResponseType = (
       }
     }
     log = `Are you sure? Do you have a ${opponentRequestCard.value}?`
+    //Used just to log
     handleAction({
-      type: Action.PLAYER_MATCH,
+      type: Action.PLAYER_RESPONSE_MESSAGE,
       log,
     })
   } else {
     for (const card of player.hand) {
       if (card.value === opponentRequestCard.value) {
         log = `Are you sure? Do you have a ${opponentRequestCard.value}?`
+        //Used just to log
         handleAction({
-          type: Action.PLAYER_MATCH,
+          type: Action.PLAYER_RESPONSE_MESSAGE,
           log,
         })
         return
