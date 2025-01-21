@@ -88,10 +88,6 @@ export const multiplayerReducer = (
       break
     }
     case Action.PLAYER_MATCH: {
-      const playerOutput = PlayerOutput.OpponentMatch
-
-      console.log("hit")
-
       setState(state => {
         const sessionState = {
           player: state.player,
@@ -103,7 +99,7 @@ export const multiplayerReducer = (
           action.opponentRequest,
           action.playerCard,
           sessionState,
-          playerOutput,
+          PlayerOutput.OpponentMatch,
           sessionID
         )
         return {
@@ -240,12 +236,6 @@ export const multiplayerReducer = (
         gameOver: true,
         deckCount: state.deck?.length,
       }))
-      return
-    }
-    case Action.CLOSE_PLAYER_MODAL: {
-      setState({
-        showPlayerModal: false,
-      })
       return
     }
   }

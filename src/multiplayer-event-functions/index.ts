@@ -1,6 +1,5 @@
 import type {
   playerRequest,
-  playerDeals as playerDealsType,
   playerResponse as playerResponseType,
   playerTurn as playerTurnType,
 } from "@types"
@@ -14,15 +13,14 @@ export const playerTurn: playerTurnType = (
 ) => {
   const eventTarget = chosenCard.target as HTMLImageElement
 
-  if (player && eventTarget)
-    for (const card of player.hand)
-      if (card.id === eventTarget.id) {
-        handleAction({
-          type: Action.PLAYER_REQUEST,
-          playerRequest: { card, playerID },
-        })
-        break
-      }
+  for (const card of player.hand)
+    if (card.id === eventTarget.id) {
+      handleAction({
+        type: Action.PLAYER_REQUEST,
+        playerRequest: { card, playerID },
+      })
+      break
+    }
 }
 
 export const playerResponse: playerResponseType = (
@@ -77,13 +75,3 @@ export const playerResponse: playerResponseType = (
     })
   }
 }
-
-export const playerDeals: playerDealsType = (
-  playerRequest,
-  handleAction,
-  Action
-) =>
-  handleAction({
-    type: Action.PLAYER_DEALT,
-    playerRequest,
-  })

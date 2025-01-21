@@ -59,12 +59,6 @@ export const singlePlayerReducer = (
       })
       break
     }
-    case Action.CLOSE_PLAYER_MODAL: {
-      setState({
-        showPlayerModal: false,
-      })
-      return
-    }
   }
 
   //Game Over Check

@@ -17,8 +17,6 @@ const App: Component = () => {
   const [gameMode, setGameMode] = createSignal<GameMode | null>(null)
   const [multiplayerMenu, setMultiplayerMenu] = createSignal(false)
   const [joinGameMenu, setJoinGameMenu] = createSignal(false)
-  const [showPairsModal, setShowPairsModal] = createSignal(false)
-  const [showQuitGameModal, setShowQuitGameModal] = createSignal(false)
   const [showInstructions, setShowInstructions] = createSignal(false)
 
   const multiplayerConfig = {
@@ -72,11 +70,7 @@ const App: Component = () => {
               multiplayerConfig={multiplayerConfig}
               gameMode={gameMode() as GameMode}
               setGameMode={setGameMode as Setter<null>}
-              showPairsModal={showPairsModal()}
-              showQuitGameModal={showQuitGameModal()}
-              setShowPairsModal={setShowPairsModal}
               setShowInstructions={setShowInstructions}
-              setShowQuitGameModal={setShowQuitGameModal}
             />
           </Match>
         </Switch>

@@ -1,11 +1,11 @@
 import type { Action as GameActionEnum, PlayerID } from "@enums"
-import type { handleActionMultiplayer, player, playerRequest } from "@types"
+import type { handleAction, player, playerRequest } from "@types"
 
 export type playerTurn = (
   playerHandEvent: MouseEvent,
-  player: player | null,
+  player: player,
   playerID: PlayerID,
-  dispatchGAmeAction: handleActionMultiplayer,
+  dispatchGAmeAction: handleAction,
   Action: typeof GameActionEnum
 ) => void
 
@@ -14,17 +14,6 @@ export type playerResponse = (
   oppenentRequest: playerRequest,
   player: player,
   playerID: number,
-  handleAction: handleActionMultiplayer,
-  Action: typeof GameActionEnum
-) => void
-
-export type playerDeals = (
-  playerRequest: playerRequest,
-  handleAction: handleActionMultiplayer,
-  Action: typeof GameActionEnum
-) => void
-
-export type playerDisconnects = (
-  handleAction: handleActionMultiplayer,
+  handleAction: handleAction,
   Action: typeof GameActionEnum
 ) => void
