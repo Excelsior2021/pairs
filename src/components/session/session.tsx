@@ -7,7 +7,7 @@ import CreateGame from "@components/create-game/create-game"
 import PairsModal from "@components/pairs-modal/pairs-modal"
 import QuitGameModal from "@components/quit-game-modal/quit-game-modal"
 import PlayerModal from "@components/player-modal/player-modal"
-import { GameController } from "@game-controller"
+import { GameController } from "@singleplayer-game-controller"
 import { playerResponse, playerTurn } from "@multiplayer-event-functions"
 import { singlePlayerReducer } from "./single-player-lib"
 import { multiplayerReducer, startSession } from "./multiplayer-lib"
@@ -78,7 +78,10 @@ const Session: Component<props> = props => {
 
     const game = new GameController(deck, handleAction)
 
-    game.start()
+    const log =
+      "The cards have been dealt. Any initial pair of cards have been added to your Pairs. Please select a card from your hand to request a match with your this.opponent."
+
+    game.start(log)
 
     playerTurnHandler = game.playerTurnHandler
     playerResponseHandler = game.playerResponseHandler

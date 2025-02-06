@@ -236,18 +236,10 @@ export const multiplayerReducer = (
         gameOver: true,
         deckCount: state.deck?.length,
       }))
-      return
+      break
     }
-  }
-
-  //Game Over Check
-  setState(state => {
-    if (state.player && state.opponent && state.deck)
-      if (
-        state.player.hand.length === 0 ||
-        state.opponent.hand.length === 0 ||
-        state.deck.length === 0
-      ) {
+    case Action.GAME_OVER: {
+      setState(state => {
         let outcome
         if (state.player.pairs.length > state.opponent.pairs.length)
           outcome = Outcome.Player
@@ -258,11 +250,12 @@ export const multiplayerReducer = (
           log: "",
           outcome,
           gameOver: true,
-          deckCount: state.deck.length,
+          deckCount: state.deck?.length,
         }
-      }
-    return {}
-  })
+      })
+      break
+    }
+  }
 }
 
 export const startSession = (socket: Socket, handleAction: handleAction) => {
@@ -302,7 +295,8 @@ export const startSession = (socket: Socket, handleAction: handleAction) => {
     serverState: serverStateMultiplayer,
     playerOutput: number,
     activePlayer: number,
-    playerTurn: number
+    playerTurn: number,
+    gameOver: boolean
   ) => {
     handleAction({
       type: Action.UPDATE,
@@ -315,6 +309,11 @@ export const startSession = (socket: Socket, handleAction: handleAction) => {
       activePlayer,
       serverState,
     })
+
+    if (gameOver)
+      handleAction({
+        type: Action.GAME_OVER,
+      })
   }
 
   //playerTurn is activePlayer
@@ -323,9 +322,16 @@ export const startSession = (socket: Socket, handleAction: handleAction) => {
     (
       serverState: serverStateMultiplayer,
       playerOutput: number,
-      activePlayer: number
+      activePlayer: number,
+      gameOver: boolean
     ) =>
-      handlePlayerResult(serverState, playerOutput, activePlayer, activePlayer)
+      handlePlayerResult(
+        serverState,
+        playerOutput,
+        activePlayer,
+        activePlayer,
+        gameOver
+      )
   )
 
   socket.on(
@@ -333,12 +339,19 @@ export const startSession = (socket: Socket, handleAction: handleAction) => {
     (
       serverState: serverStateMultiplayer,
       playerOutput: number,
-      activePlayer: number
+      activePlayer: number,
+      gameOver: boolean
     ) => {
       let playerTurn: number
       if (playerOutput === PlayerOutput.DeckMatch) playerTurn = activePlayer
       else playerTurn = activePlayer === P1 ? P2 : P1
-      handlePlayerResult(serverState, playerOutput, activePlayer, playerTurn)
+      handlePlayerResult(
+        serverState,
+        playerOutput,
+        activePlayer,
+        playerTurn,
+        gameOver
+      )
     }
   )
 

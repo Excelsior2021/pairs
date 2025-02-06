@@ -59,21 +59,14 @@ export const singlePlayerReducer = (
       })
       break
     }
-  }
-
-  //Game Over Check
-  setState(state => {
-    if (
-      state.player.hand.length === 0 ||
-      state.opponent.hand.length === 0 ||
-      state.deckCount === 0
-    )
-      return {
-        outcome: action.outcome,
+    case Action.GAME_OVER: {
+      setState({
         gameOver: true,
         log: "",
-        deckCount: state.deckCount,
-      }
-    return {}
-  })
+        outcome: action.outcome,
+        deckCount: action.deckCount,
+      })
+      break
+    }
+  }
 }

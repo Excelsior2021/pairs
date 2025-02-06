@@ -1,4 +1,4 @@
-import { Action, OpponentOutput, Outcome, PlayerOutput } from "@enums"
+import { Action, Outcome, PlayerOutput } from "@enums"
 
 import type { card, handleAction, player } from "@types"
 
@@ -13,10 +13,12 @@ export class GameController {
   playerTurnHandler
   playerResponseHandler
   playerDealsHandler
+  setOpponentTurn
+  dealFromDeck
 
-  constructor(deck: card[], handleAction: handleAction) {
+  constructor(deck: card[], handleAction: handleAction, initialHandSize = 7) {
     this.deck = structuredClone(deck)
-    this.initialHandSize = 7
+    this.initialHandSize = initialHandSize
     this.player = {
       hand: [],
       pairs: [],
@@ -32,6 +34,8 @@ export class GameController {
     this.playerResponseHandler = (hasCard: boolean) =>
       this.playerResponse(hasCard)
     this.playerDealsHandler = () => this.playerDeals()
+    this.setOpponentTurn = () => setTimeout(() => this.opponentTurn(), 2000)
+    this.dealFromDeck = () => this.deck.pop()
   }
 
   shuffleDeck() {
@@ -43,7 +47,7 @@ export class GameController {
     }
   }
 
-  start() {
+  start(log: string) {
     this.shuffleDeck()
 
     this.player.hand = this.deck.splice(0, this.initialHandSize)
@@ -51,9 +55,6 @@ export class GameController {
 
     this.player.pairs = this.initialPairs(this.player.hand)
     this.opponent.pairs = this.initialPairs(this.opponent.hand)
-
-    const log =
-      "The cards have been dealt. Any initial pair of cards have been added to your Pairs. Please select a card from your hand to request a match with your this.opponent."
 
     this.updateUI(log, true)
   }
@@ -80,7 +81,7 @@ export class GameController {
     return pairs
   }
 
-  playerMatch() {
+  playerTurnOutput() {
     if (this.playerChosenCard) {
       for (const card of this.opponent.hand) {
         if (card.value === this.playerChosenCard.value) {
@@ -88,47 +89,39 @@ export class GameController {
           this.opponent.hand.splice(this.opponent.hand.indexOf(card), 1)
 
           for (const card of this.player.hand) {
-            if (this.playerChosenCard!.id === card.id) {
+            if (this.playerChosenCard.id === card.id) {
               this.player.pairs.push(card)
               this.player.hand.splice(this.player.hand.indexOf(card), 1)
+              this.handleAction({
+                type: Action.PLAYER_ACTION,
+                playerOutput: PlayerOutput.OpponentMatch,
+              })
               this.updateUI("", true)
               this.playerChosenCard = null
-              return PlayerOutput.OpponentMatch
+              return
             }
           }
         }
       }
-      return PlayerOutput.NoOpponentMatch
-    }
-  }
-
-  playerTurn(playerChosenCardEvent: MouseEvent) {
-    const eventTarget = playerChosenCardEvent.target as HTMLImageElement
-    for (const card of this.player.hand)
-      if (card.id === eventTarget.id) {
-        this.playerChosenCard = card
-        break
-      }
-
-    const playerOutput = this.playerMatch()
-
-    if (playerOutput! < PlayerOutput.NoOpponentMatch) {
-      this.handleAction({
-        type: Action.PLAYER_ACTION,
-        playerOutput,
-      })
-    }
-
-    if (playerOutput === PlayerOutput.NoOpponentMatch) {
       const log =
         "You didn't match with any card in your opponent's hand. Please deal a card from the deck."
       this.updateUI(log, false, false, true)
     }
   }
 
-  playerResponse(hasCard: boolean) {
-    const opponentTurn = () => this.opponentTurn()
+  playerTurn(playerChosenCardEvent: MouseEvent) {
+    const eventTarget = playerChosenCardEvent.target as HTMLImageElement
 
+    for (const card of this.player.hand)
+      if (card.id === eventTarget.id) {
+        this.playerChosenCard = card
+        break
+      }
+
+    this.playerTurnOutput()
+  }
+
+  playerResponse(hasCard: boolean) {
     if (this.opponentChosenCard) {
       if (hasCard) {
         for (const card of this.player.hand) {
@@ -145,7 +138,8 @@ export class GameController {
             const log = "It's your opponent's turn again."
             this.updateUI(log)
 
-            setTimeout(opponentTurn, 2000)
+            //opponent's turn again
+            this.setOpponentTurn()
             return
           }
         }
@@ -153,9 +147,7 @@ export class GameController {
 
         this.updateUI(log, false, true)
         return
-      }
-
-      if (!hasCard) {
+      } else {
         for (const card of this.player.hand) {
           if (card.value === this.opponentChosenCard.value) {
             const log = `Are you sure? Do you have a ${this.opponentChosenCard.value}?`
@@ -165,25 +157,7 @@ export class GameController {
           }
         }
 
-        const opponentOutput = this.opponentDealt()
-
-        if (opponentOutput === OpponentOutput.DeckMatch) {
-          const log =
-            "Your opponent has dealt a card from the deck and matched with the dealt card. It's your opponent's turn again."
-          this.updateUI(log)
-          setTimeout(opponentTurn, 2000)
-        }
-
-        if (opponentOutput === OpponentOutput.HandMatch) {
-          const log =
-            "Your opponent has dealt a card from the deck. They didn't match with the dealt card but they had a hand match. It's your turn."
-          this.updateUI(log, true)
-        }
-        if (opponentOutput === OpponentOutput.NoMatch) {
-          const log =
-            "Your opponent has dealt a card from the deck and added it to their hand. There were no matches. It's your turn."
-          this.updateUI(log, true)
-        }
+        this.opponentDeals()
       }
     }
   }
@@ -196,6 +170,8 @@ export class GameController {
       playerOutput,
     })
 
+    if (playerOutput === PlayerOutput.DeckMatch) this.updateUI("", true)
+
     if (
       playerOutput === PlayerOutput.HandMatch ||
       playerOutput === PlayerOutput.NoMatch
@@ -204,7 +180,7 @@ export class GameController {
   }
 
   playerDealsOutput() {
-    const dealtCard = this.deck.pop()
+    const dealtCard = this.dealFromDeck()
 
     if (this.playerChosenCard && dealtCard) {
       if (this.playerChosenCard.value === dealtCard.value) {
@@ -213,11 +189,11 @@ export class GameController {
           if (this.playerChosenCard.id === card.id) {
             this.player.pairs.push(card)
             this.player.hand.splice(this.player.hand.indexOf(card), 1)
-            this.updateUI("", true)
             return PlayerOutput.DeckMatch
           }
         }
       }
+      //if no deck match, continue
 
       this.playerChosenCard = null
 
@@ -226,19 +202,18 @@ export class GameController {
           this.player.pairs.push(dealtCard)
           this.player.pairs.push(card)
           this.player.hand.splice(this.player.hand.indexOf(card), 1)
-          this.updateUI()
           return PlayerOutput.HandMatch
         }
       }
+      //if no hand match, continue
 
       this.player.hand.push(dealtCard)
-      this.updateUI()
       return PlayerOutput.NoMatch
     }
   }
 
-  opponentDealt() {
-    const dealtCard = this.deck.pop()
+  opponentDeals() {
+    const dealtCard = this.dealFromDeck()
 
     if (dealtCard && this.opponentChosenCard) {
       if (dealtCard.value === this.opponentChosenCard.value) {
@@ -247,10 +222,17 @@ export class GameController {
         )
         this.opponent.pairs.push(dealtCard)
         this.opponent.pairs.push(this.opponentChosenCard)
+        console.log("hello")
         if (requestedCardIndex !== -1)
           this.opponent.hand.splice(requestedCardIndex, 1)
-        this.updateUI()
-        return OpponentOutput.DeckMatch
+
+        const log =
+          "Your opponent has dealt a card from the deck and matched with the dealt card. It's your opponent's turn again."
+        this.updateUI(log)
+
+        //opponent's turn again
+        this.setOpponentTurn()
+        return
       }
 
       for (const card of this.opponent.hand) {
@@ -260,14 +242,18 @@ export class GameController {
           this.opponent.pairs.push(card)
           if (handMatchIndex !== -1)
             this.opponent.hand.splice(handMatchIndex, 1)
-          this.updateUI()
-          return OpponentOutput.HandMatch
+
+          const log =
+            "Your opponent has dealt a card from the deck. They didn't match with the dealt card but they had a hand match. It's your turn."
+          this.updateUI(log, true)
+          return
         }
       }
 
       this.opponent.hand.push(dealtCard)
-      this.updateUI()
-      return OpponentOutput.NoMatch
+      const log =
+        "Your opponent has dealt a card from the deck and added it to their hand. There were no matches. It's your turn."
+      this.updateUI(log, true)
     }
   }
 
@@ -303,13 +289,31 @@ export class GameController {
       isDealFromDeck,
       deckCount: this.deck.length,
     })
+
+    //game over check
+    this.over()
   }
 
-  outcome() {
-    if (this.player.pairs.length > this.opponent.pairs.length)
-      return Outcome.Player
-    else if (this.player.pairs.length === this.opponent.pairs.length)
-      return Outcome.Draw
-    else return Outcome.Opponent
+  over() {
+    if (
+      this.player.hand.length === 0 ||
+      this.opponent.hand.length === 0 ||
+      this.deck.length === 0
+    ) {
+      let outcome: Outcome
+
+      if (this.player.pairs.length > this.opponent.pairs.length)
+        outcome = Outcome.Player
+      else if (this.player.pairs.length < this.opponent.pairs.length)
+        outcome = Outcome.Opponent
+      else outcome = Outcome.Draw
+
+      this.handleAction({
+        type: Action.GAME_OVER,
+        log: "",
+        outcome,
+        deckCount: this.deck.length,
+      })
+    }
   }
 }
