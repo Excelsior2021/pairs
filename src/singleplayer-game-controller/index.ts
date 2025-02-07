@@ -24,7 +24,8 @@ export class GameController {
       pairs: [],
     }
     this.opponent = {
-      ...this.player,
+      hand: [],
+      pairs: [],
     }
     this.playerChosenCard = null
     this.opponentChosenCard = null
@@ -53,14 +54,14 @@ export class GameController {
     this.player.hand = this.deck.splice(0, this.initialHandSize)
     this.opponent.hand = this.deck.splice(0, this.initialHandSize)
 
-    this.player.pairs = this.initialPairs(this.player.hand)
-    this.opponent.pairs = this.initialPairs(this.opponent.hand)
+    this.initialPairs(this.player)
+    this.initialPairs(this.opponent)
 
     this.updateUI(log, true)
   }
 
-  initialPairs(hand: card[]) {
-    const pairs: card[] = []
+  initialPairs(player: player) {
+    const { hand, pairs } = player
     hand.forEach(cardX =>
       hand.some(cardY => {
         if (
@@ -78,7 +79,6 @@ export class GameController {
         if (cardP === cardH) hand.splice(hand.indexOf(cardH), 1)
       })
     )
-    return pairs
   }
 
   playerTurnOutput() {
@@ -222,7 +222,6 @@ export class GameController {
         )
         this.opponent.pairs.push(dealtCard)
         this.opponent.pairs.push(this.opponentChosenCard)
-        console.log("hello")
         if (requestedCardIndex !== -1)
           this.opponent.hand.splice(requestedCardIndex, 1)
 

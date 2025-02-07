@@ -69,16 +69,21 @@ describe("Game Controller", () => {
       game.start(log)
       expect(shuffleDeckSpy).toHaveBeenCalledOnce()
       expect(game.deck.length).toBe(52 - 2 * game.initialHandSize)
+      expect(initialPairsSpy).toHaveBeenCalledWith(game.player)
+      expect(initialPairsSpy).toHaveBeenCalledWith(game.opponent)
       expect(initialPairsSpy).toHaveBeenCalledTimes(2)
       expect(updateUISpy).toHaveBeenCalledWith(log, true)
     })
   })
 
   describe("initialPairs()", () => {
-    it("returns initial pairs", () => {
+    it("sets initial pairs for player", () => {
       const pairsMock = handMock.slice(0, 2)
-      const pairs = game.initialPairs(handMock)
-      expect(pairs).toStrictEqual(pairsMock)
+      game.player.hand = [...handMock]
+
+      game.initialPairs(game.player)
+      expect(game.player.pairs).toEqual(pairsMock)
+      expect(game.player.hand).toEqual([handMock[2]])
     })
   })
 
